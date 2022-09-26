@@ -8,14 +8,13 @@
 import UIKit
 
 class GroupChoiceViewController: UIViewController {
-    var token: String = ""
     var batch: String = ""
     var subject: String = ""
     var subjectCode: String = ""
     var section: String = ""
     var branch: String = ""
     var isLab: Bool = false
-
+    
     @IBOutlet weak var gTwoButton: UIButton!
     @IBOutlet weak var gOneButton: UIButton!
     override func viewDidLoad() {
@@ -28,7 +27,6 @@ class GroupChoiceViewController: UIViewController {
     
     @IBAction func gOnePressed(_ sender: Any) {
         if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
-            studentListVc.token = self.token
             studentListVc.batch = self.batch
             studentListVc.branch = self.branch
             studentListVc.subject = self.subjectCode
@@ -42,7 +40,6 @@ class GroupChoiceViewController: UIViewController {
     
     @IBAction func gTwoPressed(_ sender: Any) {
         if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
-            studentListVc.token = self.token
             studentListVc.batch = self.batch
             studentListVc.branch = self.branch
             studentListVc.subject = self.subjectCode
@@ -53,15 +50,4 @@ class GroupChoiceViewController: UIViewController {
             self.navigationController?.pushViewController(studentListVc, animated: true)
         }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

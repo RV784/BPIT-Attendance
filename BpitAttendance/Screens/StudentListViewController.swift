@@ -8,10 +8,9 @@
 import UIKit
 
 class StudentListViewController: UIViewController {
-
+    
     var color: UIColor = UIColor.yellow
     var isAbsent: Bool = false
-    var token: String = ""
     var batch: String = ""
     var subject: String = ""
     var subjectCode: String = ""
@@ -46,9 +45,9 @@ class StudentListViewController: UIViewController {
         navigationItem.backButtonTitle = ""
         navigationItem.title = "Students"
         studentRecord = RecordData(record: [])
-//        print(subjectCode)
-//        print(subject)
-//        print(batch)
+        //        print(subjectCode)
+        //        print(subject)
+        //        print(batch)
         navigationItem.backButtonTitle = ""
     }
     
@@ -60,8 +59,8 @@ class StudentListViewController: UIViewController {
         for item in self.students ?? [] {
             studentRecord?.record.append(RecordData.studentData(status: false, enrollment_number: item.enrollment_number ?? "", subject: self.subject, batch: self.batch))
         }
-        print(students?.count)
-        print(studentRecord?.record.count)
+        print(students?.count as Any)
+        print(studentRecord?.record.count as Any)
         self.studentCollectionView.reloadData()
     }
     
@@ -85,16 +84,22 @@ class StudentListViewController: UIViewController {
         request.httpMethod = "POST"
         request.httpBody = recordData
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             do {
-                print(response)
+                print(response as Any)
                 DispatchQueue.main.async {
                     self.submitBtn.setTitle("", for: .normal)
                     self.attendanceSubmitLoader.stopAnimating()
-                    self.navigationController?.popViewController(animated: true)
+                    
+                    let viewControllers: [UIViewController] = self.navigationController!.viewControllers
+                    for aViewController in viewControllers {
+                        if aViewController is SubjectViewController {
+                            self.navigationController!.popToViewController(aViewController, animated: true)
+                        }
+                    }
                 }
             } catch {
                 print("error")
@@ -115,7 +120,7 @@ class StudentListViewController: UIViewController {
         
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             
@@ -169,8 +174,8 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
- 
-        return CGSize(width: 200, height: 90)
+        
+        return CGSize(width: collectionView.frame.width/2 - 15, height: 90)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -190,26 +195,26 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-            configureContextMenu(index: indexPath.row)
-        }
+        configureContextMenu(index: indexPath.row)
+    }
     
     func configureContextMenu(index: Int) -> UIContextMenuConfiguration{
         
         let context = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (action) -> UIMenu? in
-                    
+            
             let name = UIAction(title: "Name: \(self.students?[index].name ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-                    }
+            }
             let enrollmentNo = UIAction(title: "Enrollment No: \(self.students?[index].enrollment_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-                    }
+            }
             let classRollNo = UIAction(title: "ClassRoll No: \(self.students?[index].class_roll_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-                    }
+            }
             let specificAttendance = UIAction(title: "Attendance: \(self.students?[index].attendance_count ?? 0)", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-                    }
-                    
-                    return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo, specificAttendance])
-                    
-                }
-                return context
+            }
+            
+            return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo, specificAttendance])
+            
+        }
+        return context
         
     }
     

@@ -8,13 +8,12 @@
 import UIKit
 
 class SubjectViewController: UIViewController {
-    var token: String = ""
     var arr: [Any] = []
     var subjects: [SubjectListModel]?
     @IBOutlet weak var subjectCollectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         subjectCollectionView.delegate = self
         subjectCollectionView.dataSource = self
         subjectCollectionView.register(UINib(nibName: "subjectCell", bundle: nil), forCellWithReuseIdentifier: "subjectCell")
@@ -28,28 +27,27 @@ class SubjectViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-
+    
     func getSubject(){
         
         var request = URLRequest(url: URL(string: EndPoints.getSubjects.description)!)
         request.httpMethod = "GET"
-
+        
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
         let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
             
             if error != nil {
                 print("inside error")
-//                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
             }else{
-//                print(String(data: data!, encoding: .utf8))
                 do{
                     let d1 = try JSONDecoder().decode([SubjectListModel].self, from: data!)
                     self?.subjects = d1
-
+                    
                     DispatchQueue.main.async {
-                        print(self?.subjects)
+                        print(self?.subjects as Any)
                         self?.subjectCollectionView.reloadData()
                     }
                     
@@ -69,7 +67,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
         
         return self.subjects?.count ?? 0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let cell = subjectCollectionView.dequeueReusableCell(withReuseIdentifier: "subjectCell", for: indexPath) as? subjectCell {
@@ -89,9 +87,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let height = subjectCollectionView.frame.height
-                let width  = subjectCollectionView.frame.width
+        let width  = subjectCollectionView.frame.width
         return CGSize(width: width/2 - 15, height: 130)
     }
     
@@ -99,7 +95,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
         
         if self.subjects?[indexPath.row].is_lab ?? false {
             if let groupChoiceVc = storyboard?.instantiateViewController(withIdentifier: "GroupChoiceViewController") as? GroupChoiceViewController {
-                groupChoiceVc.token = self.token
                 groupChoiceVc.batch = self.subjects?[indexPath.row].batch ?? ""
                 groupChoiceVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
                 groupChoiceVc.subject = self.subjects?[indexPath.row].subject_code ?? ""
@@ -110,7 +105,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             }
         } else {
             if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
-                studentListVc.token = self.token
                 studentListVc.batch = self.subjects?[indexPath.row].batch ?? ""
                 studentListVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
                 studentListVc.subject = self.subjects?[indexPath.row].subject_code ?? ""

@@ -8,17 +8,17 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
-    
     @IBOutlet weak var loginLoader: UIActivityIndicatorView!
     @IBOutlet weak var signInBtn: UIButton!
     var loginArr: [String: Any] = [:]
-    var token: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         signInBtn.layer.cornerRadius = 25
+        passwordTxtField.isSecureTextEntry = true
         emailTxtField.delegate = self
         passwordTxtField.delegate = self
     }
@@ -29,39 +29,37 @@ class ViewController: UIViewController {
     
     func navigate(){
         if let subjectVC = storyboard?.instantiateViewController(withIdentifier: "SubjectViewController") as? SubjectViewController{
-            subjectVC.token = self.token
             self.navigationController?.pushViewController(subjectVC, animated: true)
         }
     }
     
+    
     @IBAction func signInBtnClicked(_ sender: Any) {
         if(emailTxtField.text == ""){
-            let alert = UIAlertController(title: "Enter email", message: "", preferredStyle: UIAlertController.Style.alert)
-            
-            // add an action (button)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            
-            // show the alert
-            self.present(alert, animated: true, completion: nil)
+            emailTxtField.layer.borderColor = UIColor.red.cgColor
+            emailTxtField.layer.borderWidth = 0.4
+            emailTxtField.layer.cornerRadius = 1
             return
         }else if(passwordTxtField.text == ""){
-            let alert = UIAlertController(title: "Enter password", message: "", preferredStyle: UIAlertController.Style.alert)
-            
-            // add an action (button)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            
-            // show the alert
-            self.present(alert, animated: true, completion: nil)
+            passwordTxtField.layer.borderColor = UIColor.red.cgColor
+            passwordTxtField.layer.borderWidth = 0.4
+            passwordTxtField.layer.cornerRadius = 4
             return
         }
-        print(emailTxtField.text)
-        print(passwordTxtField.text)
-        
+        //        print(emailTxtField.text)
+        //        print(passwordTxtField.text)
         register(email: emailTxtField.text!, password: passwordTxtField.text!)
-        
-        
     }
     
+    func notCorrectCredentials() {
+        let alert = UIAlertController(title: "Incorrect Email or Password", message: "", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
+    
+    // MARK: API CALL
     func register(email: String, password: String){
         signInBtn.setTitle("", for: .normal)
         self.loginLoader.startAnimating()
@@ -74,20 +72,23 @@ class ViewController: UIViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-//            print(response!)
             do {
                 let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
                 if(json["token"] == nil){
                     print("No good")
+                    DispatchQueue.main.async {
+                        self.loginLoader.stopAnimating()
+                        self.signInBtn.setTitle("Sign In", for: .normal)
+                        self.notCorrectCredentials()
+                    }
                 }else{
                     self.loginArr = json
-                                    print(self.loginArr["token"])
+                    //                    print(self.loginArr["token"])
                     DispatchQueue.main.async {
                         self.signInBtn.setTitle("Sign In", for: .normal)
                         self.loginLoader.stopAnimating()
-                        self.token = self.loginArr["token"] as! String
+                        Credentials.shared.token = self.loginArr["token"] as! String
                         self.navigate()
-                        
                     }
                 }
             } catch {
@@ -99,6 +100,14 @@ class ViewController: UIViewController {
     }
 }
 
+
+//MARK: UITextFieldDelegate
 extension ViewController: UITextFieldDelegate {
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.layer.borderWidth = 0
+        textField.layer.borderColor = UIColor.gray.cgColor
+    }
+    
 }
+
