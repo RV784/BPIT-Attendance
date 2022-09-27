@@ -28,6 +28,20 @@ class SubjectViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
+    func createModule() -> SubjectViewController? {
+        let storyBoard = UIStoryboard(name: "SubjectViewController", bundle: nil)
+        if let controller = storyBoard.instantiateInitialViewController() as? SubjectViewController {
+            return controller
+        }
+        return nil
+    }
+
+    func navigateToLoginAgain() {
+        if let loginVC = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController{
+            self.navigationController?.popToViewController(loginVC, animated: true)
+        }
+    }
+    
     func getSubject(){
         
         var request = URLRequest(url: URL(string: EndPoints.getSubjects.description)!)
@@ -37,7 +51,6 @@ class SubjectViewController: UIViewController {
         request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
         let session = URLSession.shared
         let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-            
             if error != nil {
                 print("inside error")
                 print(error?.localizedDescription as Any)
@@ -52,7 +65,14 @@ class SubjectViewController: UIViewController {
                     }
                     
                 } catch(let error) {
-                    print("do catch error", error)
+                    if let httpResponse = response as? HTTPURLResponse {
+                        if httpResponse.statusCode == 401 {
+                            DispatchQueue.main.async {
+                                self?.navigateToLoginAgain()
+                            }
+                            print("token expired")
+                        }
+                    }
                 }
             }
         })

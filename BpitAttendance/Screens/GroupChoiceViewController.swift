@@ -20,8 +20,8 @@ class GroupChoiceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        gOneButton.layer.cornerRadius = 10
-        gTwoButton.layer.cornerRadius = 10
+        gOneButton.layer.cornerRadius = 13
+        gTwoButton.layer.cornerRadius = 13
     }
     
     

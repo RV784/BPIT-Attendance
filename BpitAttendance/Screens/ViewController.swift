@@ -14,10 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var loginLoader: UIActivityIndicatorView!
     @IBOutlet weak var signInBtn: UIButton!
     var loginArr: [String: Any] = [:]
-    
+    var toBePopped: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        signInBtn.layer.cornerRadius = 25
+        signInBtn.layer.cornerRadius = 15
         passwordTxtField.isSecureTextEntry = true
         emailTxtField.delegate = self
         passwordTxtField.delegate = self
@@ -28,21 +28,22 @@ class ViewController: UIViewController {
     }
     
     func navigate(){
-        if let subjectVC = storyboard?.instantiateViewController(withIdentifier: "SubjectViewController") as? SubjectViewController{
-            self.navigationController?.pushViewController(subjectVC, animated: true)
-        }
+            if let subjectVC = storyboard?.instantiateViewController(withIdentifier: "SubjectViewController") as? SubjectViewController{
+                
+                self.navigationController?.pushViewController(subjectVC, animated: true)
+            }
     }
     
     
     @IBAction func signInBtnClicked(_ sender: Any) {
         if(emailTxtField.text == ""){
             emailTxtField.layer.borderColor = UIColor.red.cgColor
-            emailTxtField.layer.borderWidth = 0.4
+            emailTxtField.layer.borderWidth = 0.5
             emailTxtField.layer.cornerRadius = 1
             return
         }else if(passwordTxtField.text == ""){
             passwordTxtField.layer.borderColor = UIColor.red.cgColor
-            passwordTxtField.layer.borderWidth = 0.4
+            passwordTxtField.layer.borderWidth = 0.5
             passwordTxtField.layer.cornerRadius = 4
             return
         }
@@ -81,7 +82,11 @@ class ViewController: UIViewController {
                         self.signInBtn.setTitle("Sign In", for: .normal)
                         self.notCorrectCredentials()
                     }
-                }else{
+                    
+                }else if json["detail"] != nil {
+                    print("invalid Token error")
+                }
+                else{
                     self.loginArr = json
                     //                    print(self.loginArr["token"])
                     DispatchQueue.main.async {
@@ -105,6 +110,11 @@ class ViewController: UIViewController {
 extension ViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        if emailTxtField.text != "" && passwordTxtField.text != "" {
+            signInBtn.layer.backgroundColor = UIColor.systemBlue.cgColor
+        } else {
+            signInBtn.layer.backgroundColor = UIColor.systemGray2.cgColor
+        }
         textField.layer.borderWidth = 0
         textField.layer.borderColor = UIColor.gray.cgColor
     }
