@@ -10,10 +10,18 @@ import UIKit
 class SubjectViewController: UIViewController {
     var arr: [Any] = []
     var subjects: [SubjectListModel]?
+    var profileDetails: ProfileModel?
     @IBOutlet weak var subjectCollectionView: UICollectionView!
+    @IBOutlet weak var bottomButtonsView: UIView!
+    @IBOutlet weak var logoutBtn: UIButton!
+    @IBOutlet weak var profileBtn: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        bottomButtonsView.layer.cornerRadius = 25
+        logoutBtn.layer.cornerRadius = 25
+        logoutBtn.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        profileBtn.layer.cornerRadius = 25
+        profileBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         subjectCollectionView.delegate = self
         subjectCollectionView.dataSource = self
         subjectCollectionView.register(UINib(nibName: "subjectCell", bundle: nil), forCellWithReuseIdentifier: "subjectCell")
@@ -43,12 +51,15 @@ class SubjectViewController: UIViewController {
     }
     
     func getSubject(){
-        
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+            navigateToLoginAgain()
+            return
+        }
         var request = URLRequest(url: URL(string: EndPoints.getSubjects.description)!)
         request.httpMethod = "GET"
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         let session = URLSession.shared
         let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
             if error != nil {
@@ -58,7 +69,6 @@ class SubjectViewController: UIViewController {
                 do{
                     let d1 = try JSONDecoder().decode([SubjectListModel].self, from: data!)
                     self?.subjects = d1
-                    
                     DispatchQueue.main.async {
                         print(self?.subjects as Any)
                         self?.subjectCollectionView.reloadData()
@@ -67,9 +77,6 @@ class SubjectViewController: UIViewController {
                 } catch(let error) {
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 401 {
-                            DispatchQueue.main.async {
-                                self?.navigateToLoginAgain()
-                            }
                             print("token expired")
                         }
                     }

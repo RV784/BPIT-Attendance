@@ -14,9 +14,11 @@
 		AB0C48A128DB1C140058B55D /* StudentListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0C48A028DB1C140058B55D /* StudentListModel.swift */; };
 		AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0C48A228DB2B660058B55D /* StudentListCell.swift */; };
 		AB0C48A528DB2B660058B55D /* StudentListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB0C48A328DB2B660058B55D /* StudentListCell.xib */; };
+		AB19E8BC28E427D500267410 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB19E8BB28E427D500267410 /* ProfileModel.swift */; };
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
+		AB33B0FE28E2CCA600B8662C /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FD28E2CCA600B8662C /* KeychainManager.swift */; };
 		ABA2CDB428D60EE0006CF656 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA2CDB328D60EE0006CF656 /* AppDelegate.swift */; };
 		ABA2CDB628D60EE0006CF656 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA2CDB528D60EE0006CF656 /* SceneDelegate.swift */; };
 		ABA2CDB828D60EE0006CF656 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA2CDB728D60EE0006CF656 /* ViewController.swift */; };
@@ -35,9 +37,11 @@
 		AB0C48A028DB1C140058B55D /* StudentListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListModel.swift; sourceTree = "<group>"; };
 		AB0C48A228DB2B660058B55D /* StudentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListCell.swift; sourceTree = "<group>"; };
 		AB0C48A328DB2B660058B55D /* StudentListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StudentListCell.xib; sourceTree = "<group>"; };
+		AB19E8BB28E427D500267410 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		AB33B0FD28E2CCA600B8662C /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		ABA2CDB028D60EE0006CF656 /* BpitAttendance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BpitAttendance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABA2CDB328D60EE0006CF656 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ABA2CDB528D60EE0006CF656 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +89,7 @@
 				AB0C489C28DAC09E0058B55D /* SubjectListModel.swift */,
 				AB0C48A028DB1C140058B55D /* StudentListModel.swift */,
 				ABCA2B9828DB8156007D3E56 /* RecordModel.swift */,
+				AB19E8BB28E427D500267410 /* ProfileModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -103,6 +108,14 @@
 				AB33B0FA28E17F4A00B8662C /* Credentials.swift */,
 			);
 			path = DataManager;
+			sourceTree = "<group>";
+		};
+		AB33B0FC28E2CC8A00B8662C /* KeychainManager */ = {
+			isa = PBXGroup;
+			children = (
+				AB33B0FD28E2CCA600B8662C /* KeychainManager.swift */,
+			);
+			path = KeychainManager;
 			sourceTree = "<group>";
 		};
 		ABA2CDA728D60EE0006CF656 = {
@@ -124,6 +137,7 @@
 		ABA2CDB228D60EE0006CF656 /* BpitAttendance */ = {
 			isa = PBXGroup;
 			children = (
+				AB33B0FC28E2CC8A00B8662C /* KeychainManager */,
 				AB33B0F928E17F1F00B8662C /* DataManager */,
 				AB33B0F428DF68CB00B8662C /* Requests */,
 				AB0C489B28DAC07F0058B55D /* models */,
@@ -224,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB19E8BC28E427D500267410 /* ProfileModel.swift in Sources */,
 				AB0C489F28DB11CA0058B55D /* StudentListViewController.swift in Sources */,
 				AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */,
 				AB0C489D28DAC09E0058B55D /* SubjectListModel.swift in Sources */,
@@ -233,6 +248,7 @@
 				AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */,
 				ABA2CDD828D704AC006CF656 /* SubjectViewController.swift in Sources */,
 				AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */,
+				AB33B0FE28E2CCA600B8662C /* KeychainManager.swift in Sources */,
 				AB0C48A128DB1C140058B55D /* StudentListModel.swift in Sources */,
 				AB0C489928DA34BE0058B55D /* subjectCell.swift in Sources */,
 				ABCA2B9928DB8156007D3E56 /* RecordModel.swift in Sources */,
@@ -381,16 +397,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JF944FC8W2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BpitAttendance/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "BPIT Attendance";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -409,16 +426,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JF944FC8W2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BpitAttendance/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "BPIT Attendance";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet var baseView: UIView!
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
     @IBOutlet weak var loginLoader: UIActivityIndicatorView!
@@ -17,10 +18,33 @@ class ViewController: UIViewController {
     var toBePopped: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        signInBtn.layer.cornerRadius = 15
+        emailTxtField.layer.cornerRadius = 12
+        passwordTxtField.layer.cornerRadius = 12
+        signInBtn.layer.cornerRadius = 12
         passwordTxtField.isSecureTextEntry = true
         emailTxtField.delegate = self
         passwordTxtField.delegate = self
+        
+        do {
+            try KeychainManager.save(service: "uwcbnjdbcnjldwkanc", account: "a@a.com", password: "newPassword2".data(using: .utf8) ?? Data())
+        } catch {
+            print(error)
+        }
+//        guard let data = KeychainManager.get(service: "uwcbnjdbcnjldwkanc", account: "a@a.com") else {
+//            print("failed to read")
+//            return
+//        }
+//
+//        let password = String(decoding: data, as: UTF8.self)
+//        print(password)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
+        baseView.addGestureRecognizer(tap)
+
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,17 +106,17 @@ class ViewController: UIViewController {
                         self.signInBtn.setTitle("Sign In", for: .normal)
                         self.notCorrectCredentials()
                     }
-                    
                 }else if json["detail"] != nil {
                     print("invalid Token error")
                 }
                 else{
                     self.loginArr = json
-                    //                    print(self.loginArr["token"])
+                    print(self.loginArr["token"])
+                    self.getProfileCall()
                     DispatchQueue.main.async {
                         self.signInBtn.setTitle("Sign In", for: .normal)
                         self.loginLoader.stopAnimating()
-                        Credentials.shared.token = self.loginArr["token"] as! String
+                        Credentials.shared.defaults.set(self.loginArr["token"], forKey: "Token")
                         self.navigate()
                     }
                 }
@@ -102,6 +126,40 @@ class ViewController: UIViewController {
         })
         
         task.resume()
+    }
+    
+    func getProfileCall() {
+//        print("inside getPrifle")
+//        var request = URLRequest(url: URL(string: EndPoints.getProfile.description)!)
+//        request.httpMethod = "GET"
+//
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
+//        let session = URLSession.shared
+//        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
+//            if error != nil {
+//                print("inside error")
+//                print(error?.localizedDescription as Any)
+//            }else{
+//                do{
+//                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
+//                    Credentials.shared.profileData = d1
+//                    DispatchQueue.main.async {
+//                        print(Credentials.shared.profileData)
+//                        print("inside get profile")
+//                    }
+//                } catch(let error) {
+//                    print("inside catch \(error)")
+//                    if let httpResponse = response as? HTTPURLResponse {
+//                        if httpResponse.statusCode == 401 {
+//                            print("token expired")
+//                        }
+//                    }
+//                }
+//            }
+//        })
+//
+//        task.resume()
     }
 }
 

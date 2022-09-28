@@ -22,6 +22,7 @@ class StudentListViewController: UIViewController {
     var studentRecord: RecordData?
     var count: Int = 0
     
+    @IBOutlet weak var bottomBtnViews: UIView!
     @IBOutlet weak var attendanceSubmitLoader: UIActivityIndicatorView!
     @IBOutlet weak var studentLoader: UIActivityIndicatorView!
     @IBOutlet weak var countLabel: UILabel!
@@ -49,6 +50,9 @@ class StudentListViewController: UIViewController {
         //        print(subject)
         //        print(batch)
         navigationItem.backButtonTitle = ""
+        bottomBtnViews.layer.cornerRadius = 25
+        submitBtn.layer.cornerRadius = 25
+        submitBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
     }
     
     override func viewWillAppear(_ animated: Bool) {
