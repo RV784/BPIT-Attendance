@@ -73,21 +73,42 @@
                                 <color key="textColor" systemColor="systemGray2Color"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hid-d4-Hdk">
+                                <rect key="frame" x="0.0" y="91" width="375" height="687"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="5Fn-HC-kGI">
+                                        <rect key="frame" x="167.66666666666666" y="323.66666666666669" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="7AL-Kn-c2g"/>
+                                            <constraint firstAttribute="height" constant="40" id="yWk-sP-nIx"/>
+                                        </constraints>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                <constraints>
+                                    <constraint firstItem="5Fn-HC-kGI" firstAttribute="centerY" secondItem="Hid-d4-Hdk" secondAttribute="centerY" id="Mux-Q3-mP9"/>
+                                    <constraint firstItem="5Fn-HC-kGI" firstAttribute="centerX" secondItem="Hid-d4-Hdk" secondAttribute="centerX" id="byc-Aj-eH4"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGray6Color"/>
                         <constraints>
+                            <constraint firstItem="Hid-d4-Hdk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="1IP-pO-dsg"/>
                             <constraint firstItem="Ey6-Gn-YOm" firstAttribute="centerX" secondItem="mcu-pA-kjT" secondAttribute="centerX" id="26T-bp-c3Q"/>
                             <constraint firstItem="F0b-75-EPt" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.5" id="3fY-DQ-0Wg"/>
                             <constraint firstItem="Ey6-Gn-YOm" firstAttribute="top" secondItem="mcu-pA-kjT" secondAttribute="bottom" constant="40" id="3sT-be-LCw"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Hid-d4-Hdk" secondAttribute="trailing" id="6AG-HB-0Db"/>
                             <constraint firstItem="F0b-75-EPt" firstAttribute="top" secondItem="0VL-Zx-iok" secondAttribute="bottom" constant="30" id="BpD-on-QSj"/>
                             <constraint firstItem="mcu-pA-kjT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="C2b-hO-1wc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="3os-Fa-ez7" secondAttribute="bottom" id="DEl-du-wfC"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Hid-d4-Hdk" secondAttribute="bottom" id="FGU-D2-dLn"/>
                             <constraint firstItem="3os-Fa-ez7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="FYl-Sz-IMs"/>
                             <constraint firstItem="MvL-Ww-E5r" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="FYx-pQ-2oA"/>
                             <constraint firstItem="0VL-Zx-iok" firstAttribute="top" secondItem="MvL-Ww-E5r" secondAttribute="bottom" constant="20" id="Hd9-Iq-SuP"/>
                             <constraint firstItem="0VL-Zx-iok" firstAttribute="trailing" secondItem="MvL-Ww-E5r" secondAttribute="trailing" id="MSu-zS-n1v"/>
                             <constraint firstItem="F0b-75-EPt" firstAttribute="centerX" secondItem="0VL-Zx-iok" secondAttribute="centerX" id="VzV-Bn-PlS"/>
+                            <constraint firstItem="Hid-d4-Hdk" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="bIJ-OO-D1h"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="MvL-Ww-E5r" secondAttribute="trailing" constant="30" id="f9Z-Wy-HgF"/>
                             <constraint firstItem="MvL-Ww-E5r" firstAttribute="top" secondItem="Ey6-Gn-YOm" secondAttribute="bottom" constant="30" id="il0-zf-qCa"/>
                             <constraint firstItem="mcu-pA-kjT" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-200" id="iob-A7-xhj"/>
@@ -100,6 +121,8 @@
                     <navigationItem key="navigationItem" id="7Ne-gk-EBG"/>
                     <connections>
                         <outlet property="baseView" destination="8bC-Xf-vdC" id="gar-gq-C1V"/>
+                        <outlet property="deciderIndicator" destination="5Fn-HC-kGI" id="ieV-E3-mlX"/>
+                        <outlet property="deciderView" destination="Hid-d4-Hdk" id="AcQ-bJ-Ijm"/>
                         <outlet property="emailTxtField" destination="MvL-Ww-E5r" id="xxx-JE-4zv"/>
                         <outlet property="loginLoader" destination="SCG-Zz-n63" id="4QR-AP-uvT"/>
                         <outlet property="passwordTxtField" destination="0VL-Zx-iok" id="Bmh-R3-ktO"/>
@@ -120,7 +143,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ixI-RE-5pz">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                <color key="backgroundColor" systemColor="secondarySystemFillColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="A8w-za-6Sc">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -135,16 +158,22 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KgS-vT-gaf">
                                         <rect key="frame" x="0.0" y="0.0" width="167.66666666666666" height="50"/>
                                         <color key="backgroundColor" systemColor="linkColor"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Logout"/>
+                                        <connections>
+                                            <action selector="logoutBtnClicked:" destination="ymq-Q5-lIb" eventType="touchUpInside" id="Btd-4A-RnF"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cST-Dc-xSq">
                                         <rect key="frame" x="167.66666666666663" y="0.0" width="167.33333333333337" height="50"/>
                                         <color key="backgroundColor" systemColor="systemIndigoColor"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Profile"/>
+                                        <connections>
+                                            <action selector="profileBtnClicked:" destination="ymq-Q5-lIb" eventType="touchUpInside" id="9Ue-qa-DFt"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -161,7 +190,11 @@
                                     <constraint firstItem="cST-Dc-xSq" firstAttribute="top" secondItem="bgT-vM-QNd" secondAttribute="top" id="poK-Ex-b6Q"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="vSt-r6-XoQ">
+                                <rect key="frame" x="177.66666666666666" y="402.66666666666669" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="Il1-HQ-p29"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="bgT-vM-QNd" secondAttribute="bottom" constant="30" id="64X-Db-Op7"/>
@@ -169,7 +202,9 @@
                             <constraint firstAttribute="trailing" secondItem="bgT-vM-QNd" secondAttribute="trailing" constant="20" id="Nro-md-zBb"/>
                             <constraint firstAttribute="bottom" secondItem="ixI-RE-5pz" secondAttribute="bottom" id="dOj-qG-t1R"/>
                             <constraint firstItem="ixI-RE-5pz" firstAttribute="leading" secondItem="NbS-KT-H6q" secondAttribute="leading" id="fYo-rx-0qB"/>
+                            <constraint firstItem="vSt-r6-XoQ" firstAttribute="centerX" secondItem="Il1-HQ-p29" secondAttribute="centerX" id="jcR-4E-OkL"/>
                             <constraint firstItem="ixI-RE-5pz" firstAttribute="top" secondItem="NbS-KT-H6q" secondAttribute="top" id="jg0-b9-qxo"/>
+                            <constraint firstItem="vSt-r6-XoQ" firstAttribute="centerY" secondItem="Il1-HQ-p29" secondAttribute="centerY" id="ofS-Wf-wxa"/>
                             <constraint firstAttribute="trailing" secondItem="ixI-RE-5pz" secondAttribute="trailing" id="uuj-0b-PhX"/>
                         </constraints>
                     </view>
@@ -178,26 +213,41 @@
                         <outlet property="logoutBtn" destination="KgS-vT-gaf" id="Fwp-LA-5OJ"/>
                         <outlet property="profileBtn" destination="cST-Dc-xSq" id="wLh-pI-zvu"/>
                         <outlet property="subjectCollectionView" destination="ixI-RE-5pz" id="0CG-3y-dC1"/>
+                        <outlet property="subjectLoader" destination="vSt-r6-XoQ" id="UZG-Po-t1Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P5a-vd-ogz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1500" y="2.9556650246305418"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="pmZ-FE-AAX">
+        <!--Profile View Controller-->
+        <scene sceneID="Nun-z0-Jee">
             <objects>
-                <viewController id="Mw3-iw-7tL" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="M7S-IE-aTn">
+                <viewController storyboardIdentifier="ProfileViewController" id="om7-K7-n6i" customClass="ProfileViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="boY-ZW-zAY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="fQc-9I-xzr"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Drc-7v-kU5">
+                                <rect key="frame" x="0.0" y="10" width="375" height="802"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Drc-7v-kU5" firstAttribute="leading" secondItem="boY-ZW-zAY" secondAttribute="leading" id="2hZ-fq-6Ao"/>
+                            <constraint firstAttribute="trailing" secondItem="Drc-7v-kU5" secondAttribute="trailing" id="8sb-go-UWy"/>
+                            <constraint firstItem="Drc-7v-kU5" firstAttribute="top" secondItem="boY-ZW-zAY" secondAttribute="top" constant="10" id="ZWm-8u-GQy"/>
+                            <constraint firstAttribute="bottom" secondItem="Drc-7v-kU5" secondAttribute="bottom" id="hbL-pP-kJs"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="profileTableView" destination="Drc-7v-kU5" id="dJp-G9-Uo8"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eaj-fz-e5l" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YpS-rj-qRf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="496" y="-650"/>
+            <point key="canvasLocation" x="1183" y="658"/>
         </scene>
         <!--Group Choice View Controller-->
         <scene sceneID="OFA-vM-Ovg">
@@ -253,7 +303,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bev-x3-wCM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1884" y="-650"/>
+            <point key="canvasLocation" x="1839" y="-652"/>
         </scene>
         <!--Student List View Controller-->
         <scene sceneID="8SF-KP-uwS">
@@ -265,7 +315,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6Tc-mn-D47">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                <color key="backgroundColor" systemColor="secondarySystemFillColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fTw-kk-rEU">
                                     <size key="itemSize" width="200" height="100"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -319,6 +369,7 @@
                                 <rect key="frame" x="6" y="520" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="AV9-Bn-shf"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="HD8-fR-SVk" secondAttribute="trailing" constant="10" id="12J-q0-Wkd"/>
@@ -372,6 +423,9 @@
         </namedColor>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondarySystemFillColor">
+            <color red="0.47058823529411764" green="0.47058823529411764" blue="0.50196078431372548" alpha="0.16" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

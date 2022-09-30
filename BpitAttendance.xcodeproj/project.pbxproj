@@ -18,7 +18,9 @@
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
-		AB33B0FE28E2CCA600B8662C /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FD28E2CCA600B8662C /* KeychainManager.swift */; };
+		AB97FFC628E55EA400CA80F7 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */; };
+		AB97FFC928E5605100CA80F7 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB97FFC728E5605100CA80F7 /* ProfileCell.swift */; };
+		AB97FFCA28E5605100CA80F7 /* ProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB97FFC828E5605100CA80F7 /* ProfileCell.xib */; };
 		ABA2CDB428D60EE0006CF656 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA2CDB328D60EE0006CF656 /* AppDelegate.swift */; };
 		ABA2CDB628D60EE0006CF656 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA2CDB528D60EE0006CF656 /* SceneDelegate.swift */; };
 		ABA2CDB828D60EE0006CF656 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA2CDB728D60EE0006CF656 /* ViewController.swift */; };
@@ -41,7 +43,9 @@
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
-		AB33B0FD28E2CCA600B8662C /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		AB97FFC728E5605100CA80F7 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
+		AB97FFC828E5605100CA80F7 /* ProfileCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCell.xib; sourceTree = "<group>"; };
 		ABA2CDB028D60EE0006CF656 /* BpitAttendance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BpitAttendance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABA2CDB328D60EE0006CF656 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ABA2CDB528D60EE0006CF656 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 				AB0C489828DA34BE0058B55D /* subjectCell.xib */,
 				AB0C48A228DB2B660058B55D /* StudentListCell.swift */,
 				AB0C48A328DB2B660058B55D /* StudentListCell.xib */,
+				AB97FFC728E5605100CA80F7 /* ProfileCell.swift */,
+				AB97FFC828E5605100CA80F7 /* ProfileCell.xib */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -110,14 +116,6 @@
 			path = DataManager;
 			sourceTree = "<group>";
 		};
-		AB33B0FC28E2CC8A00B8662C /* KeychainManager */ = {
-			isa = PBXGroup;
-			children = (
-				AB33B0FD28E2CCA600B8662C /* KeychainManager.swift */,
-			);
-			path = KeychainManager;
-			sourceTree = "<group>";
-		};
 		ABA2CDA728D60EE0006CF656 = {
 			isa = PBXGroup;
 			children = (
@@ -137,7 +135,6 @@
 		ABA2CDB228D60EE0006CF656 /* BpitAttendance */ = {
 			isa = PBXGroup;
 			children = (
-				AB33B0FC28E2CC8A00B8662C /* KeychainManager */,
 				AB33B0F928E17F1F00B8662C /* DataManager */,
 				AB33B0F428DF68CB00B8662C /* Requests */,
 				AB0C489B28DAC07F0058B55D /* models */,
@@ -161,6 +158,7 @@
 				ABA2CDD728D704AC006CF656 /* SubjectViewController.swift */,
 				AB0C489E28DB11CA0058B55D /* StudentListViewController.swift */,
 				AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */,
+				AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -226,6 +224,7 @@
 				AB0C489A28DA34BE0058B55D /* subjectCell.xib in Resources */,
 				ABA2CDC028D60EE1006CF656 /* LaunchScreen.storyboard in Resources */,
 				ABA2CDBD28D60EE1006CF656 /* Assets.xcassets in Resources */,
+				AB97FFCA28E5605100CA80F7 /* ProfileCell.xib in Resources */,
 				ABA2CDBB28D60EE0006CF656 /* Main.storyboard in Resources */,
 				AB0C48A528DB2B660058B55D /* StudentListCell.xib in Resources */,
 			);
@@ -248,9 +247,10 @@
 				AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */,
 				ABA2CDD828D704AC006CF656 /* SubjectViewController.swift in Sources */,
 				AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */,
-				AB33B0FE28E2CCA600B8662C /* KeychainManager.swift in Sources */,
 				AB0C48A128DB1C140058B55D /* StudentListModel.swift in Sources */,
 				AB0C489928DA34BE0058B55D /* subjectCell.swift in Sources */,
+				AB97FFC628E55EA400CA80F7 /* ProfileViewController.swift in Sources */,
+				AB97FFC928E5605100CA80F7 /* ProfileCell.swift in Sources */,
 				ABCA2B9928DB8156007D3E56 /* RecordModel.swift in Sources */,
 				ABA2CDB628D60EE0006CF656 /* SceneDelegate.swift in Sources */,
 			);

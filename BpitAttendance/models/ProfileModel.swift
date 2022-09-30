@@ -8,25 +8,25 @@
 import UIKit
 
 struct ProfileModel: Codable {
-    var id: Int
-    var email: String
-    var name: String
-    var phone_number: String
-    var is_staff: Bool
-    var is_superuser: Bool
-    var is_active: Bool
-    var date_joined: String
-    var designation: String
+    let id: Int?
+    let email: String?
+    let name: String?
+    let designation: String?
+    let phoneNumber: String?
+    let isStaff: Bool?
+    let isSuperUser: Bool?
+    let isActive: Bool?
+    let dateJoined: String?
     
-//    enum CodingKeys: String, CodingKey {
-//        case id
-//        case email
-//        case name
-//        case designation
-//        case phoneNumber = "phone_number"
-//        case isStaff = "is_staff"
-//        case isSuperUser = "is_superuser"
-//        case isActive = "is_active"
-//        case dateJoined = "date_joined"
-//    }
+    enum CodingKeys: String, CodingKey {
+        case id,
+             email,
+             name,
+             designation,
+             phoneNumber = "phone_number",
+             isStaff = "is_staff",
+             isSuperUser = "is_superuser",
+             isActive = "is_active",
+             dateJoined = "date_joined"
+    }
 }

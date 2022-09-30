@@ -28,6 +28,8 @@ class StudentListViewController: UIViewController {
     @IBOutlet weak var countLabel: UILabel!
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var studentCollectionView: UICollectionView!
+    
+//MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         studentCollectionView.dataSource = self
@@ -59,6 +61,7 @@ class StudentListViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
+//MARK: BUSINESS LOGIC
     func prepareRecordData() {
         for item in self.students ?? [] {
             studentRecord?.record.append(RecordData.studentData(status: false, enrollment_number: item.enrollment_number ?? "", subject: self.subject, batch: self.batch))
@@ -68,6 +71,9 @@ class StudentListViewController: UIViewController {
         self.studentCollectionView.reloadData()
     }
     
+    func yesPressed() {
+        sendStudents()
+    }
     
     @IBAction func submitBtnClicked(_ sender: Any) {
         let alert = UIAlertController(title: "\(self.count) Students Present", message: "Do you want to submit Attendance ?", preferredStyle: UIAlertController.Style.alert)
@@ -76,11 +82,12 @@ class StudentListViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    func yesPressed() {
-        sendStudents()
-    }
-    
+//MARK: API CALLS
     func sendStudents(){
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+//            self.navigateToLoginAgain()
+            return
+        }
         submitBtn.setTitle("", for: .normal)
         attendanceSubmitLoader.startAnimating()
         let recordData = try? JSONEncoder().encode(self.studentRecord)
@@ -88,7 +95,7 @@ class StudentListViewController: UIViewController {
         request.httpMethod = "POST"
         request.httpBody = recordData
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
@@ -109,11 +116,10 @@ class StudentListViewController: UIViewController {
                 print("error")
             }
         })
-        
         task.resume()
     }
     
-    func getStudents(batch: String, subject: String, section: String, branch: String, isLab: Bool, groupNum: Int, subjectCode: String){
+    func getStudents(batch: String, subject: String, section: String, branch: String, isLab: Bool, groupNum: Int, subjectCode: String) {
         self.studentLoader.startAnimating()
         var request: URLRequest
         if isLab {
@@ -122,12 +128,16 @@ class StudentListViewController: UIViewController {
             request = URLRequest(url: URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)!)
         }
         
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+            //            self.navigateToLoginAgain()
+            return
+        }
+        
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            
             if error != nil {
                 self?.studentLoader.startAnimating()
                 print("inside error")
@@ -152,15 +162,15 @@ class StudentListViewController: UIViewController {
     }
 }
 
+
+// MARK: UICollectionViewDelegate UICollectionViewDataSource UICollectionViewDelegateFlowLayout
 extension StudentListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         return self.studentRecord?.record.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StudentListCell", for: indexPath) as? StudentListCell {
             cell.rollNoLabel.text = self.students?[indexPath.row].class_roll_number
             cell.nameLabel.text = self.students?[indexPath.row].name
@@ -172,18 +182,14 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
             cell.layer.cornerRadius = 20
             return cell
         }
-        
         return UICollectionViewCell()
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         return CGSize(width: collectionView.frame.width/2 - 15, height: 90)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let selectedCell = collectionView.cellForItem(at: indexPath)
         
         if studentRecord?.record[indexPath.row].status ?? true {
@@ -203,7 +209,6 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func configureContextMenu(index: Int) -> UIContextMenuConfiguration{
-        
         let context = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (action) -> UIMenu? in
             
             let name = UIAction(title: "Name: \(self.students?[index].name ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
@@ -216,10 +221,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
             }
             
             return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo, specificAttendance])
-            
         }
         return context
-        
     }
-    
 }

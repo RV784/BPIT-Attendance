@@ -9,6 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var deciderIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var deciderView: UIView!
     @IBOutlet var baseView: UIView!
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
@@ -16,48 +18,32 @@ class ViewController: UIViewController {
     @IBOutlet weak var signInBtn: UIButton!
     var loginArr: [String: Any] = [:]
     var toBePopped: Bool = false
+    var profileData: ProfileModel?
+ 
+//MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        deciderIndicator.startAnimating()
         emailTxtField.layer.cornerRadius = 12
         passwordTxtField.layer.cornerRadius = 12
         signInBtn.layer.cornerRadius = 12
         passwordTxtField.isSecureTextEntry = true
         emailTxtField.delegate = self
         passwordTxtField.delegate = self
-        
-        do {
-            try KeychainManager.save(service: "uwcbnjdbcnjldwkanc", account: "a@a.com", password: "newPassword2".data(using: .utf8) ?? Data())
-        } catch {
-            print(error)
-        }
-//        guard let data = KeychainManager.get(service: "uwcbnjdbcnjldwkanc", account: "a@a.com") else {
-//            print("failed to read")
-//            return
-//        }
-//
-//        let password = String(decoding: data, as: UTF8.self)
-//        print(password)
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
         baseView.addGestureRecognizer(tap)
-
+        deciderView.isHidden = true
+        if Credentials.shared.defaults.string(forKey: "Token") != "" {
+            deciderView.isHidden = true
+            navigate()
+        }
     }
     
+    
+//MARK: BUSINESS LOGIC
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
-    func navigate(){
-            if let subjectVC = storyboard?.instantiateViewController(withIdentifier: "SubjectViewController") as? SubjectViewController{
-                
-                self.navigationController?.pushViewController(subjectVC, animated: true)
-            }
-    }
-    
     
     @IBAction func signInBtnClicked(_ sender: Any) {
         if(emailTxtField.text == ""){
@@ -76,6 +62,17 @@ class ViewController: UIViewController {
         register(email: emailTxtField.text!, password: passwordTxtField.text!)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    func navigate(){
+            if let subjectVC = storyboard?.instantiateViewController(withIdentifier: "SubjectViewController") as? SubjectViewController{
+                
+                self.navigationController?.pushViewController(subjectVC, animated: true)
+            }
+    }
+    
     func notCorrectCredentials() {
         let alert = UIAlertController(title: "Incorrect Email or Password", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
@@ -83,8 +80,19 @@ class ViewController: UIViewController {
         return
     }
     
+    func saveToDevice() {
+        Credentials.shared.defaults.set("\(profileData?.name ?? "")", forKey: "Name")
+        Credentials.shared.defaults.set("\(profileData?.email ?? "")", forKey: "Email")
+        Credentials.shared.defaults.set("\(profileData?.designation ?? "")", forKey: "Designation")
+        Credentials.shared.defaults.set("\(profileData?.phoneNumber ?? "")", forKey: "PhoneNumber")
+        Credentials.shared.defaults.set("\(profileData?.dateJoined ?? "")", forKey: "DateJoined")
+        Credentials.shared.defaults.set(profileData?.isStaff, forKey: "Staff")
+        Credentials.shared.defaults.set(profileData?.isActive, forKey: "Active")
+        Credentials.shared.defaults.set(profileData?.isSuperUser, forKey: "SuperUser")
+    }
     
-    // MARK: API CALL
+    
+// MARK: API CALL
     func register(email: String, password: String){
         signInBtn.setTitle("", for: .normal)
         self.loginLoader.startAnimating()
@@ -111,12 +119,14 @@ class ViewController: UIViewController {
                 }
                 else{
                     self.loginArr = json
-                    print(self.loginArr["token"])
-                    self.getProfileCall()
+//                    print(self.loginArr["token"])
                     DispatchQueue.main.async {
+                        self.emailTxtField.text = ""
+                        self.passwordTxtField.text = ""
                         self.signInBtn.setTitle("Sign In", for: .normal)
                         self.loginLoader.stopAnimating()
                         Credentials.shared.defaults.set(self.loginArr["token"], forKey: "Token")
+                        self.getProfileCall()
                         self.navigate()
                     }
                 }
@@ -129,37 +139,41 @@ class ViewController: UIViewController {
     }
     
     func getProfileCall() {
-//        print("inside getPrifle")
-//        var request = URLRequest(url: URL(string: EndPoints.getProfile.description)!)
-//        request.httpMethod = "GET"
-//
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.setValue("Token \(Credentials.shared.token)", forHTTPHeaderField: "Authorization")
-//        let session = URLSession.shared
-//        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-//            if error != nil {
-//                print("inside error")
-//                print(error?.localizedDescription as Any)
-//            }else{
-//                do{
-//                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
-//                    Credentials.shared.profileData = d1
-//                    DispatchQueue.main.async {
-//                        print(Credentials.shared.profileData)
-//                        print("inside get profile")
-//                    }
-//                } catch(let error) {
-//                    print("inside catch \(error)")
-//                    if let httpResponse = response as? HTTPURLResponse {
-//                        if httpResponse.statusCode == 401 {
-//                            print("token expired")
-//                        }
-//                    }
-//                }
-//            }
-//        })
-//
-//        task.resume()
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+            return
+        }
+        print("inside getPrifle")
+        var request = URLRequest(url: URL(string: EndPoints.getProfile.description)!)
+        request.httpMethod = "GET"
+
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        let session = URLSession.shared
+        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
+            if error != nil {
+                print("inside error")
+                print(error?.localizedDescription as Any)
+            }else{
+                do{
+                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
+                    print(d1)
+                    self?.profileData = d1
+                    DispatchQueue.main.async {
+//                        Credentials.shared.defaults.set(self?.profileData, forKey: "ProfileData")
+                        self?.saveToDevice()
+                    }
+                } catch(let error) {
+                    print("inside catch \(error)")
+                    if let httpResponse = response as? HTTPURLResponse {
+                        if httpResponse.statusCode == 401 {
+                            print("token expired")
+                        }
+                    }
+                }
+            }
+        })
+
+        task.resume()
     }
 }
 
@@ -175,6 +189,17 @@ extension ViewController: UITextFieldDelegate {
         }
         textField.layer.borderWidth = 0
         textField.layer.borderColor = UIColor.gray.cgColor
+    }
+    
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if emailTxtField.text != "" && passwordTxtField.text != "" {
+            signInBtn.layer.backgroundColor = UIColor.systemBlue.cgColor
+        } else {
+            signInBtn.layer.backgroundColor = UIColor.systemGray2.cgColor
+        }
+        
+        return true
     }
     
 }
