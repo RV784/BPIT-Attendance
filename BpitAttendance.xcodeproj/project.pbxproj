@@ -18,6 +18,9 @@
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
+		AB72457528E6DB4E00D044E4 /* InternetConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB72457428E6DB4E00D044E4 /* InternetConnectionManager.swift */; };
+		AB72457728E6FCEE00D044E4 /* NoInternetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB72457628E6FCEE00D044E4 /* NoInternetView.swift */; };
+		AB72457928E6FCFA00D044E4 /* NoInternetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB72457828E6FCFA00D044E4 /* NoInternetView.xib */; };
 		AB97FFC628E55EA400CA80F7 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */; };
 		AB97FFC928E5605100CA80F7 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB97FFC728E5605100CA80F7 /* ProfileCell.swift */; };
 		AB97FFCA28E5605100CA80F7 /* ProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB97FFC828E5605100CA80F7 /* ProfileCell.xib */; };
@@ -43,6 +46,9 @@
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		AB72457428E6DB4E00D044E4 /* InternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetConnectionManager.swift; sourceTree = "<group>"; };
+		AB72457628E6FCEE00D044E4 /* NoInternetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoInternetView.swift; sourceTree = "<group>"; };
+		AB72457828E6FCFA00D044E4 /* NoInternetView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoInternetView.xib; sourceTree = "<group>"; };
 		AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		AB97FFC728E5605100CA80F7 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		AB97FFC828E5605100CA80F7 /* ProfileCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCell.xib; sourceTree = "<group>"; };
@@ -72,6 +78,8 @@
 		AB0C488D28DA2E030058B55D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AB72457628E6FCEE00D044E4 /* NoInternetView.swift */,
+				AB72457828E6FCFA00D044E4 /* NoInternetView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -116,6 +124,21 @@
 			path = DataManager;
 			sourceTree = "<group>";
 		};
+		AB72457328E6DB3A00D044E4 /* Networks */ = {
+			isa = PBXGroup;
+			children = (
+				AB72457428E6DB4E00D044E4 /* InternetConnectionManager.swift */,
+			);
+			path = Networks;
+			sourceTree = "<group>";
+		};
+		AB72457A28EAAAAA00D044E4 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
 		ABA2CDA728D60EE0006CF656 = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +158,8 @@
 		ABA2CDB228D60EE0006CF656 /* BpitAttendance */ = {
 			isa = PBXGroup;
 			children = (
+				AB72457A28EAAAAA00D044E4 /* NetworkManager */,
+				AB72457328E6DB3A00D044E4 /* Networks */,
 				AB33B0F928E17F1F00B8662C /* DataManager */,
 				AB33B0F428DF68CB00B8662C /* Requests */,
 				AB0C489B28DAC07F0058B55D /* models */,
@@ -221,6 +246,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB72457928E6FCFA00D044E4 /* NoInternetView.xib in Resources */,
 				AB0C489A28DA34BE0058B55D /* subjectCell.xib in Resources */,
 				ABA2CDC028D60EE1006CF656 /* LaunchScreen.storyboard in Resources */,
 				ABA2CDBD28D60EE1006CF656 /* Assets.xcassets in Resources */,
@@ -242,8 +268,10 @@
 				AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */,
 				AB0C489D28DAC09E0058B55D /* SubjectListModel.swift in Sources */,
 				ABA2CDB828D60EE0006CF656 /* ViewController.swift in Sources */,
+				AB72457528E6DB4E00D044E4 /* InternetConnectionManager.swift in Sources */,
 				AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */,
 				ABA2CDB428D60EE0006CF656 /* AppDelegate.swift in Sources */,
+				AB72457728E6FCEE00D044E4 /* NoInternetView.swift in Sources */,
 				AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */,
 				ABA2CDD828D704AC006CF656 /* SubjectViewController.swift in Sources */,
 				AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */,

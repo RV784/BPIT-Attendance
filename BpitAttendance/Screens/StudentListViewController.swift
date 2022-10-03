@@ -22,10 +22,10 @@ class StudentListViewController: UIViewController {
     var studentRecord: RecordData?
     var count: Int = 0
     
+    @IBOutlet weak var noInternetView: NoInternetView!
     @IBOutlet weak var bottomBtnViews: UIView!
     @IBOutlet weak var attendanceSubmitLoader: UIActivityIndicatorView!
     @IBOutlet weak var studentLoader: UIActivityIndicatorView!
-    @IBOutlet weak var countLabel: UILabel!
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var studentCollectionView: UICollectionView!
     
@@ -34,6 +34,7 @@ class StudentListViewController: UIViewController {
         super.viewDidLoad()
         studentCollectionView.dataSource = self
         studentCollectionView.delegate = self
+        noInternetView.delegate = self
         print(self.batch)
         print(self.subject)
         print(self.subjectCode)
@@ -54,8 +55,14 @@ class StudentListViewController: UIViewController {
         navigationItem.backButtonTitle = ""
         bottomBtnViews.layer.cornerRadius = 25
         submitBtn.layer.cornerRadius = 25
-        submitBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+        let counter = UIBarButtonItem(title: "\(count)", style: .plain, target: self, action: #selector(doNothing))
+        let attributes: [NSAttributedString.Key : Any] = [ .font: UIFont.boldSystemFont(ofSize: 16) ]
+        counter.setTitleTextAttributes(attributes, for: .normal)
+        self.navigationItem.rightBarButtonItem = counter
+        noInternetView.isHidden = true
     }
+    
+    @objc func doNothing(){}
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
@@ -71,8 +78,34 @@ class StudentListViewController: UIViewController {
         self.studentCollectionView.reloadData()
     }
     
+    func shake() {
+            let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+            animation.duration = 0.6
+            animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        noInternetView.layer.add(animation, forKey: "shake")
+        let tapticFeedback = UINotificationFeedbackGenerator()
+        tapticFeedback.notificationOccurred(.success)
+        }
+
+    
     func yesPressed() {
-        sendStudents()
+        if checkConnection() {
+            sendStudents()
+        } else {
+            disableEnableViews()
+        }
+    }
+    
+    func disableEnableViews() {
+        noInternetView.isHidden.toggle()
+        studentCollectionView.isHidden.toggle()
+        bottomBtnViews.isHidden.toggle()
+        shake()
+    }
+    
+    func checkConnection() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
     }
     
     @IBAction func submitBtnClicked(_ sender: Any) {
@@ -84,6 +117,7 @@ class StudentListViewController: UIViewController {
     
 //MARK: API CALLS
     func sendStudents(){
+        
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
 //            self.navigateToLoginAgain()
             return
@@ -201,7 +235,16 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
             count = count + 1
             selectedCell?.backgroundColor = UIColor.systemGreen
         }
-        countLabel.text = "\(count)"
+        let counter = UIBarButtonItem(title: "\(count)", style: .plain, target: self, action: #selector(doNothing))
+        var attributed: [NSAttributedString.Key : Any]
+        
+        if count == 0 {
+            attributed = [ .font: UIFont.boldSystemFont(ofSize: 15)]
+        } else {
+            attributed = [ .font: UIFont.boldSystemFont(ofSize: 21)]
+        }
+        counter.setTitleTextAttributes(attributed, for: .normal)
+        self.navigationItem.rightBarButtonItem = counter
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -224,4 +267,17 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
         }
         return context
     }
+}
+
+extension StudentListViewController: NoInternetProtocols {
+    func onRetryPressed() {
+        disableEnableViews()
+        yesPressed()
+    }
+    
+    func onGoBackPressed() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
 }

@@ -37,10 +37,30 @@ class ViewController: UIViewController {
             deciderView.isHidden = true
             navigate()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     
 //MARK: BUSINESS LOGIC
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
+            }
+        
+        let bottomOfSignInBtn = signInBtn.convert(signInBtn.bounds, to: self.view).maxY
+        let topOfKeyboard = self.view.frame.height - keyboardSize.height
+
+        if bottomOfSignInBtn > topOfKeyboard {
+            baseView.frame.origin.y = 0 - (bottomOfSignInBtn - topOfKeyboard) - keyboardSize.height*0.1
+        }
+        
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        baseView.frame.origin.y = 0
+    }
+    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -59,7 +79,11 @@ class ViewController: UIViewController {
         }
         //        print(emailTxtField.text)
         //        print(passwordTxtField.text)
-        register(email: emailTxtField.text!, password: passwordTxtField.text!)
+        if checkConnection() {
+            register(email: emailTxtField.text!, password: passwordTxtField.text!)
+        } else {
+            showNoInternetAlter()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -71,6 +95,13 @@ class ViewController: UIViewController {
                 
                 self.navigationController?.pushViewController(subjectVC, animated: true)
             }
+    }
+    
+    func showNoInternetAlter() {
+        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
     }
     
     func notCorrectCredentials() {
@@ -89,6 +120,10 @@ class ViewController: UIViewController {
         Credentials.shared.defaults.set(profileData?.isStaff, forKey: "Staff")
         Credentials.shared.defaults.set(profileData?.isActive, forKey: "Active")
         Credentials.shared.defaults.set(profileData?.isSuperUser, forKey: "SuperUser")
+    }
+    
+    func checkConnection() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
     }
     
     

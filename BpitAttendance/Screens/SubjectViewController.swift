@@ -16,6 +16,7 @@ class SubjectViewController: UIViewController {
     @IBOutlet weak var bottomButtonsView: UIView!
     @IBOutlet weak var logoutBtn: UIButton!
     @IBOutlet weak var profileBtn: UIButton!
+    @IBOutlet weak var noInternetView: NoInternetView!
     
 //MARK: ViewDidLoad
     override func viewDidLoad() {
@@ -33,11 +34,13 @@ class SubjectViewController: UIViewController {
         
         navigationItem.hidesBackButton = true
         navigationItem.title = "Subjects"
+//        noInternetView.gobackBtn.isHidden = true
+        noInternetView.isHidden = true
+        noInternetView.retryBtn.isHidden = true
     }
     
 //MARK: BUSINESS LOGIC
     @IBAction func logoutBtnClicked(_ sender: Any) {
-        
         let alertController = UIAlertController(title: "Do you want to Logout?", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 UIAlertAction in
@@ -68,7 +71,6 @@ class SubjectViewController: UIViewController {
     
     func navigateToProfilePage() {
         if let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
-            
             self.navigationController?.pushViewController(profileVC, animated: true)
         }
     }
@@ -85,9 +87,26 @@ class SubjectViewController: UIViewController {
             }
         }
     }
+    
+    func shake() {
+            let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+            animation.duration = 0.6
+            animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        noInternetView.layer.add(animation, forKey: "shake")
+        let tapticFeedback = UINotificationFeedbackGenerator()
+        tapticFeedback.notificationOccurred(.success)
+    }
+    
+    func disableEnableViews() {
+        noInternetView.isHidden.toggle()
+        subjectCollectionView.isHidden.toggle()
+        bottomButtonsView.isHidden.toggle()
+        shake()
+    }
   
 //MARK: API CALLS
-    func getSubject(){
+    func getSubject() {
         subjectLoader.startAnimating()
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
             navigateToLoginAgain()
@@ -128,7 +147,6 @@ class SubjectViewController: UIViewController {
                 }
             }
         })
-        
         task.resume()
     }
 }
@@ -178,15 +196,39 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
                 self.navigationController?.pushViewController(groupChoiceVc, animated: true)
             }
         } else {
-            if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
-                studentListVc.batch = self.subjects?[indexPath.row].batch ?? ""
-                studentListVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
-                studentListVc.subject = self.subjects?[indexPath.row].subject_code ?? ""
-                studentListVc.section = self.subjects?[indexPath.row].section ?? ""
-                studentListVc.subjectCode = self.subjects?[indexPath.row].subject_name ?? ""
-                studentListVc.isLab = self.subjects?[indexPath.row].is_lab ?? false
-                self.navigationController?.pushViewController(studentListVc, animated: true)
-            }
+            checkNetwork(idx: indexPath.row)
         }
     }
+    
+    func checkNetwork(idx: Int) {
+        if InternetConnectionManager.isConnectedToNetwork() {
+            navigateToStudentList(idx: idx)
+        } else {
+            disableEnableViews()
+        }
+    }
+    
+    func navigateToStudentList(idx: Int) {
+        if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
+            studentListVC.batch = self.subjects?[idx].batch ?? ""
+            studentListVC.branch = self.subjects?[idx].branch_code ?? ""
+            studentListVC.subject = self.subjects?[idx].subject_code ?? ""
+            studentListVC.section = self.subjects?[idx].section ?? ""
+            studentListVC.subjectCode = self.subjects?[idx].subject_name ?? ""
+            studentListVC.isLab = self.subjects?[idx].is_lab ?? false
+            self.navigationController?.pushViewController(studentListVC, animated: true)
+        }
+    }
+}
+
+extension SubjectViewController: NoInternetProtocols {
+    func onRetryPressed() {
+        
+    }
+    
+    func onGoBackPressed() {
+        disableEnableViews()
+    }
+    
+    
 }

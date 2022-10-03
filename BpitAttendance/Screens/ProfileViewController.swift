@@ -19,6 +19,14 @@ class ProfileViewController: UIViewController {
         profileTableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
         print("in profile page")
         print(profiledata)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit",
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(rightHandAction))
+    }
+    @objc
+    func rightHandAction() {
+        print("right bar button action")
     }
 }
 

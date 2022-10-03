@@ -13,7 +13,7 @@ class ProfileCell: UITableViewCell {
     @IBOutlet weak var txtField: UITextField!
     @IBOutlet weak var textView: UIView!
     @IBOutlet weak var headingLabel: UILabel!
-    @IBOutlet weak var editBtnView: UIButton!
+    @IBOutlet weak var saveBtn: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,8 +22,8 @@ class ProfileCell: UITableViewCell {
         textView.layer.borderColor = UIColor.black.cgColor
         textView.layer.borderWidth = 0.5
         imgView.layer.cornerRadius = 20
-        editBtnView.isHidden = true
-        editBtnView.layer.cornerRadius = 4
+        saveBtn.layer.cornerRadius = 15
+        saveBtn.isHidden = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
