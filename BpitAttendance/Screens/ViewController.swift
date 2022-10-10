@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var forgotPasswordLabel: UILabel!
     @IBOutlet weak var deciderIndicator: UIActivityIndicatorView!
     @IBOutlet weak var deciderView: UIView!
     @IBOutlet var baseView: UIView!
@@ -19,6 +20,7 @@ class ViewController: UIViewController {
     var loginArr: [String: Any] = [:]
     var toBePopped: Bool = false
     var profileData: ProfileModel?
+    var loginData: LoginModel?
  
 //MARK: ViewDidLoad
     override func viewDidLoad() {
@@ -31,7 +33,10 @@ class ViewController: UIViewController {
         emailTxtField.delegate = self
         passwordTxtField.delegate = self
         let tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
+        let forgotTap = UITapGestureRecognizer(target: self, action: #selector(ViewController.forgotPassword))
         baseView.addGestureRecognizer(tap)
+        forgotPasswordLabel.addGestureRecognizer(forgotTap)
+        forgotPasswordLabel.isUserInteractionEnabled = true
         deciderView.isHidden = true
         if Credentials.shared.defaults.string(forKey: "Token") != "" {
             deciderView.isHidden = true
@@ -63,6 +68,13 @@ class ViewController: UIViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    
+    @objc func forgotPassword() {
+        if let enterEmailVC = storyboard?.instantiateViewController(withIdentifier: "EnterEmailViewController") as? EnterEmailViewController{
+            self.navigationController?.pushViewController(enterEmailVC, animated: true)
+        }
     }
     
     @IBAction func signInBtnClicked(_ sender: Any) {
@@ -104,6 +116,13 @@ class ViewController: UIViewController {
         return
     }
     
+    func serverDownError() {
+        let alert = UIAlertController(title: "Server is facing some issues, Please try again later", message: "", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     func notCorrectCredentials() {
         let alert = UIAlertController(title: "Incorrect Email or Password", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
@@ -126,6 +145,13 @@ class ViewController: UIViewController {
         return InternetConnectionManager.isConnectedToNetwork()
     }
     
+    func navigateToResetPassword() {
+        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController{
+            
+            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
+        }
+    }
+    
     
 // MARK: API CALL
     func register(email: String, password: String){
@@ -140,33 +166,47 @@ class ViewController: UIViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                if(json["token"] == nil){
-                    print("No good")
+            
+            DispatchQueue.main.async {
+                self.loginLoader.stopAnimating()
+            }
+            
+            if error != nil {
+                print("inside get profile erorr")
+                print(error?.localizedDescription)
+            } else {
+                do {
+                    let d1 = try JSONDecoder().decode(LoginModel.self, from: data!)
+//                    print(d1.token)
                     DispatchQueue.main.async {
-                        self.loginLoader.stopAnimating()
-                        self.signInBtn.setTitle("Sign In", for: .normal)
-                        self.notCorrectCredentials()
+                        self.loginData = d1
+                        if self.loginData?.token == nil {
+                            self.signInBtn.setTitle("Sign In", for: .normal)
+                            self.notCorrectCredentials()
+                        } else {
+                            
+                            self.emailTxtField.text = ""
+                            self.passwordTxtField.text = ""
+                            self.signInBtn.setTitle("Sign In", for: .normal)
+                            self.loginLoader.stopAnimating()
+                            Credentials.shared.defaults.set(self.loginData?.token, forKey: "Token")
+                            self.getProfileCall()
+                            
+                            if self.loginData?.isFirstLogin ?? false {
+                                self.navigateToResetPassword()
+                            } else {
+                                self.navigate()
+                            }
+                        }
                     }
-                }else if json["detail"] != nil {
-                    print("invalid Token error")
-                }
-                else{
-                    self.loginArr = json
-//                    print(self.loginArr["token"])
+                } catch {
+                    //server issue handling
                     DispatchQueue.main.async {
-                        self.emailTxtField.text = ""
-                        self.passwordTxtField.text = ""
                         self.signInBtn.setTitle("Sign In", for: .normal)
-                        self.loginLoader.stopAnimating()
-                        Credentials.shared.defaults.set(self.loginArr["token"], forKey: "Token")
-                        self.getProfileCall()
-                        self.navigate()
+                        self.serverDownError()
                     }
+                    print(error.localizedDescription)
                 }
-            } catch {
-                print("error")
             }
         })
         

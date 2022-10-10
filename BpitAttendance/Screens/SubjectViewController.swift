@@ -104,6 +104,10 @@ class SubjectViewController: UIViewController {
         bottomButtonsView.isHidden.toggle()
         shake()
     }
+    
+    func popToLoginAgainScreen() {
+        navigationController?.popToViewController(ofClass: ViewController.self)
+    }
   
 //MARK: API CALLS
     func getSubject() {
@@ -139,9 +143,12 @@ class SubjectViewController: UIViewController {
                     
                 } catch(let error) {
                     if let httpResponse = response as? HTTPURLResponse {
-                        self?.subjectLoader.stopAnimating()
-                        if httpResponse.statusCode == 401 {
-                            print("token expired")
+                        DispatchQueue.main.async {
+                            self?.subjectLoader.stopAnimating()
+                            if httpResponse.statusCode == 401 {
+                                print("token expired")
+                                self?.popToLoginAgainScreen()
+                            }
                         }
                     }
                 }
@@ -231,4 +238,13 @@ extension SubjectViewController: NoInternetProtocols {
     }
     
     
+}
+
+
+extension UINavigationController {
+    func popToViewController(ofClass: AnyClass, animated: Bool = true) {
+        if let vc = viewControllers.last(where: { $0.isKind(of: ofClass) }) {
+            popToViewController(vc, animated: animated)
+        }
+    }
 }

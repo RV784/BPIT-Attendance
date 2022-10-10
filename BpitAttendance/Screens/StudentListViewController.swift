@@ -108,6 +108,11 @@ class StudentListViewController: UIViewController {
         return InternetConnectionManager.isConnectedToNetwork()
     }
     
+    func popToLoginAgainScreen() {
+        // pop to login screen
+        
+    }
+    
     @IBAction func submitBtnClicked(_ sender: Any) {
         let alert = UIAlertController(title: "\(self.count) Students Present", message: "Do you want to submit Attendance ?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
@@ -187,7 +192,10 @@ class StudentListViewController: UIViewController {
                     }
                     
                 } catch(let error) {
-                    self?.studentLoader.stopAnimating()
+                    DispatchQueue.main.async {
+                        self?.studentLoader.stopAnimating()
+                    }
+                    self?.popToLoginAgainScreen()
                     print("do catch error", error)
                 }
             }
