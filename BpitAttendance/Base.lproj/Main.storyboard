@@ -250,8 +250,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="29" translatesAutoresizingMaskIntoConstraints="NO" id="cbD-Zi-MDW">
-                                <rect key="frame" x="20" y="348" width="335" height="129"/>
+                            <stackView opaque="NO" contentMode="center" axis="vertical" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="cbD-Zi-MDW">
+                                <rect key="frame" x="20" y="387.66666666666669" width="335" height="50"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xWi-0f-7Td">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
@@ -261,10 +261,6 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qoS-sf-as7">
-                                        <rect key="frame" x="0.0" y="79" width="335" height="50"/>
-                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
-                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="xWi-0f-7Td" firstAttribute="leading" secondItem="cbD-Zi-MDW" secondAttribute="leading" id="MJ6-yG-Wa0"/>
@@ -272,7 +268,7 @@
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ziv-lZ-ZCq">
-                                <rect key="frame" x="93.666666666666686" y="497" width="188" height="50"/>
+                                <rect key="frame" x="93.666666666666686" y="457.66666666666669" width="188" height="50"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="xd0-9F-uqP"/>
@@ -280,10 +276,13 @@
                                 <color key="tintColor" red="0.99607843139999996" green="0.96862745100000003" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <action selector="submitBtnPressed:" destination="fO7-uz-YYb" eventType="touchUpInside" id="Opt-Jy-sJU"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="eYM-Jh-zyA"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="secondarySystemFillColor"/>
                         <constraints>
                             <constraint firstItem="cbD-Zi-MDW" firstAttribute="centerX" secondItem="eYM-Jh-zyA" secondAttribute="centerX" id="1O8-kS-SpM"/>
                             <constraint firstItem="cbD-Zi-MDW" firstAttribute="leading" secondItem="eYM-Jh-zyA" secondAttribute="leading" constant="20" id="AFs-Wy-xRJ"/>
@@ -295,8 +294,10 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="baseView" destination="NBl-xt-Ijd" id="xw1-TH-abd"/>
+                        <outlet property="emailOtpStackView" destination="cbD-Zi-MDW" id="WeF-gQ-0aL"/>
                         <outlet property="enterEmailField" destination="xWi-0f-7Td" id="uhN-ZP-euH"/>
-                        <outlet property="otpView" destination="qoS-sf-as7" id="k5o-jj-iwM"/>
+                        <outlet property="submitBtn" destination="ziv-lZ-ZCq" id="L1J-O1-bMu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h0d-AG-2D9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -602,9 +603,6 @@
         </systemColor>
         <systemColor name="systemIndigoColor">
             <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemGroupedBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
