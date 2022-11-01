@@ -151,9 +151,10 @@ class ViewController: UIViewController {
             self.navigationController?.pushViewController(resetPasswordVC, animated: true)
         }
     }
-    
-    
+}
+
 // MARK: API CALL
+extension ViewController {
     func register(email: String, password: String){
         signInBtn.setTitle("", for: .normal)
         self.loginLoader.startAnimating()
@@ -276,6 +277,5 @@ extension ViewController: UITextFieldDelegate {
         
         return true
     }
-    
 }
 

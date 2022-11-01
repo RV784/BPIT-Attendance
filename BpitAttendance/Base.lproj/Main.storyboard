@@ -250,8 +250,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="center" axis="vertical" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="cbD-Zi-MDW">
-                                <rect key="frame" x="20" y="387.66666666666669" width="335" height="50"/>
+                            <stackView opaque="NO" contentMode="center" axis="vertical" distribution="fillEqually" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="cbD-Zi-MDW">
+                                <rect key="frame" x="20" y="322.66666666666669" width="335" height="180"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xWi-0f-7Td">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
@@ -261,6 +261,15 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="adL-Bg-66u">
+                                        <rect key="frame" x="67.666666666666686" y="65" width="200" height="50"/>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5F5-vI-l78">
+                                        <rect key="frame" x="147" y="130" width="41.333333333333343" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="xWi-0f-7Td" firstAttribute="leading" secondItem="cbD-Zi-MDW" secondAttribute="leading" id="MJ6-yG-Wa0"/>
@@ -268,7 +277,7 @@
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ziv-lZ-ZCq">
-                                <rect key="frame" x="93.666666666666686" y="457.66666666666669" width="188" height="50"/>
+                                <rect key="frame" x="93.666666666666686" y="522.66666666666663" width="188" height="50"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="xd0-9F-uqP"/>
@@ -280,6 +289,14 @@
                                     <action selector="submitBtnPressed:" destination="fO7-uz-YYb" eventType="touchUpInside" id="Opt-Jy-sJU"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="aoO-Uj-T0G">
+                                <rect key="frame" x="172.66666666666666" y="532.66666666666663" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="Qim-a4-I5C"/>
+                                    <constraint firstAttribute="height" constant="30" id="uJx-sS-Whb"/>
+                                </constraints>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="eYM-Jh-zyA"/>
                         <color key="backgroundColor" systemColor="secondarySystemFillColor"/>
@@ -290,6 +307,8 @@
                             <constraint firstItem="cbD-Zi-MDW" firstAttribute="centerY" secondItem="eYM-Jh-zyA" secondAttribute="centerY" id="S0v-Te-9Mc"/>
                             <constraint firstItem="ziv-lZ-ZCq" firstAttribute="top" secondItem="cbD-Zi-MDW" secondAttribute="bottom" constant="20" id="iVx-1h-pJA"/>
                             <constraint firstItem="ziv-lZ-ZCq" firstAttribute="width" secondItem="NBl-xt-Ijd" secondAttribute="width" multiplier="0.5" constant="0.5" id="o5c-xd-u6m"/>
+                            <constraint firstItem="aoO-Uj-T0G" firstAttribute="centerY" secondItem="ziv-lZ-ZCq" secondAttribute="centerY" id="r0y-Ng-wxo"/>
+                            <constraint firstItem="aoO-Uj-T0G" firstAttribute="centerX" secondItem="ziv-lZ-ZCq" secondAttribute="centerX" id="r8q-Xj-l8k"/>
                             <constraint firstItem="ziv-lZ-ZCq" firstAttribute="centerX" secondItem="cbD-Zi-MDW" secondAttribute="centerX" id="uAy-jt-ZlK"/>
                         </constraints>
                     </view>
@@ -297,6 +316,9 @@
                         <outlet property="baseView" destination="NBl-xt-Ijd" id="xw1-TH-abd"/>
                         <outlet property="emailOtpStackView" destination="cbD-Zi-MDW" id="WeF-gQ-0aL"/>
                         <outlet property="enterEmailField" destination="xWi-0f-7Td" id="uhN-ZP-euH"/>
+                        <outlet property="loader" destination="aoO-Uj-T0G" id="eqj-GC-3pR"/>
+                        <outlet property="messageLabel" destination="5F5-vI-l78" id="j80-uq-IQJ"/>
+                        <outlet property="otpStackView" destination="adL-Bg-66u" id="sc0-ic-Ank"/>
                         <outlet property="submitBtn" destination="ziv-lZ-ZCq" id="L1J-O1-bMu"/>
                     </connections>
                 </viewController>
