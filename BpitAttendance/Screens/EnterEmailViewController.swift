@@ -21,6 +21,7 @@ class EnterEmailViewController: UIViewController {
     var reponse: ForgotPasswordEmailResponseModel?
     private var textFieldsCollection: [OTPTextField] = []
     private var remainingStrStack: [String] = []
+    private var ifOtp = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,16 +38,20 @@ class EnterEmailViewController: UIViewController {
     }
     
     @IBAction func submitBtnPressed(_ sender: Any) {
-        if enterEmailField.text == "" {
-            enterEmailField.layer.borderColor = UIColor.red.cgColor
-            enterEmailField.layer.borderWidth = 0.5
-            enterEmailField.layer.cornerRadius = 1
-            return
-        }
-        
-        if checkConnection() {
-            emailOtpStackView.removeArrangedSubview(OTPStackView())
-            getOTP(email: enterEmailField.text ?? "")
+        if !ifOtp {
+            if enterEmailField.text == "" {
+                enterEmailField.layer.borderColor = UIColor.red.cgColor
+                enterEmailField.layer.borderWidth = 0.5
+                enterEmailField.layer.cornerRadius = 1
+                return
+            }
+            
+            if checkConnection() {
+                emailOtpStackView.removeArrangedSubview(OTPStackView())
+                getOTP(email: enterEmailField.text ?? "")
+            }
+        } else {
+            
         }
     }
     
@@ -99,9 +104,7 @@ class EnterEmailViewController: UIViewController {
     private func autoFillTextField(with string: String) {
         for i in 0..<textFieldsCollection.count {
             if i < string.count {
-                print(string)
 //                textFieldsCollection[i].text = string[i]
-            } else {
                 return
             }
         }
@@ -130,7 +133,6 @@ extension EnterEmailViewController {
                 self.submitBtn.setTitle("Submit", for: .normal)
                 //stop loader
             }
-            
             if error != nil {
                 print("Inside get OTP error")
                 print(error?.localizedDescription)
@@ -142,6 +144,8 @@ extension EnterEmailViewController {
                             DispatchQueue.main.async {
                                 //show OTP boxes
                                 if message != "Invalid Email" {
+                                    self.ifOtp = true
+                                    self.submitBtn.setTitle("Verify OTP", for: .normal)
                                     self.otpStackView.isHidden = false
                                     self.messageLabel.text = message
                                 } else {
@@ -160,6 +164,10 @@ extension EnterEmailViewController {
             }
         })
         task.resume()
+    }
+    
+    func verifyOTP() {
+        
     }
 }
 
