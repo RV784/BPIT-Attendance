@@ -35,7 +35,15 @@ class EnterEmailViewController: UIViewController {
         submitBtn.setTitle("Submit", for: .normal)
         otpStackView.isHidden = true
         messageLabel.text = "Enter your registered email"
+        messageLabel.textColor = .systemGray2
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    @objc func toggleAll() {}
     
     @IBAction func submitBtnPressed(_ sender: Any) {
         if !ifOtp {
@@ -51,7 +59,7 @@ class EnterEmailViewController: UIViewController {
                 getOTP(email: enterEmailField.text ?? "")
             }
         } else {
-            
+            autoLogin()
         }
     }
     
@@ -79,7 +87,7 @@ class EnterEmailViewController: UIViewController {
         textField.widthAnchor.constraint(equalToConstant: otpStackView.frame.height).isActive = true
         textField.centerYAnchor.constraint(equalTo: otpStackView.centerYAnchor).isActive = true
         textField.heightAnchor.constraint(equalTo: otpStackView.heightAnchor).isActive = true
-        textField.backgroundColor = .systemGray6
+        textField.backgroundColor = .systemGray2
         textField.textAlignment = .center
         textField.adjustsFontSizeToFitWidth = false
         textField.layer.cornerRadius = 5
@@ -96,19 +104,75 @@ class EnterEmailViewController: UIViewController {
             i != 0 ? (field.previousTextField = textFieldsCollection[i-1]) : (field.previousTextField = nil)
             i != 0 ? (textFieldsCollection[i-1].nextTextField = field) : ()
         }
-        if !textFieldsCollection.isEmpty {
-            textFieldsCollection[0].becomeFirstResponder()
-        }
     }
     
     private func autoFillTextField(with string: String) {
         for i in 0..<textFieldsCollection.count {
             if i < string.count {
-//                textFieldsCollection[i].text = string[i]
+                let index = string.index(string.startIndex, offsetBy: i)
+                textFieldsCollection[i].text = String(string[index])
+            } else {
                 return
             }
         }
-//        autoLogin()
+        autoLogin()
+    }
+    
+    private func getOtp() -> String {
+        var otp = ""
+        for i in 0..<textFieldsCollection.count {
+            if textFieldsCollection[i].text == "" {
+                //show enter otp correctly
+                showWrongOTPAlert(message: "Please enter OTP correctly")
+                return ""
+            } else {
+                otp += textFieldsCollection[i].text ?? ""
+            }
+        }
+        return otp
+    }
+    
+    private func autoLogin() {
+        if getOtp() != "" {
+            verifyOTP(otp: getOtp(), email: enterEmailField.text ?? "")
+        }
+    }
+    
+    private func showWrongOTPAlert(message: String = "Entered OTP is incorrect") {
+        for i in 0..<textFieldsCollection.count {
+            textFieldsCollection[i].text = ""
+        }
+        
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] action in
+            switch action.style {
+            case .default:
+                for fields in self?.textFieldsCollection ?? [] {
+                    fields.text = ""
+                }
+                self?.textFieldsCollection[0].becomeFirstResponder()
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+            @unknown default:
+                print("default")
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func navigateToResetPassword() {
+        let otp = getOtp()
+        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController,
+           otp != "" {
+            resetPasswordVC.forgotPassword = true
+            resetPasswordVC.otp = otp
+            resetPasswordVC.email = enterEmailField.text ?? ""
+            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
+        }
     }
 }
 
@@ -147,6 +211,7 @@ extension EnterEmailViewController {
                                     self.ifOtp = true
                                     self.submitBtn.setTitle("Verify OTP", for: .normal)
                                     self.otpStackView.isHidden = false
+                                    self.textFieldsCollection[0].becomeFirstResponder()
                                     self.messageLabel.text = message
                                 } else {
                                     self.messageLabel.text = message
@@ -166,8 +231,52 @@ extension EnterEmailViewController {
         task.resume()
     }
     
-    func verifyOTP() {
+    func verifyOTP(otp: String, email: String) {
+        loader.startAnimating()
+        submitBtn.setTitle("", for: .normal)
         
+        let parameters: [String: Any] = ["email": email, "otp": otp] as Dictionary<String, Any>
+        
+        guard let url = URL(string: EndPoints.verifyOTP.description) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            DispatchQueue.main.async {
+                self.loader.stopAnimating()
+                self.submitBtn.setTitle("Verify OTP", for: .normal)
+                //stop loader
+            }
+            if error != nil {
+                print("Inside get OTP error")
+                print(error?.localizedDescription)
+            } else {
+                do{
+                    let d1 = try JSONDecoder().decode(OtpResponseModel.self, from: data!)
+                    DispatchQueue.main.async {
+                        if let message = d1.msg {
+                            print(message)
+                            self.navigateToResetPassword()
+                        } else {
+                            //show wrong email alert
+                            print("Wrong email alert")
+                            DispatchQueue.main.async {
+                                self.showWrongOTPAlert()
+                            }
+                            
+                        }
+                    }
+                } catch(let error) {
+                    print(error.localizedDescription)
+                }
+            }
+        })
+        task.resume()
     }
 }
 
@@ -193,7 +302,7 @@ extension EnterEmailViewController: UITextFieldDelegate {
                     textField.nextTextField?.becomeFirstResponder()
                     if textField.nextTextField?.nextTextField == nil {
                         textField.nextTextField?.resignFirstResponder()
-//                        autoLogin()
+                        autoLogin()
                     }
                     return false
                 } else {

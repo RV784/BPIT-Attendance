@@ -21,7 +21,9 @@ class StudentListViewController: UIViewController {
     var students: [StudentListModel]?
     var studentRecord: RecordData?
     var count: Int = 0
+    var checkAll = true
     
+    @IBOutlet weak var dynamicStudentCounter: UILabel!
     @IBOutlet weak var noInternetView: NoInternetView!
     @IBOutlet weak var bottomBtnViews: UIView!
     @IBOutlet weak var attendanceSubmitLoader: UIActivityIndicatorView!
@@ -55,14 +57,30 @@ class StudentListViewController: UIViewController {
         navigationItem.backButtonTitle = ""
         bottomBtnViews.layer.cornerRadius = 25
         submitBtn.layer.cornerRadius = 25
-        let counter = UIBarButtonItem(title: "\(count)", style: .plain, target: self, action: #selector(doNothing))
-        let attributes: [NSAttributedString.Key : Any] = [ .font: UIFont.boldSystemFont(ofSize: 16) ]
-        counter.setTitleTextAttributes(attributes, for: .normal)
-        self.navigationItem.rightBarButtonItem = counter
+        let toggleAll = UIBarButtonItem(title: "Check All", style: .plain, target: self, action: #selector(toggleAll))
+        let attributes: [NSAttributedString.Key : Any] = [ .font: UIFont.boldSystemFont(ofSize: 18), .foregroundColor: UIColor.link]
+        toggleAll.setTitleTextAttributes(attributes, for: .normal)
+        dynamicStudentCounter.text = "\(count)"
+        self.navigationItem.rightBarButtonItem = toggleAll
         noInternetView.isHidden = true
     }
     
-    @objc func doNothing(){}
+    @objc func toggleAll() {
+        if studentRecord?.record.count != nil {
+            for i in 0..<(studentRecord?.record.count)! {
+                studentRecord?.record[i].status = checkAll
+            }
+            if checkAll {
+                count = (studentRecord?.record.count)!
+                dynamicStudentCounter.text = "\(count)"
+            } else {
+                count = 0
+                dynamicStudentCounter.text = "0"
+            }
+            checkAll.toggle()
+            studentCollectionView.reloadData()
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
@@ -86,7 +104,7 @@ class StudentListViewController: UIViewController {
         noInternetView.layer.add(animation, forKey: "shake")
         let tapticFeedback = UINotificationFeedbackGenerator()
         tapticFeedback.notificationOccurred(.success)
-        }
+    }
 
     
     func yesPressed() {
@@ -243,16 +261,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
             count = count + 1
             selectedCell?.backgroundColor = UIColor.systemGreen
         }
-        let counter = UIBarButtonItem(title: "\(count)", style: .plain, target: self, action: #selector(doNothing))
-        var attributed: [NSAttributedString.Key : Any]
-        
-        if count == 0 {
-            attributed = [ .font: UIFont.boldSystemFont(ofSize: 15)]
-        } else {
-            attributed = [ .font: UIFont.boldSystemFont(ofSize: 21)]
-        }
-        counter.setTitleTextAttributes(attributed, for: .normal)
-        self.navigationItem.rightBarButtonItem = counter
+        dynamicStudentCounter.text = "\(count)"
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

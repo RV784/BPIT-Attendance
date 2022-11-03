@@ -15,6 +15,7 @@
 		AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0C48A228DB2B660058B55D /* StudentListCell.swift */; };
 		AB0C48A528DB2B660058B55D /* StudentListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB0C48A328DB2B660058B55D /* StudentListCell.xib */; };
 		AB19E8BC28E427D500267410 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB19E8BB28E427D500267410 /* ProfileModel.swift */; };
+		AB2B4416291394C40045A415 /* OtpResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4415291394C40045A415 /* OtpResponseModel.swift */; };
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
@@ -49,6 +50,7 @@
 		AB0C48A228DB2B660058B55D /* StudentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListCell.swift; sourceTree = "<group>"; };
 		AB0C48A328DB2B660058B55D /* StudentListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StudentListCell.xib; sourceTree = "<group>"; };
 		AB19E8BB28E427D500267410 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
+		AB2B4415291394C40045A415 /* OtpResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpResponseModel.swift; sourceTree = "<group>"; };
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				AB19E8BB28E427D500267410 /* ProfileModel.swift */,
 				ABABFB0528F2096300D684C9 /* LoginModel.swift */,
 				ABC50E772901231D00540B2F /* ForgotPasswordEmailResponseModel.swift */,
+				AB2B4415291394C40045A415 /* OtpResponseModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */,
 				AB0C48A128DB1C140058B55D /* StudentListModel.swift in Sources */,
 				ABABFB0428F2025300D684C9 /* ResetPasswordViewController.swift in Sources */,
+				AB2B4416291394C40045A415 /* OtpResponseModel.swift in Sources */,
 				AB0C489928DA34BE0058B55D /* subjectCell.swift in Sources */,
 				AB97FFC628E55EA400CA80F7 /* ProfileViewController.swift in Sources */,
 				AB97FFC928E5605100CA80F7 /* ProfileCell.swift in Sources */,

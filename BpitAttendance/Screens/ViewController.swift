@@ -72,7 +72,7 @@ class ViewController: UIViewController {
     
     
     @objc func forgotPassword() {
-        if let enterEmailVC = storyboard?.instantiateViewController(withIdentifier: "EnterEmailViewController") as? EnterEmailViewController{
+        if let enterEmailVC = storyboard?.instantiateViewController(withIdentifier: "EnterEmailViewController") as? EnterEmailViewController {
             self.navigationController?.pushViewController(enterEmailVC, animated: true)
         }
     }
