@@ -89,7 +89,7 @@ class StudentListViewController: UIViewController {
 //MARK: BUSINESS LOGIC
     func prepareRecordData() {
         for item in self.students ?? [] {
-            studentRecord?.record.append(RecordData.studentData(status: false, enrollment_number: item.enrollment_number ?? "", subject: self.subject, batch: self.batch))
+            studentRecord?.record.append(RecordData.studentData(status: false, enrollment_number: item.enrollment_number ?? "", subject: self.subjectCode, batch: self.batch, date: dateFormatter()))
         }
         print(students?.count as Any)
         print(studentRecord?.record.count as Any)
@@ -131,6 +131,17 @@ class StudentListViewController: UIViewController {
         
     }
     
+    func dateFormatter() -> String {
+//        Date().description(with: .current)  //  Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
+        let dateString = Date().iso8601withFractionalSeconds   //  "2019-02-06T00:35:01.746Z"
+
+        if let date = dateString.iso8601withFractionalSeconds {
+//            date.description(with: .current) // "Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
+            return date.iso8601withFractionalSeconds       //  "2019-02-06T00:35:01.746Z\n"
+        }
+        return ""
+    }
+    
     @IBAction func submitBtnClicked(_ sender: Any) {
         let alert = UIAlertController(title: "\(self.count) Students Present", message: "Do you want to submit Attendance ?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
@@ -139,7 +150,7 @@ class StudentListViewController: UIViewController {
     }
     
 //MARK: API CALLS
-    func sendStudents(){
+    func sendStudents() {
         
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
 //            self.navigateToLoginAgain()
@@ -295,6 +306,4 @@ extension StudentListViewController: NoInternetProtocols {
     func onGoBackPressed() {
         self.navigationController?.popViewController(animated: true)
     }
-    
-    
 }

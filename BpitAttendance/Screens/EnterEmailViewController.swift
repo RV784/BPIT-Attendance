@@ -196,10 +196,11 @@ extension EnterEmailViewController {
                 self.loader.stopAnimating()
                 self.submitBtn.setTitle("Submit", for: .normal)
                 //stop loader
+                self.loader.stopAnimating()
             }
             if error != nil {
                 print("Inside get OTP error")
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
             } else {
                 do{
                     let d1 = try JSONDecoder().decode(ForgotPasswordEmailResponseModel.self, from: data!)
@@ -251,10 +252,11 @@ extension EnterEmailViewController {
                 self.loader.stopAnimating()
                 self.submitBtn.setTitle("Verify OTP", for: .normal)
                 //stop loader
+                self.loader.stopAnimating()
             }
             if error != nil {
                 print("Inside get OTP error")
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
             } else {
                 do{
                     let d1 = try JSONDecoder().decode(OtpResponseModel.self, from: data!)

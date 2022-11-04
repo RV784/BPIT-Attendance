@@ -173,8 +173,8 @@ extension ViewController {
             }
             
             if error != nil {
-                print("inside get profile erorr")
-                print(error?.localizedDescription)
+                print("inside \(EndPoints.getToken.description) erorr")
+                print(error?.localizedDescription as Any)
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(LoginModel.self, from: data!)
@@ -202,6 +202,7 @@ extension ViewController {
                     }
                 } catch {
                     //server issue handling
+                    print("inside \(EndPoints.getToken.description) catch")
                     DispatchQueue.main.async {
                         self.signInBtn.setTitle("Sign In", for: .normal)
                         self.serverDownError()
@@ -218,7 +219,6 @@ extension ViewController {
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
             return
         }
-        print("inside getPrifle")
         var request = URLRequest(url: URL(string: EndPoints.getProfile.description)!)
         request.httpMethod = "GET"
 
@@ -227,7 +227,7 @@ extension ViewController {
         let session = URLSession.shared
         let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
             if error != nil {
-                print("inside error")
+                print("inside \(EndPoints.getProfile.description) erorr")
                 print(error?.localizedDescription as Any)
             }else{
                 do{
@@ -239,6 +239,7 @@ extension ViewController {
                         self?.saveToDevice()
                     }
                 } catch(let error) {
+                    print("inside \(EndPoints.getProfile.description) catch")
                     print("inside catch \(error)")
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 401 {

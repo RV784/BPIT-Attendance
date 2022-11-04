@@ -10,11 +10,13 @@ import UIKit
 class ResetPasswordViewController: UIViewController {
     
     
+    @IBOutlet weak var loader: UIActivityIndicatorView!
     @IBOutlet weak var oldPasswordTextField: UITextField!
     @IBOutlet weak var newPasswordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var submitBtn: UIButton!
     var forgotPassword = false
+    var firstLogin = false
     var otp = ""
     var email = ""
     
@@ -92,6 +94,35 @@ class ResetPasswordViewController: UIViewController {
         return true
     }
     
+    func navigateToLoginAgain() {
+        let viewControllers: [UIViewController] = self.navigationController!.viewControllers
+        for aViewController in viewControllers {
+            if aViewController is ViewController {
+                self.navigationController!.popToViewController(aViewController, animated: true)
+            }
+        }
+    }
+    
+    func showBackToLoginAlert() {
+        let alertController = UIAlertController(title: "Password reset successful, Please now log in with your new Password", message: "", preferredStyle: .alert)
+        let backToLoginAction = UIAlertAction(title: "Back to Login", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                NSLog("OK Pressed")
+            Credentials.shared.defaults.set("", forKey: "Token")
+            Credentials.shared.defaults.set("", forKey: "Name")
+            Credentials.shared.defaults.set("", forKey: "Email")
+            Credentials.shared.defaults.set("", forKey: "Designation")
+            Credentials.shared.defaults.set("", forKey: "PhoneNumber")
+            Credentials.shared.defaults.set("", forKey: "DateJoined")
+            Credentials.shared.defaults.set(false, forKey: "Staff")
+            Credentials.shared.defaults.set(false, forKey: "Active")
+            Credentials.shared.defaults.set(false, forKey: "SuperUser")
+            self.navigateToLoginAgain()
+            }
+        alertController.addAction(backToLoginAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     @IBAction func submitBtnClicked(_ sender: Any) {
         if checkAllErrors() {
             submitNewPassword()
@@ -100,15 +131,16 @@ class ResetPasswordViewController: UIViewController {
     
     //MARK: API CALLS
     func submitNewPassword() {
-//        loader.startAnimating()
+        loader.startAnimating()
         submitBtn.setTitle("", for: .normal)
         if forgotPassword {
             oldPasswordTextField.text = ""
         }
-        let parameters: [String: Any] = ["current_password": oldPasswordTextField.text,
-                                         "new_password": newPasswordTextField.text,
-                                         "new_password_confirm": confirmPasswordTextField.text,
+        let parameters: [String: Any] = ["current_password": oldPasswordTextField.text ?? "",
+                                         "new_password": newPasswordTextField.text ?? "",
+                                         "new_password_confirm": confirmPasswordTextField.text ?? "",
                                          "password_otp": otp,
+                                         "forget": true,
                                          "email": email
         ] as Dictionary<String, Any>
         
@@ -121,9 +153,10 @@ class ResetPasswordViewController: UIViewController {
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             DispatchQueue.main.async {
-//                self.loader.stopAnimating()
+                self.loader.stopAnimating()
                 self.submitBtn.setTitle("Submit", for: .normal)
                 //stop loader
+                self.loader.stopAnimating()
             }
             print(String(data: data!, encoding: .utf8))
             if error != nil {
@@ -131,27 +164,12 @@ class ResetPasswordViewController: UIViewController {
                 print(error?.localizedDescription)
             } else {
                 do{
-//                    let d1 = try JSONDecoder().decode(ForgotPasswordEmailResponseModel.self, from: data!)
-//                    DispatchQueue.main.async {
-//                        if let message = d1.message {
-//                            DispatchQueue.main.async {
-//                                //show OTP boxes
-//                                if message != "Invalid Email" {
-//                                    self.ifOtp = true
-//                                    self.submitBtn.setTitle("Verify OTP", for: .normal)
-//                                    self.otpStackView.isHidden = false
-//                                    self.textFieldsCollection[0].becomeFirstResponder()
-//                                    self.messageLabel.text = message
-//                                } else {
-//                                    self.messageLabel.text = message
-//                                }
-//                            }
-//                            print(message)
-//                        } else {
-//                            //show wrong email alert
-//                            print("Wrong email alert")
-//                        }
-//                    }
+                    let d1 = try JSONDecoder().decode(ResetPasswordModel.self, from: data!)
+                    DispatchQueue.main.async {
+                        if let message = d1.message {
+                            self.showBackToLoginAlert()
+                        }
+                    }
                 } catch(let error) {
                     print(error.localizedDescription)
                 }

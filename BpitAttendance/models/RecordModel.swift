@@ -16,5 +16,6 @@ struct RecordData: Encodable {
         var enrollment_number: String
         var subject: String
         var batch: String
+        var date: String
     }
 }

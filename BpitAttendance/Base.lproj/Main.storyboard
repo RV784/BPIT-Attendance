@@ -324,7 +324,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h0d-AG-2D9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="455" y="658"/>
+            <point key="canvasLocation" x="137" y="921"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="Nun-z0-Jee">
@@ -354,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YpS-rj-qRf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1183" y="658"/>
+            <point key="canvasLocation" x="895" y="921"/>
         </scene>
         <!--Reset Password View Controller-->
         <scene sceneID="N7I-DZ-QBJ">
@@ -406,6 +406,9 @@
                                     <action selector="submitBtnClicked:" destination="49U-rq-ML5" eventType="touchUpInside" id="d51-DR-APv"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-b3-hUM">
+                                <rect key="frame" x="177.66666666666666" y="542.66666666666663" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="MWg-jP-5CU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -413,14 +416,17 @@
                             <constraint firstItem="wHQ-VM-YsY" firstAttribute="centerY" secondItem="MWg-jP-5CU" secondAttribute="centerY" id="FX4-gv-Iei"/>
                             <constraint firstItem="MWg-jP-5CU" firstAttribute="trailing" secondItem="wHQ-VM-YsY" secondAttribute="trailing" constant="20" id="HxR-wZ-bSc"/>
                             <constraint firstItem="HxN-GW-Lgq" firstAttribute="width" secondItem="joB-uO-rqQ" secondAttribute="width" multiplier="0.5" id="L2j-Og-Gfj"/>
+                            <constraint firstItem="TZc-b3-hUM" firstAttribute="centerX" secondItem="HxN-GW-Lgq" secondAttribute="centerX" id="Q93-4n-hmB"/>
                             <constraint firstItem="wHQ-VM-YsY" firstAttribute="centerX" secondItem="MWg-jP-5CU" secondAttribute="centerX" id="aTk-9x-QR4"/>
                             <constraint firstItem="HxN-GW-Lgq" firstAttribute="top" secondItem="wHQ-VM-YsY" secondAttribute="bottom" constant="20" id="imH-ej-gId"/>
                             <constraint firstItem="wHQ-VM-YsY" firstAttribute="leading" secondItem="MWg-jP-5CU" secondAttribute="leading" constant="20" id="mQn-uA-sHL"/>
                             <constraint firstItem="HxN-GW-Lgq" firstAttribute="centerX" secondItem="wHQ-VM-YsY" secondAttribute="centerX" id="nnb-iy-0qN"/>
+                            <constraint firstItem="TZc-b3-hUM" firstAttribute="centerY" secondItem="HxN-GW-Lgq" secondAttribute="centerY" id="qPD-xp-3p7"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="confirmPasswordTextField" destination="xv5-cF-K9i" id="e3K-Q1-8Sf"/>
+                        <outlet property="loader" destination="TZc-b3-hUM" id="Nex-WC-TZH"/>
                         <outlet property="newPasswordTextField" destination="e0P-VT-MOf" id="8cQ-xL-UMc"/>
                         <outlet property="oldPasswordTextField" destination="N0z-Av-wIP" id="Gcq-0b-z5e"/>
                         <outlet property="submitBtn" destination="HxN-GW-Lgq" id="JB8-yK-ufZ"/>
@@ -428,7 +434,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tyN-eE-4vX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1897" y="658"/>
+            <point key="canvasLocation" x="1838" y="1100"/>
         </scene>
         <!--Group Choice View Controller-->
         <scene sceneID="OFA-vM-Ovg">
@@ -590,7 +596,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o9e-Dv-vFP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2180" y="3"/>
+            <point key="canvasLocation" x="2852" y="-816"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="6ex-ai-KZW">
