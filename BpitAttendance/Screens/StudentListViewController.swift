@@ -27,6 +27,8 @@ class StudentListViewController: UIViewController {
     var lastAttendanceStudents: [LastAttendanceStudentModel]?
     var lastRecordData: LastAttendanceModel?
     
+    var submitResponse: SubmitAttendanceResponseModel?
+    
     @IBOutlet weak var dynamicStudentCounter: UILabel!
     @IBOutlet weak var noInternetView: NoInternetView!
     @IBOutlet weak var bottomBtnViews: UIView!
@@ -62,6 +64,10 @@ class StudentListViewController: UIViewController {
         dynamicStudentCounter.text = "\(count)"
         self.navigationItem.rightBarButtonItem = toggleAll
         noInternetView.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
     
     @objc func toggleAll() {
@@ -111,8 +117,6 @@ class StudentListViewController: UIViewController {
                                                                 batch: self.batch,
                                                                 date: date))
         }
-        print(students?.count as Any)
-        print(studentRecord?.record.count as Any)
         self.studentCollectionView.reloadData()
     }
     
@@ -128,14 +132,7 @@ class StudentListViewController: UIViewController {
                                                                           date: item.date ?? "",
                                                                           subject: item.subject ?? ""))
         }
-        print(lastRecordData?.record.count as Any)
         self.studentCollectionView.reloadData()
-        
-//        if let array = lastAttendanceStudents {
-//            for i in 0..<array.count {
-//                lastAttendanceStudents?[i].date = date
-//            }
-//        }
     }
     
     func shake() {
@@ -172,11 +169,6 @@ class StudentListViewController: UIViewController {
         return InternetConnectionManager.isConnectedToNetwork()
     }
     
-    func popToLoginAgainScreen() {
-        // pop to login screen
-        
-    }
-    
     func dateFormatter() -> String {
 //        Date().description(with: .current)  //  Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
         let dateString = Date().iso8601withFractionalSeconds   //  "2019-02-06T00:35:01.746Z"
@@ -199,6 +191,13 @@ class StudentListViewController: UIViewController {
         }
     }
     
+    func navigateToLoginAgain() {
+        if let loginVC = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
+            loginVC.tokExpMidCycle = true
+            navigationController?.pushViewController(loginVC, animated: true)
+        }
+    }
+    
     @IBAction func submitBtnClicked(_ sender: Any) {
         let alert = UIAlertController(title: "\(self.count) Students Present", message: "Do you want to submit Attendance ?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
@@ -208,36 +207,70 @@ class StudentListViewController: UIViewController {
     
 //MARK: API CALLS
     func sendStudents() {
+        
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-//            self.navigateToLoginAgain()
+            navigateToLoginAgain()
             return
         }
+        if tok == "" {
+            navigateToLoginAgain()
+            return
+        }
+        
+        guard let url = URL(string: EndPoints.sendAttendance.description) else {
+            return
+        }
+        
         submitBtn.setTitle("", for: .normal)
         attendanceSubmitLoader.startAnimating()
+        
+        print("______________________________")
+        print(EndPoints.sendAttendance.description)
+        
         let recordData = try? JSONEncoder().encode(self.studentRecord)
-        var request = URLRequest(url: URL(string: EndPoints.sendAttendance.description)!)
+        var request = URLRequest(url: url)
+        
         request.httpMethod = "POST"
         request.httpBody = recordData
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            do {
-                print(response as Any)
-                DispatchQueue.main.async {
-                    self.submitBtn.setTitle("", for: .normal)
-                    self.attendanceSubmitLoader.stopAnimating()
-                    
-                    let viewControllers: [UIViewController] = self.navigationController!.viewControllers
-                    for aViewController in viewControllers {
-                        if aViewController is SubjectViewController {
-                            self.navigationController!.popToViewController(aViewController, animated: true)
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
+            
+            DispatchQueue.main.async {
+                self?.submitBtn.setTitle("Submit", for: .normal)
+                self?.attendanceSubmitLoader.stopAnimating()
+            }
+            
+            if error != nil {
+                print("inside error")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
+            } else {
+                do {
+                    let d1 = try JSONDecoder().decode(SubmitAttendanceResponseModel.self, from: data!)
+                    DispatchQueue.main.async {
+                        if self?.isLab ?? false {
+                            self?.navigationController?.popViewControllers(viewsToPop: 2)
+                        } else {
+                            self?.navigationController?.popViewController(animated: true)
+                        }
+                        print(d1)
+                        print("______________________________")
+                    }
+                } catch (let error){
+                    if let httpResponse = response as? HTTPURLResponse {
+                        DispatchQueue.main.async {
+                            if httpResponse.statusCode == 401 {
+                                print("token expired")
+                                self?.navigateToLoginAgain()
+                            }
                         }
                     }
+                    print(error)
+                    print("______________________________")
                 }
-            } catch {
-                print("error")
             }
         })
         task.resume()
@@ -245,84 +278,137 @@ class StudentListViewController: UIViewController {
     
     func sendLastStudents() {
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-//            self.navigateToLoginAgain()
+            navigateToLoginAgain()
+            return
+        }
+        
+        if tok == "" {
+            navigateToLoginAgain()
+            return
+        }
+        
+        guard let url = URL(string: EndPoints.sendLastAttendance.description) else {
             return
         }
         
         submitBtn.setTitle("", for: .normal)
         attendanceSubmitLoader.startAnimating()
         
+        print("______________________________")
+        print(EndPoints.sendLastAttendance.description)
+        
         let recordData = try? JSONEncoder().encode(self.lastRecordData)
         
-        var request = URLRequest(url: URL(string: EndPoints.sendLastAttendance.description)!)
+        var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
         request.httpBody = recordData
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            do {
-                print(String(data: data!, encoding: .utf8))
-                print(response as Any)
-                DispatchQueue.main.async {
-                    self.submitBtn.setTitle("", for: .normal)
-                    self.attendanceSubmitLoader.stopAnimating()
-                    
-                    let viewControllers: [UIViewController] = self.navigationController!.viewControllers
-                    for aViewController in viewControllers {
-                        if aViewController is SubjectViewController {
-                            self.navigationController!.popToViewController(aViewController, animated: true)
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
+            
+            DispatchQueue.main.async {
+                self?.submitBtn.setTitle("Submit", for: .normal)
+                self?.attendanceSubmitLoader.stopAnimating()
+            }
+            
+            if error != nil {
+                print("inside error")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
+            } else {
+                do {
+                    let d1 = try JSONDecoder().decode(SubmitAttendanceResponseModel.self, from: data!)
+                    DispatchQueue.main.async {
+                        self?.navigationController?.popViewController(animated: true)
+                        print(d1)
+                        print("______________________________")
+                    }
+                } catch (let error){
+                    if let httpResponse = response as? HTTPURLResponse {
+                        DispatchQueue.main.async {
+                            if httpResponse.statusCode == 401 {
+                                print("token expired")
+                                self?.navigateToLoginAgain()
+                            }
                         }
                     }
+                    print(error)
+                    print("______________________________")
                 }
-            } catch {
-                print("error")
             }
+            
         })
         task.resume()
         
     }
     
     func getStudents(batch: String, subject: String, section: String, branch: String, isLab: Bool, groupNum: Int, subjectCode: String) {
-        self.studentLoader.startAnimating()
-        var request: URLRequest
-        if isLab {
-            request = URLRequest(url: URL(string: EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description)!)
-        } else {
-            request = URLRequest(url: URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subject, section: section).description)!)
-        }
         
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-            //            self.navigateToLoginAgain()
+            navigateToLoginAgain()
             return
         }
+        if tok == "" {
+            navigateToLoginAgain()
+            return
+        }
+        
+        var request: URLRequest
+        print("______________________________")
+        if isLab {
+            guard let url = URL(string: EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description) else {
+                return
+            }
+            request = URLRequest(url: url)
+            print(EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description)
+        } else {
+            guard let url = URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subject, section: section).description) else {
+                return
+            }
+            request = URLRequest(url: url)
+            print(EndPoints.getAllStudents(batch: batch, branch: branch, subject: subject, section: section).description)
+        }
+        
+        studentLoader.startAnimating()
         
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-//            print(String(data: data!, encoding: .utf8))
+            
+            DispatchQueue.main.async {
+                self?.studentLoader.stopAnimating()
+            }
+            
             if error != nil {
-                self?.studentLoader.startAnimating()
                 print("inside error")
-                print(error?.localizedDescription ?? "")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
             }else{
                 do{
                     let d1 = try JSONDecoder().decode([StudentListModel].self, from: data!)
                     self?.students = d1
                     DispatchQueue.main.async {
-                        self?.studentLoader.stopAnimating()
+                        print(self?.students as Any)
+                        print("______________________________")
                         self?.prepareRecordData()
                     }
                     
                 } catch(let error) {
-                    DispatchQueue.main.async {
-                        self?.studentLoader.stopAnimating()
+                    if let httpResponse = response as? HTTPURLResponse {
+                        DispatchQueue.main.async {
+                            if httpResponse.statusCode == 401 {
+                                print("token expired")
+                                self?.navigateToLoginAgain()
+                            }
+                        }
                     }
-                    self?.popToLoginAgainScreen()
-                    print("do catch error", error)
+                    print(error)
+                    print("______________________________")
                 }
             }
         })
@@ -330,40 +416,60 @@ class StudentListViewController: UIViewController {
     }
     
     func getLastAttendanceStudents(batch: String, subject: String, section: String, branch: String, isLab: Bool, subjectCode: String) {
+        
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+            navigateToLoginAgain()
+            return
+        }
+        if tok == "" {
+            navigateToLoginAgain()
+            return
+        }
+        
         self.studentLoader.startAnimating()
+        
+        print("______________________________")
+        print(EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)
         var request: URLRequest
 
         request = URLRequest(url: URL(string: EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)!)
-        
-        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-            //            self.navigateToLoginAgain()
-            return
-        }
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            
+            DispatchQueue.main.async {
+                self?.studentLoader.stopAnimating()
+            }
+            
             if error != nil {
-                self?.studentLoader.startAnimating()
                 print("inside error")
-                print(error?.localizedDescription ?? "")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
             }else{
                 do{
                     let d1 = try JSONDecoder().decode([LastAttendanceStudentModel].self, from: data!)
                     self?.lastAttendanceStudents = d1
                     DispatchQueue.main.async {
-                        self?.studentLoader.stopAnimating()
                         self?.updateCounter()
                         self?.prepareLastRecordData()
+                        print(d1)
+                        print("______________________________")
                     }
                     
                 } catch(let error) {
-                    DispatchQueue.main.async {
-                        self?.studentLoader.stopAnimating()
+                    if let httpResponse = response as? HTTPURLResponse {
+                        DispatchQueue.main.async {
+                            if httpResponse.statusCode == 401 {
+                                print("token expired")
+                                self?.navigateToLoginAgain()
+                            }
+                        }
                     }
-                    self?.popToLoginAgainScreen()
-                    print("do catch error", error)
+                    print(error)
+                    print("______________________________")
                 }
             }
         })

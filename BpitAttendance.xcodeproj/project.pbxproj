@@ -21,6 +21,9 @@
 		AB2B44292915377A0045A415 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B44282915377A0045A415 /* APIManager.swift */; };
 		AB2B442B291599BB0045A415 /* LastAttendanceStudentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B442A291599BB0045A415 /* LastAttendanceStudentModel.swift */; };
 		AB2B442D29163E1A0045A415 /* LastAttendanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B442C29163E1A0045A415 /* LastAttendanceModel.swift */; };
+		AB2B442F2916B9910045A415 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B442E2916B9910045A415 /* AboutViewController.swift */; };
+		AB2B44312916E8040045A415 /* SubmitAttendanceResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */; };
+		AB2B4433291708B10045A415 /* EditProfileResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */; };
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
@@ -61,6 +64,9 @@
 		AB2B44282915377A0045A415 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		AB2B442A291599BB0045A415 /* LastAttendanceStudentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastAttendanceStudentModel.swift; sourceTree = "<group>"; };
 		AB2B442C29163E1A0045A415 /* LastAttendanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastAttendanceModel.swift; sourceTree = "<group>"; };
+		AB2B442E2916B9910045A415 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitAttendanceResponseModel.swift; sourceTree = "<group>"; };
+		AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileResponseModel.swift; sourceTree = "<group>"; };
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -134,6 +140,8 @@
 				AB2B44172914CF230045A415 /* ResetPasswordModel.swift */,
 				AB2B442A291599BB0045A415 /* LastAttendanceStudentModel.swift */,
 				AB2B442C29163E1A0045A415 /* LastAttendanceModel.swift */,
+				AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */,
+				AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -235,6 +243,7 @@
 				AB0C489E28DB11CA0058B55D /* StudentListViewController.swift */,
 				ABA2CDD728D704AC006CF656 /* SubjectViewController.swift */,
 				ABA2CDB728D60EE0006CF656 /* ViewController.swift */,
+				AB2B442E2916B9910045A415 /* AboutViewController.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -331,6 +340,7 @@
 				ABA2CDB828D60EE0006CF656 /* ViewController.swift in Sources */,
 				ABC50E782901231D00540B2F /* ForgotPasswordEmailResponseModel.swift in Sources */,
 				AB2B44182914CF230045A415 /* ResetPasswordModel.swift in Sources */,
+				AB2B442F2916B9910045A415 /* AboutViewController.swift in Sources */,
 				ABABFB0628F2096300D684C9 /* LoginModel.swift in Sources */,
 				AB72457528E6DB4E00D044E4 /* InternetConnectionManager.swift in Sources */,
 				AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */,
@@ -339,6 +349,7 @@
 				ABCA6A8F28F3E19A0060C3D5 /* OTPTextField.swift in Sources */,
 				AB72457728E6FCEE00D044E4 /* NoInternetView.swift in Sources */,
 				AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */,
+				AB2B44312916E8040045A415 /* SubmitAttendanceResponseModel.swift in Sources */,
 				ABA2CDD828D704AC006CF656 /* SubjectViewController.swift in Sources */,
 				AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */,
 				AB0C48A128DB1C140058B55D /* StudentListModel.swift in Sources */,
@@ -353,6 +364,7 @@
 				AB2B441B2914DF760045A415 /* Date.swift in Sources */,
 				ABA2CDB628D60EE0006CF656 /* SceneDelegate.swift in Sources */,
 				AB2B442B291599BB0045A415 /* LastAttendanceStudentModel.swift in Sources */,
+				AB2B4433291708B10045A415 /* EditProfileResponseModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -482,7 +494,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

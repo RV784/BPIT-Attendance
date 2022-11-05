@@ -11,6 +11,12 @@ class SubjectViewController: UIViewController {
     var arr: [Any] = []
     var subjects: [SubjectListModel]?
     var profileDetails: ProfileModel?
+    var tokenRefreshed = false {
+        didSet {
+            getSubject()
+        }
+    }
+    
     @IBOutlet weak var subjectCollectionView: UICollectionView!
     @IBOutlet weak var subjectLoader: UIActivityIndicatorView!
     @IBOutlet weak var bottomButtonsView: UIView!
@@ -34,12 +40,14 @@ class SubjectViewController: UIViewController {
         
         navigationItem.hidesBackButton = true
         navigationItem.title = "Subjects"
+        navigationController?.navigationBar.prefersLargeTitles = true
 //        noInternetView.gobackBtn.isHidden = true
         noInternetView.isHidden = true
         noInternetView.retryBtn.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
@@ -80,11 +88,9 @@ class SubjectViewController: UIViewController {
     }
     
     func navigateToLoginAgain() {
-        let viewControllers: [UIViewController] = self.navigationController!.viewControllers
-        for aViewController in viewControllers {
-            if aViewController is ViewController {
-                self.navigationController!.popToViewController(aViewController, animated: true)
-            }
+        if let loginVC = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
+            loginVC.tokExpMidCycle = true
+            navigationController?.pushViewController(loginVC, animated: true)
         }
     }
     
@@ -104,14 +110,10 @@ class SubjectViewController: UIViewController {
         bottomButtonsView.isHidden.toggle()
         shake()
     }
-    
-    func popToLoginAgainScreen() {
-        navigationController?.popToViewController(ofClass: ViewController.self)
-    }
   
 //MARK: API CALLS
     func getSubject() {
-        subjectLoader.startAnimating()
+        
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
             navigateToLoginAgain()
             return
@@ -120,41 +122,52 @@ class SubjectViewController: UIViewController {
             navigateToLoginAgain()
             return
         }
-        var request = URLRequest(url: URL(string: EndPoints.getSubjects.description)!)
-        request.httpMethod = "GET"
         
+        guard let url = URL(string: EndPoints.getSubjects.description) else {
+            return
+        }
+        
+        subjectLoader.startAnimating()
+        print("______________________________")
+        print(EndPoints.getSubjects.description)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
+            
+            DispatchQueue.main.async {
+                self?.subjectLoader.stopAnimating()
+            }
             
             if error != nil {
                 print("inside error")
                 print(error?.localizedDescription as Any)
+                print("______________________________")
             }else{
                 do{
                     let d1 = try JSONDecoder().decode([SubjectListModel].self, from: data!)
                     self?.subjects = d1
                     DispatchQueue.main.async {
-                        self?.subjectLoader.stopAnimating()
                         print(self?.subjects as Any)
+                        print("______________________________")
                         self?.subjectCollectionView.reloadData()
                     }
                     
-                } catch(let error) {
-                    DispatchQueue.main.async {
-                        self?.subjectLoader.stopAnimating()
-                        print(error)
+                } catch (let error) {
+                    if let httpResponse = response as? HTTPURLResponse {
+                        DispatchQueue.main.async {
+                            if httpResponse.statusCode == 401 {
+                                print("token expired")
+                                self?.navigateToLoginAgain()
+                            }
+                        }
                     }
-//                    if let httpResponse = response as? HTTPURLResponse {
-//                        DispatchQueue.main.async {
-//                            self?.subjectLoader.stopAnimating()
-//                            if httpResponse.statusCode == 401 {
-//                                print("token expired")
-//                                self?.popToLoginAgainScreen()
-//                            }
-//                        }
-//                    }
+                    print(error)
+                    print("______________________________")
                 }
             }
         })
@@ -205,6 +218,8 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
                 groupChoiceVc.section = self.subjects?[indexPath.row].section ?? ""
                 groupChoiceVc.subjectCode = self.subjects?[indexPath.row].subject_name ?? ""
                 groupChoiceVc.isLab = true
+                groupChoiceVc.navigationItem.largeTitleDisplayMode = .never
+                tabBarController?.tabBar.isHidden = true
                 self.navigationController?.pushViewController(groupChoiceVc, animated: true)
             }
         } else {
@@ -261,7 +276,18 @@ extension SubjectViewController: SubjectCellProtocol {
             studentListVC.subjectCode = self.subjects?[idx].subject_name ?? ""
             studentListVC.isLab = self.subjects?[idx].is_lab ?? false
             studentListVC.isEditingPrevAttendance = true
+            studentListVC.navigationItem.largeTitleDisplayMode = .never
+            tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(studentListVC, animated: true)
+        }
+    }
+}
+
+
+extension SubjectViewController: LoginViewControllerProtocol {
+    func reloadData(isLogin: Bool) {
+        if !isLogin {
+            getSubject()
         }
     }
 }
