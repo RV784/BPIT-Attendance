@@ -11,5 +11,5 @@ struct StudentListModel: Codable {
     var enrollment_number: String?
     var name: String?
     var class_roll_number: String?
-    var attendance_count: Int
+    var attendance_count: Int?
 }

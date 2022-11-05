@@ -39,6 +39,10 @@ class SubjectViewController: UIViewController {
         noInternetView.retryBtn.isHidden = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
 //MARK: BUSINESS LOGIC
     @IBAction func logoutBtnClicked(_ sender: Any) {
         let alertController = UIAlertController(title: "Do you want to Logout?", message: "", preferredStyle: .alert)
@@ -73,10 +77,6 @@ class SubjectViewController: UIViewController {
         if let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
             self.navigationController?.pushViewController(profileVC, animated: true)
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     func navigateToLoginAgain() {
@@ -142,15 +142,19 @@ class SubjectViewController: UIViewController {
                     }
                     
                 } catch(let error) {
-                    if let httpResponse = response as? HTTPURLResponse {
-                        DispatchQueue.main.async {
-                            self?.subjectLoader.stopAnimating()
-                            if httpResponse.statusCode == 401 {
-                                print("token expired")
-                                self?.popToLoginAgainScreen()
-                            }
-                        }
+                    DispatchQueue.main.async {
+                        self?.subjectLoader.stopAnimating()
+                        print(error)
                     }
+//                    if let httpResponse = response as? HTTPURLResponse {
+//                        DispatchQueue.main.async {
+//                            self?.subjectLoader.stopAnimating()
+//                            if httpResponse.statusCode == 401 {
+//                                print("token expired")
+//                                self?.popToLoginAgainScreen()
+//                            }
+//                        }
+//                    }
                 }
             }
         })
@@ -170,7 +174,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let cell = subjectCollectionView.dequeueReusableCell(withReuseIdentifier: "subjectCell", for: indexPath) as? subjectCell {
-            
+            cell.delegate = self
             cell.subjectLabel.text = self.subjects?[indexPath.row].subject_name
             cell.sectionLabel.text = "Semester \(self.subjects?[indexPath.row].semester ?? 0)"
             if self.subjects?[indexPath.row].is_lab == true {
@@ -179,6 +183,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
                 cell.labLabel.text = ""
             }
             cell.branch_sectionLabel.text = "\(self.subjects?[indexPath.row].branch_code ?? "") - \(self.subjects?[indexPath.row].section ?? "")"
+            cell.idxPath = indexPath.row
             return cell
         }
         
@@ -236,15 +241,27 @@ extension SubjectViewController: NoInternetProtocols {
     func onGoBackPressed() {
         disableEnableViews()
     }
-    
-    
 }
-
 
 extension UINavigationController {
     func popToViewController(ofClass: AnyClass, animated: Bool = true) {
         if let vc = viewControllers.last(where: { $0.isKind(of: ofClass) }) {
             popToViewController(vc, animated: animated)
+        }
+    }
+}
+
+extension SubjectViewController: SubjectCellProtocol {
+    func editLastAttendance(idx: Int) {
+        if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
+            studentListVC.batch = self.subjects?[idx].batch ?? ""
+            studentListVC.branch = self.subjects?[idx].branch_code ?? ""
+            studentListVC.subject = self.subjects?[idx].subject_code ?? ""
+            studentListVC.section = self.subjects?[idx].section ?? ""
+            studentListVC.subjectCode = self.subjects?[idx].subject_name ?? ""
+            studentListVC.isLab = self.subjects?[idx].is_lab ?? false
+            studentListVC.isEditingPrevAttendance = true
+            self.navigationController?.pushViewController(studentListVC, animated: true)
         }
     }
 }

@@ -47,6 +47,10 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     
 //MARK: BUSINESS LOGIC
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -89,8 +93,6 @@ class ViewController: UIViewController {
             passwordTxtField.layer.cornerRadius = 4
             return
         }
-        //        print(emailTxtField.text)
-        //        print(passwordTxtField.text)
         if checkConnection() {
             register(email: emailTxtField.text!, password: passwordTxtField.text!)
         } else {
@@ -98,13 +100,8 @@ class ViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
     func navigate(){
             if let subjectVC = storyboard?.instantiateViewController(withIdentifier: "SubjectViewController") as? SubjectViewController{
-                
                 self.navigationController?.pushViewController(subjectVC, animated: true)
             }
     }
@@ -155,7 +152,7 @@ class ViewController: UIViewController {
 
 // MARK: API CALL
 extension ViewController {
-    func register(email: String, password: String){
+    func register(email: String, password: String) {
         signInBtn.setTitle("", for: .normal)
         self.loginLoader.startAnimating()
         let parameters: [String: Any]  = ["email" : email, "password" : password] as Dictionary<String, Any>
@@ -178,7 +175,6 @@ extension ViewController {
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(LoginModel.self, from: data!)
-//                    print(d1.token)
                     DispatchQueue.main.async {
                         self.loginData = d1
                         if self.loginData?.token == nil {
@@ -191,6 +187,7 @@ extension ViewController {
                             self.signInBtn.setTitle("Sign In", for: .normal)
                             self.loginLoader.stopAnimating()
                             Credentials.shared.defaults.set(self.loginData?.token, forKey: "Token")
+                            Credentials.shared.defaults.set(self.loginData?.id, forKey: "Id")
                             self.getProfileCall()
                             
                             if self.loginData?.isFirstLogin ?? false {
@@ -219,7 +216,12 @@ extension ViewController {
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
             return
         }
-        var request = URLRequest(url: URL(string: EndPoints.getProfile.description)!)
+        
+        guard let id = Credentials.shared.defaults.string(forKey: "Id") else {
+            return
+        }
+        
+        var request = URLRequest(url: URL(string: EndPoints.getProfile(id: id).description)!)
         request.httpMethod = "GET"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -227,7 +229,7 @@ extension ViewController {
         let session = URLSession.shared
         let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
             if error != nil {
-                print("inside \(EndPoints.getProfile.description) erorr")
+                print("inside \(EndPoints.getProfile(id: id).description) erorr")
                 print(error?.localizedDescription as Any)
             }else{
                 do{
@@ -235,11 +237,10 @@ extension ViewController {
                     print(d1)
                     self?.profileData = d1
                     DispatchQueue.main.async {
-//                        Credentials.shared.defaults.set(self?.profileData, forKey: "ProfileData")
                         self?.saveToDevice()
                     }
                 } catch(let error) {
-                    print("inside \(EndPoints.getProfile.description) catch")
+                    print("inside \(EndPoints.getProfile(id: id).description) catch")
                     print("inside catch \(error)")
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 401 {

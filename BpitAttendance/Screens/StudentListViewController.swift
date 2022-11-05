@@ -22,6 +22,10 @@ class StudentListViewController: UIViewController {
     var studentRecord: RecordData?
     var count: Int = 0
     var checkAll = true
+    var isEditingPrevAttendance = false
+    
+    var lastAttendanceStudents: [LastAttendanceStudentModel]?
+    var lastRecordData: LastAttendanceModel?
     
     @IBOutlet weak var dynamicStudentCounter: UILabel!
     @IBOutlet weak var noInternetView: NoInternetView!
@@ -37,23 +41,18 @@ class StudentListViewController: UIViewController {
         studentCollectionView.dataSource = self
         studentCollectionView.delegate = self
         noInternetView.delegate = self
-        print(self.batch)
-        print(self.subject)
-        print(self.subjectCode)
-        print(self.branch)
-        print(self.isLab)
-        print(self.groupNum)
-        print("_-------------------")
-        getStudents(batch: self.batch, subject: self.subjectCode, section: self.section, branch: self.branch, isLab: self.isLab, groupNum: self.groupNum, subjectCode: self.subject)
+        if isEditingPrevAttendance {
+            getLastAttendanceStudents(batch: self.batch, subject: self.subjectCode, section: self.section, branch: self.branch, isLab: false, subjectCode: self.subject)
+        } else {
+            getStudents(batch: self.batch, subject: self.subjectCode, section: self.section, branch: self.branch, isLab: self.isLab, groupNum: self.groupNum, subjectCode: self.subject)
+        }
         studentCollectionView.register(UINib(nibName: "StudentListCell", bundle: nil), forCellWithReuseIdentifier: "StudentListCell")
         studentCollectionView.contentInset = UIEdgeInsets(top: CGFloat(10), left: CGFloat(10), bottom: 0, right: CGFloat(10))
         submitBtn.layer.cornerRadius = 25
         navigationItem.backButtonTitle = ""
         navigationItem.title = "Students"
         studentRecord = RecordData(record: [])
-        //        print(subjectCode)
-        //        print(subject)
-        //        print(batch)
+        lastRecordData = LastAttendanceModel(record: [])
         navigationItem.backButtonTitle = ""
         bottomBtnViews.layer.cornerRadius = 25
         submitBtn.layer.cornerRadius = 25
@@ -66,19 +65,35 @@ class StudentListViewController: UIViewController {
     }
     
     @objc func toggleAll() {
-        if studentRecord?.record.count != nil {
-            for i in 0..<(studentRecord?.record.count)! {
-                studentRecord?.record[i].status = checkAll
+        
+        if isEditingPrevAttendance {
+            if lastAttendanceStudents?.count != nil {
+                for i in 0..<(lastAttendanceStudents?.count)! {
+                    lastAttendanceStudents?[i].status = checkAll
+                }
+                if checkAll {
+                    count = (lastAttendanceStudents?.count)!
+                    dynamicStudentCounter.text = "\(count)"
+                } else {
+                    count = 0
+                    dynamicStudentCounter.text = "\(count)"
+                }
             }
-            if checkAll {
-                count = (studentRecord?.record.count)!
-                dynamicStudentCounter.text = "\(count)"
-            } else {
-                count = 0
-                dynamicStudentCounter.text = "0"
+        } else {
+            if studentRecord?.record.count != nil {
+                for i in 0..<(studentRecord?.record.count)! {
+                    studentRecord?.record[i].status = checkAll
+                }
+                if checkAll {
+                    count = (studentRecord?.record.count)!
+                    dynamicStudentCounter.text = "\(count)"
+                } else {
+                    count = 0
+                    dynamicStudentCounter.text = "0"
+                }
+                checkAll.toggle()
+                studentCollectionView.reloadData()
             }
-            checkAll.toggle()
-            studentCollectionView.reloadData()
         }
     }
     
@@ -88,12 +103,39 @@ class StudentListViewController: UIViewController {
     
 //MARK: BUSINESS LOGIC
     func prepareRecordData() {
+        let date = dateFormatter()
         for item in self.students ?? [] {
-            studentRecord?.record.append(RecordData.studentData(status: false, enrollment_number: item.enrollment_number ?? "", subject: self.subjectCode, batch: self.batch, date: dateFormatter()))
+            studentRecord?.record.append(RecordData.studentData(status: false,
+                                                                enrollment_number: item.enrollment_number ?? "",
+                                                                subject: self.subjectCode,
+                                                                batch: self.batch,
+                                                                date: date))
         }
         print(students?.count as Any)
         print(studentRecord?.record.count as Any)
         self.studentCollectionView.reloadData()
+    }
+    
+    func prepareLastRecordData() {
+//        let date = dateFormatter()
+        for item in self.lastAttendanceStudents ?? [] {
+            lastRecordData?.record.append(LastAttendanceModel.studentData(id: item.id ?? 0,
+                                                                          enrollment_number: item.enrollment_number ?? "",
+                                                                          batch: item.batch ?? "",
+                                                                          name: item.name ?? "",
+                                                                          status: item.status ?? true,
+                                                                          class_roll_number: item.class_roll_number ?? "",
+                                                                          date: item.date ?? "",
+                                                                          subject: item.subject ?? ""))
+        }
+        print(lastRecordData?.record.count as Any)
+        self.studentCollectionView.reloadData()
+        
+//        if let array = lastAttendanceStudents {
+//            for i in 0..<array.count {
+//                lastAttendanceStudents?[i].date = date
+//            }
+//        }
     }
     
     func shake() {
@@ -109,7 +151,11 @@ class StudentListViewController: UIViewController {
     
     func yesPressed() {
         if checkConnection() {
-            sendStudents()
+            if isEditingPrevAttendance {
+                sendLastStudents()
+            } else {
+                sendStudents()
+            }
         } else {
             disableEnableViews()
         }
@@ -142,6 +188,17 @@ class StudentListViewController: UIViewController {
         return ""
     }
     
+    func updateCounter() {
+        if lastAttendanceStudents?.count != nil {
+            for i in 0..<(lastAttendanceStudents?.count)! {
+                if lastAttendanceStudents?[i].status ?? false {
+                    count = count + 1
+                }
+            }
+        dynamicStudentCounter.text = "\(count)"
+        }
+    }
+    
     @IBAction func submitBtnClicked(_ sender: Any) {
         let alert = UIAlertController(title: "\(self.count) Students Present", message: "Do you want to submit Attendance ?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
@@ -151,7 +208,6 @@ class StudentListViewController: UIViewController {
     
 //MARK: API CALLS
     func sendStudents() {
-        
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
 //            self.navigateToLoginAgain()
             return
@@ -187,13 +243,54 @@ class StudentListViewController: UIViewController {
         task.resume()
     }
     
+    func sendLastStudents() {
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+//            self.navigateToLoginAgain()
+            return
+        }
+        
+        submitBtn.setTitle("", for: .normal)
+        attendanceSubmitLoader.startAnimating()
+        
+        let recordData = try? JSONEncoder().encode(self.lastRecordData)
+        
+        var request = URLRequest(url: URL(string: EndPoints.sendLastAttendance.description)!)
+        request.httpMethod = "PATCH"
+        request.httpBody = recordData
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            do {
+                print(String(data: data!, encoding: .utf8))
+                print(response as Any)
+                DispatchQueue.main.async {
+                    self.submitBtn.setTitle("", for: .normal)
+                    self.attendanceSubmitLoader.stopAnimating()
+                    
+                    let viewControllers: [UIViewController] = self.navigationController!.viewControllers
+                    for aViewController in viewControllers {
+                        if aViewController is SubjectViewController {
+                            self.navigationController!.popToViewController(aViewController, animated: true)
+                        }
+                    }
+                }
+            } catch {
+                print("error")
+            }
+        })
+        task.resume()
+        
+    }
+    
     func getStudents(batch: String, subject: String, section: String, branch: String, isLab: Bool, groupNum: Int, subjectCode: String) {
         self.studentLoader.startAnimating()
         var request: URLRequest
         if isLab {
             request = URLRequest(url: URL(string: EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description)!)
         } else {
-            request = URLRequest(url: URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)!)
+            request = URLRequest(url: URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subject, section: section).description)!)
         }
         
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
@@ -206,6 +303,7 @@ class StudentListViewController: UIViewController {
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+//            print(String(data: data!, encoding: .utf8))
             if error != nil {
                 self?.studentLoader.startAnimating()
                 print("inside error")
@@ -214,10 +312,50 @@ class StudentListViewController: UIViewController {
                 do{
                     let d1 = try JSONDecoder().decode([StudentListModel].self, from: data!)
                     self?.students = d1
-                    print(self?.students?.count ?? 0)
                     DispatchQueue.main.async {
                         self?.studentLoader.stopAnimating()
                         self?.prepareRecordData()
+                    }
+                    
+                } catch(let error) {
+                    DispatchQueue.main.async {
+                        self?.studentLoader.stopAnimating()
+                    }
+                    self?.popToLoginAgainScreen()
+                    print("do catch error", error)
+                }
+            }
+        })
+        task.resume()
+    }
+    
+    func getLastAttendanceStudents(batch: String, subject: String, section: String, branch: String, isLab: Bool, subjectCode: String) {
+        self.studentLoader.startAnimating()
+        var request: URLRequest
+
+        request = URLRequest(url: URL(string: EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)!)
+        
+        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+            //            self.navigateToLoginAgain()
+            return
+        }
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            if error != nil {
+                self?.studentLoader.startAnimating()
+                print("inside error")
+                print(error?.localizedDescription ?? "")
+            }else{
+                do{
+                    let d1 = try JSONDecoder().decode([LastAttendanceStudentModel].self, from: data!)
+                    self?.lastAttendanceStudents = d1
+                    DispatchQueue.main.async {
+                        self?.studentLoader.stopAnimating()
+                        self?.updateCounter()
+                        self?.prepareLastRecordData()
                     }
                     
                 } catch(let error) {
@@ -238,18 +376,33 @@ class StudentListViewController: UIViewController {
 extension StudentListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if isEditingPrevAttendance {
+            return self.lastRecordData?.record.count ?? 0
+        }
         return self.studentRecord?.record.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StudentListCell", for: indexPath) as? StudentListCell {
-            cell.rollNoLabel.text = self.students?[indexPath.row].class_roll_number
-            cell.nameLabel.text = self.students?[indexPath.row].name
-            if self.studentRecord?.record[indexPath.row].status ?? false {
-                cell.backgroundColor = UIColor.systemGreen
+            
+            if isEditingPrevAttendance {
+                cell.rollNoLabel.text = self.lastAttendanceStudents?[indexPath.row].class_roll_number
+                cell.nameLabel.text = self.lastAttendanceStudents?[indexPath.row].name
+                if self.lastRecordData?.record[indexPath.row].status ?? false {
+                    cell.backgroundColor = UIColor.systemGreen
+                } else {
+                    cell.backgroundColor = UIColor.systemYellow
+                }
             } else {
-                cell.backgroundColor = UIColor.systemYellow
+                cell.rollNoLabel.text = self.students?[indexPath.row].class_roll_number
+                cell.nameLabel.text = self.students?[indexPath.row].name
+                if self.studentRecord?.record[indexPath.row].status ?? false {
+                    cell.backgroundColor = UIColor.systemGreen
+                } else {
+                    cell.backgroundColor = UIColor.systemYellow
+                }
             }
+            
             cell.layer.cornerRadius = 20
             return cell
         }
@@ -263,15 +416,29 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedCell = collectionView.cellForItem(at: indexPath)
         
-        if studentRecord?.record[indexPath.row].status ?? true {
-            studentRecord?.record[indexPath.row].status = false
-            selectedCell?.backgroundColor = UIColor.systemYellow
-            count = count - 1
+        if isEditingPrevAttendance {
+            if lastRecordData?.record[indexPath.row].status ?? true {
+                lastRecordData?.record[indexPath.row].status = false
+                selectedCell?.backgroundColor = UIColor.systemYellow
+                count = count - 1
+            } else {
+                lastRecordData?.record[indexPath.row].status = true
+                selectedCell?.backgroundColor = UIColor.systemGreen
+                count = count + 1
+            }
         } else {
-            studentRecord?.record[indexPath.row].status = true
-            count = count + 1
-            selectedCell?.backgroundColor = UIColor.systemGreen
+            if studentRecord?.record[indexPath.row].status ?? true {
+                studentRecord?.record[indexPath.row].status = false
+                selectedCell?.backgroundColor = UIColor.systemYellow
+                count = count - 1
+            } else {
+                studentRecord?.record[indexPath.row].status = true
+                count = count + 1
+                selectedCell?.backgroundColor = UIColor.systemGreen
+            }
         }
+        
+        
         dynamicStudentCounter.text = "\(count)"
     }
     
@@ -279,7 +446,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
         configureContextMenu(index: indexPath.row)
     }
     
-    func configureContextMenu(index: Int) -> UIContextMenuConfiguration{
+    func configureContextMenu(index: Int) -> UIContextMenuConfiguration {
         let context = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (action) -> UIMenu? in
             
             let name = UIAction(title: "Name: \(self.students?[index].name ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
