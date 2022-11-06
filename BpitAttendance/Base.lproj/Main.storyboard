@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginImg" translatesAutoresizingMaskIntoConstraints="NO" id="mcu-pA-kjT">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BpitLaunch" translatesAutoresizingMaskIntoConstraints="NO" id="mcu-pA-kjT">
                                 <rect key="frame" x="112.66666666666669" y="159.66666666666666" width="150" height="149.99999999999997"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="mcu-pA-kjT" secondAttribute="height" id="s60-bH-NRZ"/>
@@ -1033,6 +1033,7 @@
     </scenes>
     <color key="tintColor" systemColor="linkColor"/>
     <resources>
+        <image name="BpitLaunch" width="250" height="125"/>
         <image name="achalSir" width="280" height="400"/>
         <image name="book" catalog="system" width="128" height="99"/>
         <image name="book.fill" catalog="system" width="128" height="95"/>
@@ -1041,7 +1042,6 @@
         <image name="info.circle" catalog="system" width="128" height="123"/>
         <image name="info.circle.fill" catalog="system" width="128" height="123"/>
         <image name="jindal" width="451" height="451"/>
-        <image name="loginImg" width="512" height="512"/>
         <image name="nishant" width="636" height="635"/>
         <image name="person" catalog="system" width="128" height="121"/>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>

@@ -132,7 +132,10 @@ class ResetPasswordViewController: UIViewController {
             Credentials.shared.defaults.set(false, forKey: "Staff")
             Credentials.shared.defaults.set(false, forKey: "Active")
             Credentials.shared.defaults.set(false, forKey: "SuperUser")
-            self.navigateToLoginAgain()
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginNavController = storyboard.instantiateViewController(identifier: "ViewController")
+            
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
             }
         alertController.addAction(backToLoginAction)
         self.present(alertController, animated: true, completion: nil)
