@@ -166,12 +166,20 @@ class EnterEmailViewController: UIViewController {
     
     private func navigateToResetPassword() {
         let otp = getOtp()
-        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController,
-           otp != "" {
+//        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController,
+//           otp != "" {
+//            resetPasswordVC.forgotPassword = true
+//            resetPasswordVC.otp = otp
+//            resetPasswordVC.email = enterEmailField.text ?? ""
+//            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
+//        }
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let resetPasswordVC = storyboard.instantiateViewController(identifier: "ResetPasswordViewController") as? ResetPasswordViewController {
             resetPasswordVC.forgotPassword = true
             resetPasswordVC.otp = otp
             resetPasswordVC.email = enterEmailField.text ?? ""
-            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(resetPasswordVC)
         }
     }
 }

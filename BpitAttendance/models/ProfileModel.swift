@@ -17,6 +17,7 @@ struct ProfileModel: Codable {
     let isSuperUser: Bool?
     let isActive: Bool?
     let dateJoined: String?
+    let image_url: String?
     
     enum CodingKeys: String, CodingKey {
         case id,
@@ -27,6 +28,7 @@ struct ProfileModel: Codable {
              isStaff = "is_staff",
              isSuperUser = "is_superuser",
              isActive = "is_active",
-             dateJoined = "date_joined"
+             dateJoined = "date_joined",
+             image_url
     }
 }

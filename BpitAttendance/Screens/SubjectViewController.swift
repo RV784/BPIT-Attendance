@@ -41,6 +41,11 @@ class SubjectViewController: UIViewController {
 //        noInternetView.gobackBtn.isHidden = true
         noInternetView.isHidden = true
         noInternetView.retryBtn.isHidden = true
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh",
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(rightHandAction))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -85,10 +90,18 @@ class SubjectViewController: UIViewController {
     }
     
     func navigateToLoginAgain() {
-        if let loginVC = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
-            loginVC.tokExpMidCycle = true
-            navigationController?.pushViewController(loginVC, animated: true)
+        let alertController = UIAlertController(title: "Oops!", message: "Seems link your token expired, we'll redirect you to LogIn screen to refresh your token", preferredStyle: .alert)
+        let gotoButton = UIAlertAction(title: "Go to Login Screen", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            NSLog("gotoButton Pressed")
+            if let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
+                loginVC.tokExpMidCycle = true
+                self.tabBarController?.tabBar.isHidden = true
+                self.navigationController?.pushViewController(loginVC, animated: true)
+            }
         }
+        alertController.addAction(gotoButton)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func shake() {
@@ -106,6 +119,10 @@ class SubjectViewController: UIViewController {
         subjectCollectionView.isHidden.toggle()
 //        bottomButtonsView.isHidden.toggle()
         shake()
+    }
+    
+    @objc func rightHandAction() {
+        getSubject()
     }
   
 //MARK: API CALLS
@@ -202,7 +219,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width  = subjectCollectionView.frame.width
-        return CGSize(width: width/2 - 15, height: 130)
+        return CGSize(width: width/2 - 15, height: 140)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -240,6 +257,8 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             studentListVC.section = self.subjects?[idx].section ?? ""
             studentListVC.subjectCode = self.subjects?[idx].subject_name ?? ""
             studentListVC.isLab = self.subjects?[idx].is_lab ?? false
+            studentListVC.navigationItem.largeTitleDisplayMode = .never
+            tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(studentListVC, animated: true)
         }
     }

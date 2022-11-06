@@ -10,4 +10,5 @@ import UIKit
 struct ResetPasswordModel: Codable {
     var message: String?
     var token: String?
+    var error: [String]?
 }

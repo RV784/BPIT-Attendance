@@ -73,17 +73,19 @@ class StudentListViewController: UIViewController {
     @objc func toggleAll() {
         
         if isEditingPrevAttendance {
-            if lastAttendanceStudents?.count != nil {
-                for i in 0..<(lastAttendanceStudents?.count)! {
-                    lastAttendanceStudents?[i].status = checkAll
+            if lastRecordData?.record.count != nil {
+                for i in 0..<(lastRecordData?.record.count)! {
+                    lastRecordData?.record[i].status = checkAll
                 }
                 if checkAll {
-                    count = (lastAttendanceStudents?.count)!
+                    count = (lastRecordData?.record.count)!
                     dynamicStudentCounter.text = "\(count)"
                 } else {
                     count = 0
                     dynamicStudentCounter.text = "\(count)"
                 }
+                checkAll.toggle()
+                studentCollectionView.reloadData()
             }
         } else {
             if studentRecord?.record.count != nil {
@@ -192,10 +194,27 @@ class StudentListViewController: UIViewController {
     }
     
     func navigateToLoginAgain() {
-        if let loginVC = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
-            loginVC.tokExpMidCycle = true
-            navigationController?.pushViewController(loginVC, animated: true)
+        let alertController = UIAlertController(title: "Oops!", message: "Seems link your token expired, we'll redirect you to LogIn screen to refresh your token", preferredStyle: .alert)
+        let gotoButton = UIAlertAction(title: "Go to Login Screen", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            NSLog("gotoButton Pressed")
+            if let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
+                loginVC.tokExpMidCycle = true
+                self.navigationController?.pushViewController(loginVC, animated: true)
+            }
         }
+        alertController.addAction(gotoButton)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func showNoDataAlert() {
+        let alert = UIAlertController(title: "Alert", message: "No last attendance stats available", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in self.okPressed()}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func okPressed() {
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func submitBtnClicked(_ sender: Any) {
@@ -250,16 +269,25 @@ class StudentListViewController: UIViewController {
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(SubmitAttendanceResponseModel.self, from: data!)
-                    DispatchQueue.main.async {
-                        if self?.isLab ?? false {
+                    print(d1)
+                    if d1.msg == nil {
+                        DispatchQueue.main.async {
+                            print("token expired")
+                            self?.navigateToLoginAgain()
+                        }
+                        return
+                    }
+                    if self?.isLab ?? false {
+                        DispatchQueue.main.async {
                             self?.navigationController?.popViewControllers(viewsToPop: 2)
-                        } else {
+                        }
+                    } else {
+                        DispatchQueue.main.async {
                             self?.navigationController?.popViewController(animated: true)
                         }
-                        print(d1)
-                        print("______________________________")
                     }
-                } catch (let error){
+                    print("----------------------------")
+                } catch (let error) {
                     if let httpResponse = response as? HTTPURLResponse {
                         DispatchQueue.main.async {
                             if httpResponse.statusCode == 401 {
@@ -281,7 +309,6 @@ class StudentListViewController: UIViewController {
             navigateToLoginAgain()
             return
         }
-        
         if tok == "" {
             navigateToLoginAgain()
             return
@@ -320,10 +347,17 @@ class StudentListViewController: UIViewController {
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(SubmitAttendanceResponseModel.self, from: data!)
+                    print(d1)
+                    print("______________________________")
+                    if d1.msg == nil {
+                        DispatchQueue.main.async {
+                            print("token expired")
+                            self?.navigateToLoginAgain()
+                        }
+                        return
+                    }
                     DispatchQueue.main.async {
                         self?.navigationController?.popViewController(animated: true)
-                        print(d1)
-                        print("______________________________")
                     }
                 } catch (let error){
                     if let httpResponse = response as? HTTPURLResponse {
@@ -364,7 +398,7 @@ class StudentListViewController: UIViewController {
             request = URLRequest(url: url)
             print(EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description)
         } else {
-            guard let url = URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subject, section: section).description) else {
+            guard let url = URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description) else {
                 return
             }
             request = URLRequest(url: url)
@@ -440,6 +474,8 @@ class StudentListViewController: UIViewController {
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             
+            print(String(data: data!, encoding: .utf8))
+            
             DispatchQueue.main.async {
                 self?.studentLoader.stopAnimating()
             }
@@ -465,6 +501,8 @@ class StudentListViewController: UIViewController {
                             if httpResponse.statusCode == 401 {
                                 print("token expired")
                                 self?.navigateToLoginAgain()
+                            } else {
+                                self?.showNoDataAlert()
                             }
                         }
                     }
@@ -492,8 +530,8 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StudentListCell", for: indexPath) as? StudentListCell {
             
             if isEditingPrevAttendance {
-                cell.rollNoLabel.text = self.lastAttendanceStudents?[indexPath.row].class_roll_number
-                cell.nameLabel.text = self.lastAttendanceStudents?[indexPath.row].name
+                cell.rollNoLabel.text = self.lastAttendanceStudents?[indexPath.row].class_roll_number ?? ""
+                cell.nameLabel.text = self.lastAttendanceStudents?[indexPath.row].name ?? ""
                 if self.lastRecordData?.record[indexPath.row].status ?? false {
                     cell.backgroundColor = UIColor.systemGreen
                 } else {
@@ -516,7 +554,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/2 - 15, height: 90)
+        return CGSize(width: collectionView.frame.width/2 - 15, height: 85)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -553,18 +591,32 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func configureContextMenu(index: Int) -> UIContextMenuConfiguration {
+
         let context = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (action) -> UIMenu? in
             
-            let name = UIAction(title: "Name: \(self.students?[index].name ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+            if self.isEditingPrevAttendance {
+                let name = UIAction(title: "Name: \(self.lastAttendanceStudents?[index].name ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                let enrollmentNo = UIAction(title: "Enrollment No: \(self.lastAttendanceStudents?[index].enrollment_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                let classRollNo = UIAction(title: "ClassRoll No: \(self.lastAttendanceStudents?[index].class_roll_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                
+                return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo])
+                
+            } else {
+                let name = UIAction(title: "Name: \(self.students?[index].name ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                let enrollmentNo = UIAction(title: "Enrollment No: \(self.students?[index].enrollment_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                let classRollNo = UIAction(title: "ClassRoll No: \(self.students?[index].class_roll_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                let specificAttendance = UIAction(title: "Attendance: \(self.students?[index].attendance_count ?? 0)", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                }
+                
+                return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo, specificAttendance])
             }
-            let enrollmentNo = UIAction(title: "Enrollment No: \(self.students?[index].enrollment_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-            }
-            let classRollNo = UIAction(title: "ClassRoll No: \(self.students?[index].class_roll_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-            }
-            let specificAttendance = UIAction(title: "Attendance: \(self.students?[index].attendance_count ?? 0)", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
-            }
-            
-            return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo, specificAttendance])
+            return UIMenu()
         }
         return context
     }

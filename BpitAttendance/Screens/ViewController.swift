@@ -85,9 +85,18 @@ class ViewController: UIViewController {
     
     
     @objc func forgotPassword() {
-        if let enterEmailVC = storyboard?.instantiateViewController(withIdentifier: "EnterEmailViewController") as? EnterEmailViewController {
-            self.navigationController?.pushViewController(enterEmailVC, animated: true)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let resetPasswordVC = storyboard.instantiateViewController(identifier: "EnterEmailViewController") as? EnterEmailViewController {
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(resetPasswordVC)
         }
+        
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let enterEmail = storyboard.instantiateViewController(identifier: "EnterEmailViewController")
+//
+//            // This is to get the SceneDelegate object from your view controller
+//            // then call the change root view controller function to change to main tab bar
+//            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(enterEmail)
     }
     
     @IBAction func signInBtnClicked(_ sender: Any) {
@@ -159,9 +168,10 @@ class ViewController: UIViewController {
     }
     
     func navigateToResetPassword() {
-        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController{
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let resetPasswordVC = storyboard.instantiateViewController(identifier: "ResetPasswordViewController") as? ResetPasswordViewController {
             resetPasswordVC.firstLogin = true
-            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(resetPasswordVC)
         }
     }
 }

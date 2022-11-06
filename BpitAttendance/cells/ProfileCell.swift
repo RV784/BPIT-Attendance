@@ -7,29 +7,39 @@
 
 import UIKit
 
-protocol ProfileCellProtocol {
-    func editOrSave(isSave: Bool)
+protocol ProfileCellProtocol: NSObjectProtocol {
+    func edited(cell: ProfileCell)
 }
 
 class ProfileCell: UITableViewCell {
     
     var isEditingAllowed = false
-    
+    var type: cellType?
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var txtField: UITextField!
     @IBOutlet weak var headingLabel: UILabel!
     @IBOutlet weak var saveBtn: UIButton!
+    weak var delegate: ProfileCellProtocol?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         txtField.delegate = self
         baseView.layer.cornerRadius = 20
-        imgView.layer.cornerRadius = 15
+        imgView.layer.cornerRadius = 11
         baseView.layer.borderColor = UIColor.systemGray5.cgColor
         baseView.layer.borderWidth = 1
-        saveBtn.titleLabel?.text = "save"
+        saveBtn.titleLabel?.text = "Edit"
+        saveBtn.layer.cornerRadius = 15
+        
+        txtField.addTarget(self, action: #selector(textFieldDidChange(_:)),
+                                  for: .editingChanged)
+    }
+    
+    @IBAction func txtFieldAction(_ sender: UITextField) { }
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        delegate?.edited(cell: self)
     }
     
     @IBAction func editBtnClicked(_ sender: Any) {
@@ -47,12 +57,10 @@ class ProfileCell: UITableViewCell {
 
 //TODO: send faculty data all at once
 extension ProfileCell: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return true
-    }
+    
 }
 
-enum profileType: String {
+enum cellType: String {
     case name = "Name"
     case phone = "Phone"
 }

@@ -22,15 +22,15 @@
                         <rect key="frame" x="10" y="10" width="468" height="105"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GiR-aj-PIQ">
-                                <rect key="frame" x="10" y="10" width="30" height="30"/>
+                                <rect key="frame" x="10" y="10" width="22" height="22"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Dew-vI-pBd"/>
-                                    <constraint firstAttribute="width" constant="30" id="w8w-ax-5Ig"/>
+                                    <constraint firstAttribute="height" constant="22" id="Dew-vI-pBd"/>
+                                    <constraint firstAttribute="width" constant="22" id="w8w-ax-5Ig"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eYv-8j-qKr">
-                                <rect key="frame" x="45" y="-5" width="39" height="60"/>
-                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
+                                <rect key="frame" x="42" y="-13" width="37" height="68"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -39,8 +39,11 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="hlP-iR-Lg2"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="txtFieldAction:" destination="KGk-i7-Jjw" eventType="editingDidEnd" id="jTm-Ns-9ab"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1eI-Bh-QSS">
                                 <rect key="frame" x="393" y="65" width="65" height="30"/>
@@ -52,6 +55,9 @@
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit"/>
+                                <connections>
+                                    <action selector="editBtnClicked:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Y2f-b0-cId"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -66,7 +72,7 @@
                             <constraint firstAttribute="bottom" secondItem="nuI-WG-Vmo" secondAttribute="bottom" id="hYI-jZ-86I"/>
                             <constraint firstAttribute="trailing" secondItem="1eI-Bh-QSS" secondAttribute="trailing" constant="10" id="njj-fa-dG8"/>
                             <constraint firstItem="nuI-WG-Vmo" firstAttribute="top" secondItem="eYv-8j-qKr" secondAttribute="bottom" id="qEl-MA-vi4"/>
-                            <constraint firstItem="eYv-8j-qKr" firstAttribute="leading" secondItem="GiR-aj-PIQ" secondAttribute="trailing" constant="5" id="wEi-3N-wgq"/>
+                            <constraint firstItem="eYv-8j-qKr" firstAttribute="leading" secondItem="GiR-aj-PIQ" secondAttribute="trailing" constant="10" id="wEi-3N-wgq"/>
                         </constraints>
                     </view>
                 </subviews>

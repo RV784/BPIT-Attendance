@@ -10,6 +10,7 @@ import UIKit
 class ResetPasswordViewController: UIViewController {
     
     
+    @IBOutlet var baseView: UIView!
     @IBOutlet weak var loader: UIActivityIndicatorView!
     @IBOutlet weak var oldPasswordTextField: UITextField!
     @IBOutlet weak var newPasswordTextField: UITextField!
@@ -43,6 +44,13 @@ class ResetPasswordViewController: UIViewController {
         
         navigationItem.title = "Reset Password"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ResetPasswordViewController.dismissKeyboard))
+        baseView.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     @objc func oldTextFieldDidChange(_ textField: UITextField) {
@@ -52,7 +60,6 @@ class ResetPasswordViewController: UIViewController {
     @objc func newtextFieldDidChange(_ textField: UITextField) {
         
     }
-    
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         if confirmPasswordTextField.text != newPasswordTextField.text {
@@ -98,12 +105,17 @@ class ResetPasswordViewController: UIViewController {
     }
     
     func navigateToLoginAgain() {
-        let viewControllers: [UIViewController] = self.navigationController!.viewControllers
-        for aViewController in viewControllers {
-            if aViewController is ViewController {
-                self.navigationController!.popToViewController(aViewController, animated: true)
-            }
+        
+        let alertController = UIAlertController(title: "Oops!", message: "Seems link your token expired, we'll redirect you to LogIn screen to refresh your token", preferredStyle: .alert)
+        let gotoButton = UIAlertAction(title: "Go to Login Screen", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            NSLog("gotoButton Pressed")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginNavController = storyboard.instantiateViewController(identifier: "ViewController")
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
         }
+        alertController.addAction(gotoButton)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func showBackToLoginAlert() {
@@ -127,20 +139,28 @@ class ResetPasswordViewController: UIViewController {
     }
     
     func successfulResetPassword() {
-        let alertController = UIAlertController(title: "Password reset successful, Please now log in with your new Password", message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Password reset successful", message: "Please now log in with your new Password", preferredStyle: .alert)
         let confirmation = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
                 UIAlertAction in
                 NSLog("OK Pressed")
-            Credentials.shared.defaults.set("", forKey: "Token")
-            Credentials.shared.defaults.set("", forKey: "Name")
-            Credentials.shared.defaults.set("", forKey: "Email")
-            Credentials.shared.defaults.set("", forKey: "Designation")
-            Credentials.shared.defaults.set("", forKey: "PhoneNumber")
-            Credentials.shared.defaults.set("", forKey: "DateJoined")
-            Credentials.shared.defaults.set(false, forKey: "Staff")
-            Credentials.shared.defaults.set(false, forKey: "Active")
-            Credentials.shared.defaults.set(false, forKey: "SuperUser")
-            self.navigationController?.popViewController(animated: true)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginNavController = storyboard.instantiateViewController(identifier: "ViewController")
+            
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
+        }
+        alertController.addAction(confirmation)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func showSamePasswordError() {
+        let alertController = UIAlertController(title: "Alert", message: "Old password and new password cannot be same", preferredStyle: .alert)
+        let confirmation = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            NSLog("OK Pressed")
+            self.oldPasswordTextField.text = ""
+            self.newPasswordTextField.text = ""
+            self.confirmPasswordTextField.text = ""
+            self.oldPasswordTextField.becomeFirstResponder()
         }
         alertController.addAction(confirmation)
         self.present(alertController, animated: true, completion: nil)
@@ -179,6 +199,16 @@ class ResetPasswordViewController: UIViewController {
                                              "new_password_confirm": confirmPasswordTextField.text ?? "",
             ] as Dictionary<String, Any>
             request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
+            
+            guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+                navigateToLoginAgain()
+                return
+            }
+            if tok == "" {
+                navigateToLoginAgain()
+                return
+            }
+            request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         }
         
         loader.startAnimating()
@@ -193,7 +223,7 @@ class ResetPasswordViewController: UIViewController {
                 self?.loader.stopAnimating()
                 self?.submitBtn.setTitle("Submit", for: .normal)
             }
-            
+//            print(String(data: data!, encoding: .utf8))
             if error != nil {
                 print("Inside get OTP error")
                 print(error?.localizedDescription as Any)
@@ -207,7 +237,10 @@ class ResetPasswordViewController: UIViewController {
                         if d1.message != nil {
                             self?.showBackToLoginAlert()
                         } else if d1.token != nil {
+                            Credentials.shared.defaults.set(d1.token, forKey: "Token")
                             self?.successfulResetPassword()
+                        } else if d1.error?.first != nil {
+                            self?.showSamePasswordError()
                         }
                     }
                 } catch(let error) {

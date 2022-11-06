@@ -43,7 +43,7 @@ class subjectCell: UICollectionViewCell {
         menuBtn.menu = menu
         menuBtn.showsMenuAsPrimaryAction = true
         
-        baseView.backgroundColor = UIColor.barContrastColor
+        baseView.backgroundColor = UIColor.subjectColor
     }
     
     func config(idx: Int) {
