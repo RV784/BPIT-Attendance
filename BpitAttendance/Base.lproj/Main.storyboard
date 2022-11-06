@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ym1-EX-Jqc">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -161,44 +162,6 @@
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bgT-vM-QNd">
-                                <rect key="frame" x="20" y="662" width="335" height="50"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KgS-vT-gaf">
-                                        <rect key="frame" x="0.0" y="0.0" width="167.66666666666666" height="50"/>
-                                        <color key="backgroundColor" systemColor="linkColor"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Logout"/>
-                                        <connections>
-                                            <action selector="logoutBtnClicked:" destination="ymq-Q5-lIb" eventType="touchUpInside" id="Btd-4A-RnF"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cST-Dc-xSq">
-                                        <rect key="frame" x="167.66666666666663" y="0.0" width="167.33333333333337" height="50"/>
-                                        <color key="backgroundColor" systemColor="systemIndigoColor"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Profile"/>
-                                        <connections>
-                                            <action selector="profileBtnClicked:" destination="ymq-Q5-lIb" eventType="touchUpInside" id="9Ue-qa-DFt"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="KgS-vT-gaf" firstAttribute="top" secondItem="bgT-vM-QNd" secondAttribute="top" id="90U-hJ-brY"/>
-                                    <constraint firstItem="cST-Dc-xSq" firstAttribute="leading" secondItem="KgS-vT-gaf" secondAttribute="trailing" id="ALz-kW-hzL"/>
-                                    <constraint firstItem="KgS-vT-gaf" firstAttribute="width" secondItem="bgT-vM-QNd" secondAttribute="width" multiplier="0.5" id="Fwi-QA-DAd"/>
-                                    <constraint firstAttribute="height" constant="50" id="Oun-r5-Ym9"/>
-                                    <constraint firstAttribute="bottom" secondItem="cST-Dc-xSq" secondAttribute="bottom" id="P5j-du-Pu9"/>
-                                    <constraint firstAttribute="trailing" secondItem="cST-Dc-xSq" secondAttribute="trailing" id="Tpm-Zf-TA0"/>
-                                    <constraint firstItem="KgS-vT-gaf" firstAttribute="leading" secondItem="bgT-vM-QNd" secondAttribute="leading" id="aQU-ed-MZV"/>
-                                    <constraint firstItem="cST-Dc-xSq" firstAttribute="width" secondItem="KgS-vT-gaf" secondAttribute="width" id="aiN-JU-fRh"/>
-                                    <constraint firstAttribute="bottom" secondItem="KgS-vT-gaf" secondAttribute="bottom" id="awj-v2-2jq"/>
-                                    <constraint firstItem="cST-Dc-xSq" firstAttribute="top" secondItem="bgT-vM-QNd" secondAttribute="top" id="poK-Ex-b6Q"/>
-                                </constraints>
-                            </view>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="vSt-r6-XoQ">
                                 <rect key="frame" x="177.66666666666666" y="400" width="20" height="20"/>
                             </activityIndicatorView>
@@ -214,11 +177,8 @@
                         <viewLayoutGuide key="safeArea" id="Il1-HQ-p29"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="bgT-vM-QNd" secondAttribute="bottom" constant="100" id="64X-Db-Op7"/>
-                            <constraint firstItem="bgT-vM-QNd" firstAttribute="leading" secondItem="NbS-KT-H6q" secondAttribute="leading" constant="20" id="6Lg-K4-9c8"/>
                             <constraint firstItem="Fps-0m-B6p" firstAttribute="leading" secondItem="Il1-HQ-p29" secondAttribute="leading" constant="20" id="6oM-OC-0Pl"/>
                             <constraint firstItem="Fps-0m-B6p" firstAttribute="centerX" secondItem="Il1-HQ-p29" secondAttribute="centerX" id="GBz-jx-DAh"/>
-                            <constraint firstAttribute="trailing" secondItem="bgT-vM-QNd" secondAttribute="trailing" constant="20" id="Nro-md-zBb"/>
                             <constraint firstItem="Il1-HQ-p29" firstAttribute="trailing" secondItem="Fps-0m-B6p" secondAttribute="trailing" constant="20" id="Q4t-vw-Abs"/>
                             <constraint firstItem="Fps-0m-B6p" firstAttribute="centerY" secondItem="Il1-HQ-p29" secondAttribute="centerY" id="Qw7-FU-H2d"/>
                             <constraint firstAttribute="bottom" secondItem="ixI-RE-5pz" secondAttribute="bottom" id="dOj-qG-t1R"/>
@@ -231,17 +191,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="Aiy-8h-kvm"/>
                     <connections>
-                        <outlet property="bottomButtonsView" destination="bgT-vM-QNd" id="Bpg-Px-Wtw"/>
-                        <outlet property="logoutBtn" destination="KgS-vT-gaf" id="Fwp-LA-5OJ"/>
                         <outlet property="noInternetView" destination="Fps-0m-B6p" id="e7z-sf-GXA"/>
-                        <outlet property="profileBtn" destination="cST-Dc-xSq" id="wLh-pI-zvu"/>
                         <outlet property="subjectCollectionView" destination="ixI-RE-5pz" id="0CG-3y-dC1"/>
                         <outlet property="subjectLoader" destination="vSt-r6-XoQ" id="UZG-Po-t1Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P5a-vd-ogz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4543.1999999999998" y="-336.20689655172413"/>
+            <point key="canvasLocation" x="5485.6000000000004" y="-336.20689655172413"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="KUC-jK-Jnr">
@@ -256,6 +213,7 @@
                         <segue destination="BdX-Mc-1c9" kind="relationship" relationship="viewControllers" id="qWh-gd-ooX"/>
                         <segue destination="2KJ-b5-Owp" kind="relationship" relationship="viewControllers" id="3TJ-HG-2vZ"/>
                         <segue destination="42s-hy-UGl" kind="relationship" relationship="viewControllers" id="Rl6-ZJ-4f3"/>
+                        <segue destination="ows-VB-vn8" kind="relationship" relationship="viewControllers" id="KzK-uu-SJ9"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N4p-oV-qJd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -396,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YpS-rj-qRf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4631.1999999999998" y="539.40886699507394"/>
+            <point key="canvasLocation" x="5573.6000000000004" y="539.40886699507394"/>
         </scene>
         <!--Reset Password View Controller-->
         <scene sceneID="N7I-DZ-QBJ">
@@ -407,7 +365,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="wHQ-VM-YsY">
-                                <rect key="frame" x="20" y="317.66666666666669" width="335" height="190"/>
+                                <rect key="frame" x="20" y="339.66666666666669" width="335" height="190.00000000000006"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Old Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N0z-Av-wIP">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
@@ -436,7 +394,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HxN-GW-Lgq">
-                                <rect key="frame" x="93.666666666666671" y="527.66666666666663" width="187.66666666666663" height="50"/>
+                                <rect key="frame" x="93.666666666666671" y="549.66666666666663" width="187.66666666666663" height="50"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="RhU-RF-arF"/>
@@ -449,7 +407,7 @@
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-b3-hUM">
-                                <rect key="frame" x="177.66666666666666" y="542.66666666666663" width="20" height="20"/>
+                                <rect key="frame" x="177.66666666666666" y="564.66666666666663" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="MWg-jP-5CU"/>
@@ -466,6 +424,7 @@
                             <constraint firstItem="TZc-b3-hUM" firstAttribute="centerY" secondItem="HxN-GW-Lgq" secondAttribute="centerY" id="qPD-xp-3p7"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="QUi-Ya-pBJ"/>
                     <connections>
                         <outlet property="confirmPasswordTextField" destination="xv5-cF-K9i" id="e3K-Q1-8Sf"/>
                         <outlet property="loader" destination="TZc-b3-hUM" id="Nex-WC-TZH"/>
@@ -476,7 +435,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tyN-eE-4vX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="892" y="882"/>
+            <point key="canvasLocation" x="1834.4000000000001" y="881.5270935960591"/>
         </scene>
         <!--Group Choice View Controller-->
         <scene sceneID="OFA-vM-Ovg">
@@ -513,7 +472,8 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="wRr-LA-ETk"/>
+                        <color key="backgroundColor" systemColor="systemGray6Color"/>
                         <constraints>
                             <constraint firstItem="rwG-Ep-t0T" firstAttribute="centerX" secondItem="yha-1x-C4C" secondAttribute="centerX" id="Cmh-jb-zGR"/>
                             <constraint firstItem="St0-34-aOd" firstAttribute="top" secondItem="rwG-Ep-t0T" secondAttribute="bottom" constant="10" id="EOV-PJ-Djw"/>
@@ -532,6 +492,62 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bev-x3-wCM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1839" y="-652"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="yKV-wR-TzU">
+            <objects>
+                <viewController id="JDG-bC-4I3" customClass="SettingsViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ipp-1v-9P9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fx3-ZB-jqJ">
+                                <rect key="frame" x="20" y="111" width="335" height="50"/>
+                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="PVh-MZ-CN3"/>
+                                </constraints>
+                                <color key="tintColor" red="0.91764705879999997" green="0.30588235289999999" blue="0.23921568630000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Sign Out"/>
+                                <connections>
+                                    <action selector="signOutClicked:" destination="JDG-bC-4I3" eventType="touchUpInside" id="Uvb-hz-l0M"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFF-Iv-uEf">
+                                <rect key="frame" x="20" y="171" width="335" height="50"/>
+                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Tfk-Zk-9zz"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Reset Password"/>
+                                <connections>
+                                    <action selector="resetPasswordBtnClicked:" destination="JDG-bC-4I3" eventType="touchUpInside" id="o9B-DZ-afX"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="jcj-mj-ZL0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="DFF-Iv-uEf" firstAttribute="leading" secondItem="fx3-ZB-jqJ" secondAttribute="leading" id="4B0-wX-Tur"/>
+                            <constraint firstItem="DFF-Iv-uEf" firstAttribute="trailing" secondItem="fx3-ZB-jqJ" secondAttribute="trailing" id="BMJ-oY-bJn"/>
+                            <constraint firstItem="fx3-ZB-jqJ" firstAttribute="leading" secondItem="jcj-mj-ZL0" secondAttribute="leading" constant="20" id="XEP-L7-VU9"/>
+                            <constraint firstItem="jcj-mj-ZL0" firstAttribute="trailing" secondItem="fx3-ZB-jqJ" secondAttribute="trailing" constant="20" id="aLo-Mk-Vfk"/>
+                            <constraint firstItem="DFF-Iv-uEf" firstAttribute="top" secondItem="fx3-ZB-jqJ" secondAttribute="bottom" constant="10" id="gTz-cU-4Ek"/>
+                            <constraint firstItem="fx3-ZB-jqJ" firstAttribute="top" secondItem="jcj-mj-ZL0" secondAttribute="top" constant="20" id="rCC-YU-Kaa"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="fWc-wD-LmX"/>
+                    <connections>
+                        <outlet property="resetPasswordBtn" destination="DFF-Iv-uEf" id="Qqm-yZ-p99"/>
+                        <outlet property="signOut" destination="fx3-ZB-jqJ" id="CQd-pl-vW9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nfr-Yv-QwM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3650.4000000000001" y="-668.7192118226601"/>
         </scene>
         <!--Student List View Controller-->
         <scene sceneID="8SF-KP-uwS">
@@ -637,7 +653,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o9e-Dv-vFP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2852" y="-816"/>
+            <point key="canvasLocation" x="892" y="-780"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="6ex-ai-KZW">
@@ -675,7 +691,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GB8-Md-pee" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3600.8000000000002" y="-336.20689655172413"/>
+            <point key="canvasLocation" x="4543.1999999999998" y="-336.20689655172413"/>
         </scene>
         <!--About-->
         <scene sceneID="6MM-yB-hqf">
@@ -691,7 +707,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BbZ-W2-FUW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2686" y="857"/>
+            <point key="canvasLocation" x="3628" y="856.4039408866995"/>
         </scene>
         <!--Profile-->
         <scene sceneID="Bj8-e6-LOF">
@@ -710,13 +726,52 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4kL-1F-EMQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3688.8000000000002" y="539.40886699507394"/>
+            <point key="canvasLocation" x="4631.1999999999998" y="539.40886699507394"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="rwY-mV-OnK">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ows-VB-vn8" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Settings" image="gearshape" catalog="system" selectedImage="gearshape.fill" id="o1k-zJ-ZwB"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="FjU-Qn-mBy">
+                        <rect key="frame" x="0.0" y="47" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="JDG-bC-4I3" kind="relationship" relationship="rootViewController" id="jq5-5Y-igI"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="evc-dh-Mj9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2708" y="-668.7192118226601"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="jBG-BP-13C">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cKL-PM-Rr3" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VvM-oh-TC8">
+                        <rect key="frame" x="0.0" y="47" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="49U-rq-ML5" kind="relationship" relationship="rootViewController" id="Vxe-uz-2vD"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Qz-im-RDw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="892" y="881.5270935960591"/>
         </scene>
     </scenes>
-    <color key="tintColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
+    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
         <image name="book" catalog="system" width="128" height="99"/>
         <image name="book.fill" catalog="system" width="128" height="95"/>
+        <image name="gearshape" catalog="system" width="128" height="123"/>
+        <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="info.circle" catalog="system" width="128" height="123"/>
         <image name="info.circle.fill" catalog="system" width="128" height="123"/>
         <image name="loginImg" width="512" height="512"/>
@@ -725,22 +780,16 @@
         <namedColor name="AccentColor">
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray2Color">
             <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemIndigoColor">
-            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="tertiarySystemGroupedBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>

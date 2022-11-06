@@ -160,7 +160,7 @@ class ViewController: UIViewController {
     
     func navigateToResetPassword() {
         if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController{
-            
+            resetPasswordVC.firstLogin = true
             self.navigationController?.pushViewController(resetPasswordVC, animated: true)
         }
     }

@@ -24,6 +24,8 @@
 		AB2B442F2916B9910045A415 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B442E2916B9910045A415 /* AboutViewController.swift */; };
 		AB2B44312916E8040045A415 /* SubmitAttendanceResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */; };
 		AB2B4433291708B10045A415 /* EditProfileResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */; };
+		AB2B4435291759020045A415 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4434291759020045A415 /* SettingsViewController.swift */; };
+		AB2B443729175FD40045A415 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B443629175FD40045A415 /* ColorExtension.swift */; };
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
@@ -67,6 +69,8 @@
 		AB2B442E2916B9910045A415 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitAttendanceResponseModel.swift; sourceTree = "<group>"; };
 		AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileResponseModel.swift; sourceTree = "<group>"; };
+		AB2B4434291759020045A415 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		AB2B443629175FD40045A415 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -150,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				AB2B441A2914DF760045A415 /* Date.swift */,
+				AB2B443629175FD40045A415 /* ColorExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 				ABA2CDD728D704AC006CF656 /* SubjectViewController.swift */,
 				ABA2CDB728D60EE0006CF656 /* ViewController.swift */,
 				AB2B442E2916B9910045A415 /* AboutViewController.swift */,
+				AB2B4434291759020045A415 /* SettingsViewController.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -351,6 +357,7 @@
 				AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */,
 				AB2B44312916E8040045A415 /* SubmitAttendanceResponseModel.swift in Sources */,
 				ABA2CDD828D704AC006CF656 /* SubjectViewController.swift in Sources */,
+				AB2B443729175FD40045A415 /* ColorExtension.swift in Sources */,
 				AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */,
 				AB0C48A128DB1C140058B55D /* StudentListModel.swift in Sources */,
 				ABABFB0428F2025300D684C9 /* ResetPasswordViewController.swift in Sources */,
@@ -361,6 +368,7 @@
 				AB97FFC928E5605100CA80F7 /* ProfileCell.swift in Sources */,
 				ABCA6A8C28F3DDF70060C3D5 /* EnterEmailViewController.swift in Sources */,
 				ABCA2B9928DB8156007D3E56 /* RecordModel.swift in Sources */,
+				AB2B4435291759020045A415 /* SettingsViewController.swift in Sources */,
 				AB2B441B2914DF760045A415 /* Date.swift in Sources */,
 				ABA2CDB628D60EE0006CF656 /* SceneDelegate.swift in Sources */,
 				AB2B442B291599BB0045A415 /* LastAttendanceStudentModel.swift in Sources */,

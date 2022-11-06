@@ -42,6 +42,8 @@ class subjectCell: UICollectionViewCell {
         
         menuBtn.menu = menu
         menuBtn.showsMenuAsPrimaryAction = true
+        
+        baseView.backgroundColor = UIColor.barContrastColor
     }
     
     func config(idx: Int) {

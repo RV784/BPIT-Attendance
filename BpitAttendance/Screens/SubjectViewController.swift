@@ -19,19 +19,16 @@ class SubjectViewController: UIViewController {
     
     @IBOutlet weak var subjectCollectionView: UICollectionView!
     @IBOutlet weak var subjectLoader: UIActivityIndicatorView!
-    @IBOutlet weak var bottomButtonsView: UIView!
-    @IBOutlet weak var logoutBtn: UIButton!
-    @IBOutlet weak var profileBtn: UIButton!
     @IBOutlet weak var noInternetView: NoInternetView!
     
 //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        bottomButtonsView.layer.cornerRadius = 25
-        logoutBtn.layer.cornerRadius = 25
-        logoutBtn.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-        profileBtn.layer.cornerRadius = 25
-        profileBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+//        bottomButtonsView.layer.cornerRadius = 25
+//        logoutBtn.layer.cornerRadius = 25
+//        logoutBtn.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+//        profileBtn.layer.cornerRadius = 25
+//        profileBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         subjectCollectionView.delegate = self
         subjectCollectionView.dataSource = self
         subjectCollectionView.register(UINib(nibName: "subjectCell", bundle: nil), forCellWithReuseIdentifier: "subjectCell")
@@ -107,7 +104,7 @@ class SubjectViewController: UIViewController {
     func disableEnableViews() {
         noInternetView.isHidden.toggle()
         subjectCollectionView.isHidden.toggle()
-        bottomButtonsView.isHidden.toggle()
+//        bottomButtonsView.isHidden.toggle()
         shake()
     }
   
