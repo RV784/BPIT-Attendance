@@ -195,6 +195,13 @@ class EnterEmailViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
         return
     }
+    
+    func somethingGoneWrongError() {
+        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
 }
 
 //MARK: API CALLS
@@ -212,16 +219,19 @@ extension EnterEmailViewController {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
             DispatchQueue.main.async {
-                self.loader.stopAnimating()
-                self.submitBtn.setTitle("Submit", for: .normal)
+                self?.loader.stopAnimating()
+                self?.submitBtn.setTitle("Submit", for: .normal)
                 //stop loader
-                self.loader.stopAnimating()
+                self?.loader.stopAnimating()
             }
             if error != nil {
                 print("Inside get OTP error")
                 print(error?.localizedDescription as Any)
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 do{
                     let d1 = try JSONDecoder().decode(ForgotPasswordEmailResponseModel.self, from: data!)
@@ -230,13 +240,13 @@ extension EnterEmailViewController {
                             DispatchQueue.main.async {
                                 //show OTP boxes
                                 if message != "Invalid Email" {
-                                    self.ifOtp = true
-                                    self.submitBtn.setTitle("Verify OTP", for: .normal)
-                                    self.otpStackView.isHidden = false
-                                    self.textFieldsCollection[0].becomeFirstResponder()
-                                    self.messageLabel.text = message
+                                    self?.ifOtp = true
+                                    self?.submitBtn.setTitle("Verify OTP", for: .normal)
+                                    self?.otpStackView.isHidden = false
+                                    self?.textFieldsCollection[0].becomeFirstResponder()
+                                    self?.messageLabel.text = message
                                 } else {
-                                    self.messageLabel.text = message
+                                    self?.messageLabel.text = message
                                 }
                             }
                             print(message)
@@ -268,28 +278,32 @@ extension EnterEmailViewController {
         
         let session = URLSession.shared
         
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
             DispatchQueue.main.async {
-                self.loader.stopAnimating()
-                self.submitBtn.setTitle("Verify OTP", for: .normal)
+                self?.loader.stopAnimating()
+                self?.submitBtn.setTitle("Verify OTP", for: .normal)
                 //stop loader
-                self.loader.stopAnimating()
+                self?.loader.stopAnimating()
             }
             if error != nil {
                 print("Inside get OTP error")
                 print(error?.localizedDescription as Any)
+                
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 do{
                     let d1 = try JSONDecoder().decode(OtpResponseModel.self, from: data!)
                     DispatchQueue.main.async {
                         if let message = d1.msg {
                             print(message)
-                            self.navigateToResetPassword()
+                            self?.navigateToResetPassword()
                         } else {
                             //show wrong email alert
                             print("Wrong email alert")
                             DispatchQueue.main.async {
-                                self.showWrongOTPAlert()
+                                self?.showWrongOTPAlert()
                             }
                             
                         }

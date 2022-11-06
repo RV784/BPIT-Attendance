@@ -190,6 +190,13 @@ class ResetPasswordViewController: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    func somethingGoneWrongError() {
+        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     @IBAction func submitBtnClicked(_ sender: Any) {
         if checkAllErrors() {
             submitNewPassword()
@@ -252,6 +259,10 @@ class ResetPasswordViewController: UIViewController {
                 print("Inside get OTP error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 do{
                     let d1 = try JSONDecoder().decode(ResetPasswordModel.self, from: data!)

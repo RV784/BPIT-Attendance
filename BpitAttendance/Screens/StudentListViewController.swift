@@ -237,6 +237,13 @@ class StudentListViewController: UIViewController {
         return InternetConnectionManager.isConnectedToNetwork()
     }
     
+    func somethingGoneWrongError() {
+        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     @objc func okPressed() {
         navigationController?.popViewController(animated: true)
     }
@@ -290,6 +297,9 @@ class StudentListViewController: UIViewController {
                 print("inside error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(SubmitAttendanceResponseModel.self, from: data!)
@@ -368,6 +378,9 @@ class StudentListViewController: UIViewController {
                 print("inside error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(SubmitAttendanceResponseModel.self, from: data!)
@@ -446,6 +459,9 @@ class StudentListViewController: UIViewController {
                 print("inside error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }else{
                 do{
                     let d1 = try JSONDecoder().decode([StudentListModel].self, from: data!)
@@ -510,6 +526,10 @@ class StudentListViewController: UIViewController {
                 print("inside error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }else{
                 do{
                     let d1 = try JSONDecoder().decode([LastAttendanceStudentModel].self, from: data!)

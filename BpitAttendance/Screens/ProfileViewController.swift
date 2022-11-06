@@ -140,6 +140,13 @@ class ProfileViewController: UIViewController {
         return InternetConnectionManager.isConnectedToNetwork()
     }
     
+    func somethingGoneWrongError() {
+        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     //MARK: API CALLS
     func getProfileCall() {
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
@@ -180,6 +187,10 @@ class ProfileViewController: UIViewController {
                 print("inside \(EndPoints.getProfile(id: id).description) erorr")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }else{
                 do{
                     let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
@@ -266,6 +277,10 @@ class ProfileViewController: UIViewController {
                 print("inside erorr")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }else{
                 do{
                     let d1 = try JSONDecoder().decode(EditProfileResponseModel.self, from: data!)

@@ -75,6 +75,13 @@ class SettingsViewController: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    func somethingGoneWrongError() {
+        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     //MARK: API CALLING
     
     func logoutApi() {
@@ -111,6 +118,9 @@ class SettingsViewController: UIViewController {
                 print("inside error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }else{
                 DispatchQueue.main.async {
                     self?.navigateToLoginAgain()
