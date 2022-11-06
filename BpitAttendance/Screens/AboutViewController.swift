@@ -13,7 +13,6 @@ class AboutViewController: UIViewController {
     @IBOutlet weak var mentorDesignation: UILabel!
     @IBOutlet weak var mentorName: UILabel!
     @IBOutlet weak var mentorView: UIView!
-    @IBOutlet weak var titleView: UIView!
     
     
     @IBOutlet weak var devOneView: UIView!
@@ -27,6 +26,9 @@ class AboutViewController: UIViewController {
     @IBOutlet weak var devThreeView: UIView!
     @IBOutlet weak var devThreeImg: UIImageView!
     
+    @IBOutlet weak var devFourView: UIView!
+    @IBOutlet weak var devFourImg: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,22 +36,24 @@ class AboutViewController: UIViewController {
         
         navigationItem.title = "About this app"
         navigationController?.navigationBar.prefersLargeTitles = true
-        titleView.backgroundColor = UIColor.barColor
         
         mentorView.layer.cornerRadius = 10
         devOneView.layer.cornerRadius = 10
         devTwoView.layer.cornerRadius = 10
         devThreeView.layer.cornerRadius = 10
+        devFourView.layer.cornerRadius = 10
         
         mentorImg.layer.cornerRadius = 30
         devOneImg.layer.cornerRadius = 30
         devTwoImg.layer.cornerRadius = 30
         devThreeImg.layer.cornerRadius = 30
+        devFourImg.layer.cornerRadius = 30
         
         mentorView.backgroundColor = .subjectColor
         devOneView.backgroundColor = .subjectColor
         devTwoView.backgroundColor = .subjectColor
         devThreeView.backgroundColor = .subjectColor
+        devFourView.backgroundColor = .subjectColor
     }
     
 
