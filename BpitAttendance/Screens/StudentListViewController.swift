@@ -44,9 +44,17 @@ class StudentListViewController: UIViewController {
         studentCollectionView.delegate = self
         noInternetView.delegate = self
         if isEditingPrevAttendance {
-            getLastAttendanceStudents(batch: self.batch, subject: self.subjectCode, section: self.section, branch: self.branch, isLab: false, subjectCode: self.subject)
+            if checkInternet() {
+                getLastAttendanceStudents(batch: self.batch, subject: self.subject, section: self.section, branch: self.branch, isLab: false, subjectCode: self.subjectCode)
+            } else {
+                showNoInternetAlter()
+            }
         } else {
-            getStudents(batch: self.batch, subject: self.subjectCode, section: self.section, branch: self.branch, isLab: self.isLab, groupNum: self.groupNum, subjectCode: self.subject)
+            if checkInternet() {
+                getStudents(batch: self.batch, subject: self.subject, section: self.section, branch: self.branch, isLab: self.isLab, groupNum: self.groupNum, subjectCode: self.subjectCode)
+            } else {
+                showNoInternetAlter()
+            }
         }
         studentCollectionView.register(UINib(nibName: "StudentListCell", bundle: nil), forCellWithReuseIdentifier: "StudentListCell")
         studentCollectionView.contentInset = UIEdgeInsets(top: CGFloat(10), left: CGFloat(10), bottom: 0, right: CGFloat(10))
@@ -149,15 +157,31 @@ class StudentListViewController: UIViewController {
 
     
     func yesPressed() {
-        if checkConnection() {
+//        if checkConnection() {
+//            if isEditingPrevAttendance {
+//                sendLastStudents()
+//            } else {
+//                sendStudents()
+//            }
+//        } else {
+//            disableEnableViews()
+////        }
+        if checkInternet() {
             if isEditingPrevAttendance {
                 sendLastStudents()
             } else {
                 sendStudents()
             }
         } else {
-            disableEnableViews()
+            showNoInternetAlter()
         }
+    }
+    
+    func showNoInternetAlter() {
+        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
     }
     
     func disableEnableViews() {
@@ -165,10 +189,6 @@ class StudentListViewController: UIViewController {
         studentCollectionView.isHidden.toggle()
         bottomBtnViews.isHidden.toggle()
         shake()
-    }
-    
-    func checkConnection() -> Bool {
-        return InternetConnectionManager.isConnectedToNetwork()
     }
     
     func dateFormatter() -> String {
@@ -211,6 +231,10 @@ class StudentListViewController: UIViewController {
         let alert = UIAlertController(title: "Alert", message: "No last attendance stats available", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in self.okPressed()}))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func checkInternet() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
     }
     
     @objc func okPressed() {
@@ -279,7 +303,7 @@ class StudentListViewController: UIViewController {
                     }
                     if self?.isLab ?? false {
                         DispatchQueue.main.async {
-                            self?.navigationController?.popViewControllers(viewsToPop: 2)
+                            self?.navigationController?.popViewController(animated: true)
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -392,17 +416,17 @@ class StudentListViewController: UIViewController {
         var request: URLRequest
         print("______________________________")
         if isLab {
-            guard let url = URL(string: EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description) else {
+            guard let url = URL(string: EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subjectCode, section: section, groupNo: groupNum).description) else {
                 return
             }
             request = URLRequest(url: url)
-            print(EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subject, section: section, groupNo: groupNum).description)
+            print(EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subjectCode, section: section, groupNo: groupNum).description)
         } else {
             guard let url = URL(string: EndPoints.getAllStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description) else {
                 return
             }
             request = URLRequest(url: url)
-            print(EndPoints.getAllStudents(batch: batch, branch: branch, subject: subject, section: section).description)
+            print(EndPoints.getAllStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)
         }
         
         studentLoader.startAnimating()
@@ -465,16 +489,18 @@ class StudentListViewController: UIViewController {
         print("______________________________")
         print(EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)
         var request: URLRequest
+        
+        guard let url = URL(string: EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description) else {
+            return
+        }
 
-        request = URLRequest(url: URL(string: EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)!)
+        request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            
-            print(String(data: data!, encoding: .utf8))
             
             DispatchQueue.main.async {
                 self?.studentLoader.stopAnimating()

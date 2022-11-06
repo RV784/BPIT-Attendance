@@ -11,11 +11,6 @@ class SubjectViewController: UIViewController {
     var arr: [Any] = []
     var subjects: [SubjectListModel]?
     var profileDetails: ProfileModel?
-    var tokenRefreshed = false {
-        didSet {
-            getSubject()
-        }
-    }
     
     @IBOutlet weak var subjectCollectionView: UICollectionView!
     @IBOutlet weak var subjectLoader: UIActivityIndicatorView!
@@ -33,7 +28,14 @@ class SubjectViewController: UIViewController {
         subjectCollectionView.dataSource = self
         subjectCollectionView.register(UINib(nibName: "subjectCell", bundle: nil), forCellWithReuseIdentifier: "subjectCell")
         subjectCollectionView.contentInset = UIEdgeInsets(top: CGFloat(10), left: CGFloat(10), bottom: 0, right: CGFloat(10))
-        getSubject()
+        
+        if checkInternet() {
+            getSubject()
+        } else {
+            // show no internet Alert
+            showNoInternetAlter()
+        }
+        
         
         navigationItem.hidesBackButton = true
         navigationItem.title = "Subjects"
@@ -48,7 +50,12 @@ class SubjectViewController: UIViewController {
                                                                  action: #selector(rightHandAction))
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+//    override func viewWillAppear(_ animated: Bool) {
+//        tabBarController?.tabBar.isHidden = false
+//        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+//    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
@@ -121,8 +128,26 @@ class SubjectViewController: UIViewController {
         shake()
     }
     
+    func showNoInternetAlter() {
+        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
+    func somethingGoneWrongError() {
+        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     @objc func rightHandAction() {
-        getSubject()
+        if checkInternet() {
+            getSubject()
+        } else {
+            showNoInternetAlter()
+        }
     }
   
 //MARK: API CALLS
@@ -161,6 +186,9 @@ class SubjectViewController: UIViewController {
                 print("inside error")
                 print(error?.localizedDescription as Any)
                 print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }else{
                 do{
                     let d1 = try JSONDecoder().decode([SubjectListModel].self, from: data!)
@@ -204,8 +232,9 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             cell.delegate = self
             cell.subjectLabel.text = self.subjects?[indexPath.row].subject_name
             cell.sectionLabel.text = "Semester \(self.subjects?[indexPath.row].semester ?? 0)"
-            if self.subjects?[indexPath.row].is_lab == true {
-                cell.labLabel.text = "Lab"
+            if self.subjects?[indexPath.row].is_lab == true,
+                let group = self.subjects?[indexPath.row].group {
+                cell.labLabel.text = "Lab \(group)"
             }else{
                 cell.labLabel.text = ""
             }
@@ -224,20 +253,46 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if self.subjects?[indexPath.row].is_lab ?? false {
-            if let groupChoiceVc = storyboard?.instantiateViewController(withIdentifier: "GroupChoiceViewController") as? GroupChoiceViewController {
-                groupChoiceVc.batch = self.subjects?[indexPath.row].batch ?? ""
-                groupChoiceVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
-                groupChoiceVc.subject = self.subjects?[indexPath.row].subject_code ?? ""
-                groupChoiceVc.section = self.subjects?[indexPath.row].section ?? ""
-                groupChoiceVc.subjectCode = self.subjects?[indexPath.row].subject_name ?? ""
-                groupChoiceVc.isLab = true
-                groupChoiceVc.navigationItem.largeTitleDisplayMode = .never
+//        if self.subjects?[indexPath.row].is_lab ?? false {
+//            if let groupChoiceVc = storyboard?.instantiateViewController(withIdentifier: "GroupChoiceViewController") as? GroupChoiceViewController {
+//                groupChoiceVc.batch = self.subjects?[indexPath.row].batch ?? ""
+//                groupChoiceVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
+//                groupChoiceVc.subject = self.subjects?[indexPath.row].subject_name ?? ""
+//                groupChoiceVc.section = self.subjects?[indexPath.row].section ?? ""
+//                groupChoiceVc.subjectCode = self.subjects?[indexPath.row].subject_code ?? ""
+//                groupChoiceVc.isLab = true
+//                groupChoiceVc.navigationItem.largeTitleDisplayMode = .never
+//                tabBarController?.tabBar.isHidden = true
+//                self.navigationController?.pushViewController(groupChoiceVc, animated: true)
+//            }
+//
+//        } else {
+//            checkNetwork(idx: indexPath.row)
+//        }
+        if checkInternet() {
+            if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
+                studentListVc.batch = self.subjects?[indexPath.row].batch ?? ""
+                studentListVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
+                studentListVc.subject = self.subjects?[indexPath.row].subject_name ?? ""
+                studentListVc.section = self.subjects?[indexPath.row].section ?? ""
+                studentListVc.subjectCode = self.subjects?[indexPath.row].subject_code ?? ""
+                
+                if subjects?[indexPath.row].is_lab ?? false,
+                   let group = subjects?[indexPath.row].group {
+                    studentListVc.isLab = true
+                    
+                    if group == "G1" {
+                        studentListVc.groupNum = 1
+                    } else if group == "G2" {
+                        studentListVc.groupNum = 2
+                    }
+                }
+                studentListVc.navigationItem.largeTitleDisplayMode = .never
                 tabBarController?.tabBar.isHidden = true
-                self.navigationController?.pushViewController(groupChoiceVc, animated: true)
+                self.navigationController?.pushViewController(studentListVc, animated: true)
             }
         } else {
-            checkNetwork(idx: indexPath.row)
+            showNoInternetAlter()
         }
     }
     
@@ -249,13 +304,17 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
+    func checkInternet() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
+    }
+    
     func navigateToStudentList(idx: Int) {
         if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
             studentListVC.batch = self.subjects?[idx].batch ?? ""
             studentListVC.branch = self.subjects?[idx].branch_code ?? ""
-            studentListVC.subject = self.subjects?[idx].subject_code ?? ""
+            studentListVC.subject = self.subjects?[idx].subject_name ?? ""
             studentListVC.section = self.subjects?[idx].section ?? ""
-            studentListVC.subjectCode = self.subjects?[idx].subject_name ?? ""
+            studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
             studentListVC.isLab = self.subjects?[idx].is_lab ?? false
             studentListVC.navigationItem.largeTitleDisplayMode = .never
             tabBarController?.tabBar.isHidden = true
@@ -287,9 +346,9 @@ extension SubjectViewController: SubjectCellProtocol {
         if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
             studentListVC.batch = self.subjects?[idx].batch ?? ""
             studentListVC.branch = self.subjects?[idx].branch_code ?? ""
-            studentListVC.subject = self.subjects?[idx].subject_code ?? ""
+            studentListVC.subject = self.subjects?[idx].subject_name ?? ""
             studentListVC.section = self.subjects?[idx].section ?? ""
-            studentListVC.subjectCode = self.subjects?[idx].subject_name ?? ""
+            studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
             studentListVC.isLab = self.subjects?[idx].is_lab ?? false
             studentListVC.isEditingPrevAttendance = true
             studentListVC.navigationItem.largeTitleDisplayMode = .never
@@ -303,7 +362,7 @@ extension SubjectViewController: SubjectCellProtocol {
 extension SubjectViewController: LoginViewControllerProtocol {
     func reloadData(isLogin: Bool) {
         if !isLogin {
-            getSubject()
+//            getSubject()
         }
     }
 }

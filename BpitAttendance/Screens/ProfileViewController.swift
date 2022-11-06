@@ -21,6 +21,8 @@ class ProfileViewController: UIViewController {
     var variableProfileData: ProfileModel?
     var editedPhone: String?
     var editedName: String?
+    var isPhoneEdited = false
+    var isNameEdited = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +39,12 @@ class ProfileViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(ProfileViewController.dismissKeyboard))
         baseView.addGestureRecognizer(tap)
-        getProfileCall()
+        if checkInternet() {
+            getProfileCall()
+        } else {
+            showNoInternetAlter()
+        }
+        
         mainNameView.backgroundColor = UIColor.barColor
         //        navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -49,6 +56,16 @@ class ProfileViewController: UIViewController {
         if let urlStr = variableProfileData?.image_url {
             loadProfileImage(image_url: urlStr)
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if checkInternet() {
+            getProfileCall()
+        } else {
+            showNoInternetAlter()
+        }
+        tabBarController?.tabBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     @objc private func keyboardWillShow(notification: NSNotification) {
@@ -82,6 +99,7 @@ class ProfileViewController: UIViewController {
         Credentials.shared.defaults.set(variableProfileData?.isStaff, forKey: "Staff")
         Credentials.shared.defaults.set(variableProfileData?.isActive, forKey: "Active")
         Credentials.shared.defaults.set(variableProfileData?.isSuperUser, forKey: "SuperUser")
+        Credentials.shared.defaults.set(variableProfileData?.phoneNumber, forKey: "Phone")
         if let urlStr = variableProfileData?.image_url {
             loadProfileImage(image_url: urlStr)
         }
@@ -104,7 +122,22 @@ class ProfileViewController: UIViewController {
     }
     
     func savePressed() {
-        sendFacultyData()
+        if checkInternet() {
+            sendFacultyData()
+        } else {
+            showNoInternetAlter()
+        }
+    }
+    
+    func showNoInternetAlter() {
+        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
+    func checkInternet() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
     }
     
     //MARK: API CALLS
@@ -150,6 +183,13 @@ class ProfileViewController: UIViewController {
             }else{
                 do{
                     let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
+                    print(d1)
+                    if d1.name == nil {
+                        DispatchQueue.main.async {
+                            self?.navigateToLoginAgain()
+                            return
+                        }
+                    }
                     DispatchQueue.main.async {
                         self?.variableProfileData = d1
                         print(self?.variableProfileData as Any)
@@ -198,13 +238,13 @@ class ProfileViewController: UIViewController {
         let parameters: [String: Any] = [
             "id": Credentials.shared.defaults.integer(forKey: "Id"),
             "email": Credentials.shared.defaults.string(forKey: "Email") ?? "",
-            "name": editedName ?? "",
-            "phone_number": editedPhone ?? "",
+            "name": isNameEdited ? editedName ?? "" : Credentials.shared.defaults.string(forKey: "Name") ?? "",
+            "phone_number": isPhoneEdited ? editedPhone ?? "" : Credentials.shared.defaults.string(forKey: "Phone") ?? "",
             "is_staff": Credentials.shared.defaults.bool(forKey: "Staff"),
             "is_superuser": Credentials.shared.defaults.bool(forKey: "SuperUser"),
             "is_active": Credentials.shared.defaults.bool(forKey: "Active"),
             "designation": Credentials.shared.defaults.string(forKey: "Designation") ?? "",
-            "date_joined": Credentials.shared.defaults.string(forKey: "DateJoined") == "" ? nil : Credentials.shared.defaults.string(forKey: "DateJoined"),
+            "date_joined": variableProfileData?.dateJoined,
             "image_url": variableProfileData?.image_url ?? ""
         ] as Dictionary<String, Any>
         
@@ -364,10 +404,12 @@ extension ProfileViewController: ProfileCellProtocol {
     func edited(cell: ProfileCell) {
         if cell.type == .phone {
             if let newNum = cell.txtField.text {
+                isPhoneEdited = true
                 editedPhone = newNum
             }
         } else if cell.type == .name {
             if let newName = cell.txtField.text {
+                isNameEdited = true
                 editedName = newName
             }
         }

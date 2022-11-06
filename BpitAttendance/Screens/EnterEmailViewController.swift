@@ -54,9 +54,11 @@ class EnterEmailViewController: UIViewController {
                 return
             }
             
-            if checkConnection() {
+            if checkInternet() {
                 emailOtpStackView.removeArrangedSubview(OTPStackView())
                 getOTP(email: enterEmailField.text ?? "")
+            } else {
+                showNoInternetAlter()
             }
         } else {
             autoLogin()
@@ -65,10 +67,6 @@ class EnterEmailViewController: UIViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-    
-    private func checkConnection() -> Bool {
-        return InternetConnectionManager.isConnectedToNetwork()
     }
     
     private func setupStackView() {
@@ -134,7 +132,11 @@ class EnterEmailViewController: UIViewController {
     
     private func autoLogin() {
         if getOtp() != "" {
-            verifyOTP(otp: getOtp(), email: enterEmailField.text ?? "")
+            if checkInternet() {
+                verifyOTP(otp: getOtp(), email: enterEmailField.text ?? "")
+            } else {
+                showNoInternetAlter()
+            }
         }
     }
     
@@ -181,6 +183,17 @@ class EnterEmailViewController: UIViewController {
             resetPasswordVC.email = enterEmailField.text ?? ""
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(resetPasswordVC)
         }
+    }
+    
+    func checkInternet() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
+    }
+    
+    func showNoInternetAlter() {
+        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
     }
 }
 
@@ -293,6 +306,15 @@ extension EnterEmailViewController {
 //MARK: UITextFieldDelegate
 extension EnterEmailViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == enterEmailField {
+            if string == "" {
+                textField.deleteBackward()
+            } else {
+                textField.insertText(string.lowercased())
+            }
+            return false
+        }
+        
         guard let textField = textField as? OTPTextField else { return true }
         
         //will handle quickBar text

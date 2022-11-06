@@ -17,4 +17,5 @@ struct SubjectListModel: Codable {
     var section: String?
     var branch_code: String?
     var subject_name: String?
+    var group: String?
 }

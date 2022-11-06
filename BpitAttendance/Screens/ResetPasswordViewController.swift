@@ -18,6 +18,7 @@ class ResetPasswordViewController: UIViewController {
     @IBOutlet weak var submitBtn: UIButton!
     var forgotPassword = false
     var firstLogin = false
+    var resetPassword = false
     var otp = ""
     var email = ""
     
@@ -47,6 +48,10 @@ class ResetPasswordViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(ResetPasswordViewController.dismissKeyboard))
         baseView.addGestureRecognizer(tap)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ResetPasswordViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ResetPasswordViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc func dismissKeyboard() {
@@ -104,6 +109,23 @@ class ResetPasswordViewController: UIViewController {
         return true
     }
     
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
+            }
+        
+        let bottomOfSignInBtn = submitBtn.convert(submitBtn.bounds, to: self.view).maxY
+        let topOfKeyboard = self.view.frame.height - keyboardSize.height
+
+        if bottomOfSignInBtn > topOfKeyboard {
+            baseView.frame.origin.y = 0 - (bottomOfSignInBtn - topOfKeyboard) - keyboardSize.height*0.1
+        }
+        
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        baseView.frame.origin.y = 0
+    }
+    
     func navigateToLoginAgain() {
         
         let alertController = UIAlertController(title: "Oops!", message: "Seems link your token expired, we'll redirect you to LogIn screen to refresh your token", preferredStyle: .alert)
@@ -142,14 +164,13 @@ class ResetPasswordViewController: UIViewController {
     }
     
     func successfulResetPassword() {
-        let alertController = UIAlertController(title: "Password reset successful", message: "Please now log in with your new Password", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Password reset successful", message: "", preferredStyle: .alert)
         let confirmation = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
                 UIAlertAction in
                 NSLog("OK Pressed")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let loginNavController = storyboard.instantiateViewController(identifier: "ViewController")
-            
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
+                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
         }
         alertController.addAction(confirmation)
         self.present(alertController, animated: true, completion: nil)

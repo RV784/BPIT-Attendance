@@ -37,8 +37,20 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    func checkInternet() -> Bool {
+        return InternetConnectionManager.isConnectedToNetwork()
+    }
+    
+    func showNoInternetAlter() {
+        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        return
+    }
+    
     @IBAction func resetPasswordBtnClicked(_ sender: Any) {
         if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController{
+            resetPasswordVC.resetPassword = true
             self.navigationController?.pushViewController(resetPasswordVC, animated: true)
         }
     }
@@ -48,7 +60,11 @@ class SettingsViewController: UIViewController {
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             UIAlertAction in
             NSLog("OK Pressed")
-            self.logoutApi()
+            if self.checkInternet() {
+                self.logoutApi()
+            } else {
+                self.showNoInternetAlter()
+            }
         }
         let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
             UIAlertAction in

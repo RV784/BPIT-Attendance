@@ -29,9 +29,9 @@ class GroupChoiceViewController: UIViewController {
         if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
             studentListVc.batch = self.batch
             studentListVc.branch = self.branch
-            studentListVc.subject = self.subjectCode
+            studentListVc.subject = self.subject
             studentListVc.section = self.section
-            studentListVc.subjectCode = self.subject
+            studentListVc.subjectCode = self.subjectCode
             studentListVc.isLab = true
             studentListVc.groupNum = 1
             self.navigationController?.pushViewController(studentListVc, animated: true)
@@ -42,9 +42,9 @@ class GroupChoiceViewController: UIViewController {
         if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
             studentListVc.batch = self.batch
             studentListVc.branch = self.branch
-            studentListVc.subject = self.subjectCode
+            studentListVc.subject = self.subject
             studentListVc.section = self.section
-            studentListVc.subjectCode = self.subject
+            studentListVc.subjectCode = self.subjectCode
             studentListVc.isLab = true
             studentListVc.groupNum = 2
             self.navigationController?.pushViewController(studentListVc, animated: true)

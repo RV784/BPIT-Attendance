@@ -114,6 +114,7 @@ class ViewController: UIViewController {
         if checkConnection() {
             register(email: emailTxtField.text!, password: passwordTxtField.text!)
         } else {
+            //TODO: show no internet Alert
             showNoInternetAlter()
         }
     }
@@ -320,6 +321,15 @@ extension ViewController: UITextFieldDelegate {
             signInBtn.layer.backgroundColor = UIColor.systemBlue.cgColor
         } else {
             signInBtn.layer.backgroundColor = UIColor.systemGray2.cgColor
+        }
+        
+        if textField == emailTxtField {
+            if string == "" {
+                textField.deleteBackward()
+            } else {
+                textField.insertText(string.lowercased())
+            }
+            return false
         }
         
         return true
