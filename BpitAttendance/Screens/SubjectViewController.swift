@@ -238,7 +238,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             }else{
                 cell.labLabel.text = ""
             }
-            cell.branch_sectionLabel.text = "\(self.subjects?[indexPath.row].branch_code ?? "") - \(self.subjects?[indexPath.row].section ?? "")"
+            cell.branch_sectionLabel.text = "\(returnBranch(branchCode: self.subjects?[indexPath.row].branch_code)) - \(self.subjects?[indexPath.row].section ?? "")"
             cell.idxPath = indexPath.row
             return cell
         }
@@ -248,7 +248,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width  = subjectCollectionView.frame.width
-        return CGSize(width: width/2 - 15, height: 140)
+        return CGSize(width: width - 15, height: 130)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -365,4 +365,30 @@ extension SubjectViewController: LoginViewControllerProtocol {
 //            getSubject()
         }
     }
+}
+
+
+func returnBranch(branchCode: String?) -> String {
+    if let code = branchCode {
+        if code == "027" {
+            return "CSE"
+        }
+        
+        if code == "031" {
+            return "IT"
+        }
+        
+        if code == "028" {
+            return "ECE"
+        }
+        
+        if code == "039" {
+            return "MBA"
+        }
+        
+        if code == "017" {
+            return "BBA"
+        }
+    }
+    return "Invalid Branch"
 }

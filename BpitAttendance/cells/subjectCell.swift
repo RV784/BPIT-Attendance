@@ -44,6 +44,8 @@ class subjectCell: UICollectionViewCell {
         menuBtn.showsMenuAsPrimaryAction = true
         
         baseView.backgroundColor = UIColor.subjectColor
+        
+        menuBtn.layer.cornerRadius = 5
     }
     
     func config(idx: Int) {

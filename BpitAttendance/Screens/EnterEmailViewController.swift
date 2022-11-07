@@ -36,11 +36,32 @@ class EnterEmailViewController: UIViewController {
         otpStackView.isHidden = true
         messageLabel.text = "Enter your registered email"
         messageLabel.textColor = .systemGray2
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(EnterEmailViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(EnterEmailViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
+            }
+        
+        let bottomOfSignInBtn = submitBtn.convert(submitBtn.bounds, to: self.view).maxY
+        let topOfKeyboard = self.view.frame.height - keyboardSize.height
+
+        if bottomOfSignInBtn > topOfKeyboard {
+            baseView.frame.origin.y = 0 - (bottomOfSignInBtn - topOfKeyboard) - keyboardSize.height*0.1
+        }
+        
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        baseView.frame.origin.y = 0
     }
     
     @objc func toggleAll() {}

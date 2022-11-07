@@ -12,7 +12,7 @@ struct SubjectListModel: Codable {
     var batch: String?
     var semester: Int?
     var is_lab: Bool?
-    var faculty: Int?
+    var branch_name: String?
     var subject_code: String?
     var section: String?
     var branch_code: String?
