@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol LoginViewControllerProtocol {
+protocol LoginViewControllerProtocol: AnyObject {
     func reloadData(isLogin: Bool)
 }
 
@@ -27,7 +27,11 @@ class ViewController: UIViewController {
     var profileData: ProfileModel?
     var loginData: LoginModel?
     var tokExpMidCycle = false
-    var delegate: LoginViewControllerProtocol?
+    weak var delegate: LoginViewControllerProtocol?
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
  
 //MARK: ViewDidLoad
     override func viewDidLoad() {

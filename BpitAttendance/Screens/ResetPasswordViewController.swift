@@ -22,6 +22,10 @@ class ResetPasswordViewController: UIViewController {
     var otp = ""
     var email = ""
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         submitBtn.layer.cornerRadius = 12

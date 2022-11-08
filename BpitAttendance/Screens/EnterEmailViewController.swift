@@ -23,6 +23,10 @@ class EnterEmailViewController: UIViewController {
     private var remainingStrStack: [String] = []
     private var ifOtp = false
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupStackView()

@@ -24,6 +24,10 @@ class ProfileViewController: UIViewController {
     var isPhoneEdited = false
     var isNameEdited = false
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

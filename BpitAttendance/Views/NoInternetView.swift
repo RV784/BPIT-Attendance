@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol NoInternetProtocols {
+protocol NoInternetProtocols: AnyObject {
     func onRetryPressed()
     func onGoBackPressed()
 }
@@ -19,7 +19,7 @@ class NoInternetView: UIView {
     @IBOutlet weak var retryBtn: UIButton!
     @IBOutlet weak var gobackBtn: UIButton!
     @IBOutlet weak var intrernetImgView: UIImageView!
-    var delegate: NoInternetProtocols?
+    weak var delegate: NoInternetProtocols?
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
