@@ -22,6 +22,10 @@ class ProfileCell: UITableViewCell {
     @IBOutlet weak var saveBtn: UIButton!
     weak var delegate: ProfileCellProtocol?
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

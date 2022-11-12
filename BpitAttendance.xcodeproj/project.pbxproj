@@ -15,6 +15,10 @@
 		AB0C48A428DB2B660058B55D /* StudentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0C48A228DB2B660058B55D /* StudentListCell.swift */; };
 		AB0C48A528DB2B660058B55D /* StudentListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB0C48A328DB2B660058B55D /* StudentListCell.xib */; };
 		AB19E8BC28E427D500267410 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB19E8BB28E427D500267410 /* ProfileModel.swift */; };
+		AB268C97291CF29E0030F1FE /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB268C96291CF29E0030F1FE /* StatsViewController.swift */; };
+		AB268C9A291CF5AA0030F1FE /* StatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB268C98291CF5AA0030F1FE /* StatsCollectionViewCell.swift */; };
+		AB268C9B291CF5AA0030F1FE /* StatsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB268C99291CF5AA0030F1FE /* StatsCollectionViewCell.xib */; };
+		AB268C9D291CFF530030F1FE /* StatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB268C9C291CFF530030F1FE /* StatsModel.swift */; };
 		AB2B4416291394C40045A415 /* OtpResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4415291394C40045A415 /* OtpResponseModel.swift */; };
 		AB2B44182914CF230045A415 /* ResetPasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B44172914CF230045A415 /* ResetPasswordModel.swift */; };
 		AB2B441B2914DF760045A415 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B441A2914DF760045A415 /* Date.swift */; };
@@ -49,9 +53,12 @@
 		ABCA6A8C28F3DDF70060C3D5 /* EnterEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA6A8B28F3DDF70060C3D5 /* EnterEmailViewController.swift */; };
 		ABCA6A8F28F3E19A0060C3D5 /* OTPTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA6A8E28F3E19A0060C3D5 /* OTPTextField.swift */; };
 		ABCA6A9128F3E4970060C3D5 /* OTPStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA6A9028F3E4970060C3D5 /* OTPStackView.swift */; };
+		CA2225CEF121E7B960AC6163 /* Pods_BpitAttendance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9FAEAA121340629137A52F /* Pods_BpitAttendance.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F9FAEAA121340629137A52F /* Pods_BpitAttendance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BpitAttendance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AC09147796C35C55FD0F60D /* Pods-BpitAttendance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BpitAttendance.debug.xcconfig"; path = "Target Support Files/Pods-BpitAttendance/Pods-BpitAttendance.debug.xcconfig"; sourceTree = "<group>"; };
 		AB0C489728DA34BE0058B55D /* subjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = subjectCell.swift; sourceTree = "<group>"; };
 		AB0C489828DA34BE0058B55D /* subjectCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = subjectCell.xib; sourceTree = "<group>"; };
 		AB0C489C28DAC09E0058B55D /* SubjectListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectListModel.swift; sourceTree = "<group>"; };
@@ -60,6 +67,10 @@
 		AB0C48A228DB2B660058B55D /* StudentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListCell.swift; sourceTree = "<group>"; };
 		AB0C48A328DB2B660058B55D /* StudentListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StudentListCell.xib; sourceTree = "<group>"; };
 		AB19E8BB28E427D500267410 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
+		AB268C96291CF29E0030F1FE /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		AB268C98291CF5AA0030F1FE /* StatsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCollectionViewCell.swift; sourceTree = "<group>"; };
+		AB268C99291CF5AA0030F1FE /* StatsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StatsCollectionViewCell.xib; sourceTree = "<group>"; };
+		AB268C9C291CFF530030F1FE /* StatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsModel.swift; sourceTree = "<group>"; };
 		AB2B4415291394C40045A415 /* OtpResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpResponseModel.swift; sourceTree = "<group>"; };
 		AB2B44172914CF230045A415 /* ResetPasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordModel.swift; sourceTree = "<group>"; };
 		AB2B441A2914DF760045A415 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -96,6 +107,7 @@
 		ABCA6A8B28F3DDF70060C3D5 /* EnterEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewController.swift; sourceTree = "<group>"; };
 		ABCA6A8E28F3E19A0060C3D5 /* OTPTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPTextField.swift; sourceTree = "<group>"; };
 		ABCA6A9028F3E4970060C3D5 /* OTPStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPStackView.swift; sourceTree = "<group>"; };
+		F5A561E53C6C7E5FA8AB01E2 /* Pods-BpitAttendance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BpitAttendance.release.xcconfig"; path = "Target Support Files/Pods-BpitAttendance/Pods-BpitAttendance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,12 +115,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA2225CEF121E7B960AC6163 /* Pods_BpitAttendance.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		52277BF71CAD44AEA56F7629 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1F9FAEAA121340629137A52F /* Pods_BpitAttendance.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AB0C488D28DA2E030058B55D /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +148,8 @@
 				AB0C48A328DB2B660058B55D /* StudentListCell.xib */,
 				AB97FFC728E5605100CA80F7 /* ProfileCell.swift */,
 				AB97FFC828E5605100CA80F7 /* ProfileCell.xib */,
+				AB268C98291CF5AA0030F1FE /* StatsCollectionViewCell.swift */,
+				AB268C99291CF5AA0030F1FE /* StatsCollectionViewCell.xib */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -146,6 +169,7 @@
 				AB2B442C29163E1A0045A415 /* LastAttendanceModel.swift */,
 				AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */,
 				AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */,
+				AB268C9C291CFF530030F1FE /* StatsModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -203,6 +227,8 @@
 			children = (
 				ABA2CDB228D60EE0006CF656 /* BpitAttendance */,
 				ABA2CDB128D60EE0006CF656 /* Products */,
+				E7D9F35DEAF6C92844434553 /* Pods */,
+				52277BF71CAD44AEA56F7629 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -250,6 +276,7 @@
 				ABA2CDB728D60EE0006CF656 /* ViewController.swift */,
 				AB2B442E2916B9910045A415 /* AboutViewController.swift */,
 				AB2B4434291759020045A415 /* SettingsViewController.swift */,
+				AB268C96291CF29E0030F1FE /* StatsViewController.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -263,6 +290,15 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
+		E7D9F35DEAF6C92844434553 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4AC09147796C35C55FD0F60D /* Pods-BpitAttendance.debug.xcconfig */,
+				F5A561E53C6C7E5FA8AB01E2 /* Pods-BpitAttendance.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -270,9 +306,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = ABA2CDC428D60EE1006CF656 /* Build configuration list for PBXNativeTarget "BpitAttendance" */;
 			buildPhases = (
+				B0C985FD5F4BD16716BDE0C9 /* [CP] Check Pods Manifest.lock */,
 				ABA2CDAC28D60EE0006CF656 /* Sources */,
 				ABA2CDAD28D60EE0006CF656 /* Frameworks */,
 				ABA2CDAE28D60EE0006CF656 /* Resources */,
+				909C27E7F58FADFCCF71741C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -323,6 +361,7 @@
 			files = (
 				AB72457928E6FCFA00D044E4 /* NoInternetView.xib in Resources */,
 				AB0C489A28DA34BE0058B55D /* subjectCell.xib in Resources */,
+				AB268C9B291CF5AA0030F1FE /* StatsCollectionViewCell.xib in Resources */,
 				ABA2CDC028D60EE1006CF656 /* LaunchScreen.storyboard in Resources */,
 				ABA2CDBD28D60EE1006CF656 /* Assets.xcassets in Resources */,
 				AB97FFCA28E5605100CA80F7 /* ProfileCell.xib in Resources */,
@@ -332,6 +371,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		909C27E7F58FADFCCF71741C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BpitAttendance/Pods-BpitAttendance-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BpitAttendance/Pods-BpitAttendance-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BpitAttendance/Pods-BpitAttendance-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B0C985FD5F4BD16716BDE0C9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BpitAttendance-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		ABA2CDAC28D60EE0006CF656 /* Sources */ = {
@@ -347,6 +428,7 @@
 				ABC50E782901231D00540B2F /* ForgotPasswordEmailResponseModel.swift in Sources */,
 				AB2B44182914CF230045A415 /* ResetPasswordModel.swift in Sources */,
 				AB2B442F2916B9910045A415 /* AboutViewController.swift in Sources */,
+				AB268C9A291CF5AA0030F1FE /* StatsCollectionViewCell.swift in Sources */,
 				ABABFB0628F2096300D684C9 /* LoginModel.swift in Sources */,
 				AB72457528E6DB4E00D044E4 /* InternetConnectionManager.swift in Sources */,
 				AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */,
@@ -372,7 +454,9 @@
 				AB2B441B2914DF760045A415 /* Date.swift in Sources */,
 				ABA2CDB628D60EE0006CF656 /* SceneDelegate.swift in Sources */,
 				AB2B442B291599BB0045A415 /* LastAttendanceStudentModel.swift in Sources */,
+				AB268C97291CF29E0030F1FE /* StatsViewController.swift in Sources */,
 				AB2B4433291708B10045A415 /* EditProfileResponseModel.swift in Sources */,
+				AB268C9D291CFF530030F1FE /* StatsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +598,7 @@
 		};
 		ABA2CDC528D60EE1006CF656 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AC09147796C35C55FD0F60D /* Pods-BpitAttendance.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -543,6 +628,7 @@
 		};
 		ABA2CDC628D60EE1006CF656 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5A561E53C6C7E5FA8AB01E2 /* Pods-BpitAttendance.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

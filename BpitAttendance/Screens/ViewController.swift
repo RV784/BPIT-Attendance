@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol LoginViewControllerProtocol: AnyObject {
-    func reloadData(isLogin: Bool)
-}
-
 class ViewController: UIViewController {
     
     @IBOutlet weak var forgotPasswordLabel: UILabel!
@@ -27,13 +23,12 @@ class ViewController: UIViewController {
     var profileData: ProfileModel?
     var loginData: LoginModel?
     var tokExpMidCycle = false
-    weak var delegate: LoginViewControllerProtocol?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
- 
-//MARK: ViewDidLoad
+    
+    //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         deciderIndicator.startAnimating()
@@ -60,19 +55,17 @@ class ViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        delegate?.reloadData(isLogin: tokExpMidCycle)
     }
     
     
-//MARK: BUSINESS LOGIC
+    //MARK: BUSINESS LOGIC
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
-            }
+        }
         
         let bottomOfSignInBtn = signInBtn.convert(signInBtn.bounds, to: self.view).maxY
         let topOfKeyboard = self.view.frame.height - keyboardSize.height
-
+        
         if bottomOfSignInBtn > topOfKeyboard {
             baseView.frame.origin.y = 0 - (bottomOfSignInBtn - topOfKeyboard) - keyboardSize.height*0.1
         }
@@ -94,13 +87,6 @@ class ViewController: UIViewController {
         if let resetPasswordVC = storyboard.instantiateViewController(identifier: "EnterEmailViewController") as? EnterEmailViewController {
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(resetPasswordVC)
         }
-        
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let enterEmail = storyboard.instantiateViewController(identifier: "EnterEmailViewController")
-//
-//            // This is to get the SceneDelegate object from your view controller
-//            // then call the change root view controller function to change to main tab bar
-//            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(enterEmail)
     }
     
     @IBAction func signInBtnClicked(_ sender: Any) {
@@ -128,11 +114,11 @@ class ViewController: UIViewController {
             navigationController?.popViewController(animated: true)
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
-                
-                // This is to get the SceneDelegate object from your view controller
-                // then call the change root view controller function to change to main tab bar
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
+            
+            // This is to get the SceneDelegate object from your view controller
+            // then call the change root view controller function to change to main tab bar
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
         }
     }
     
@@ -240,8 +226,6 @@ extension ViewController {
                             self?.loginLoader.stopAnimating()
                             Credentials.shared.defaults.set(self?.loginData?.token, forKey: "Token")
                             Credentials.shared.defaults.set(self?.loginData?.id, forKey: "Id")
-//                            self?.getProfileCall()
-                            
                             if self?.loginData?.isFirstLogin ?? false {
                                 self?.navigateToResetPassword()
                             } else {
@@ -260,59 +244,59 @@ extension ViewController {
         task.resume()
     }
     
-    func getProfileCall() {
-        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-            return
-        }
-        
-        guard let id = Credentials.shared.defaults.string(forKey: "Id") else {
-            return
-        }
-        
-        guard let url = URL(string: EndPoints.getProfile(id: id).description) else {
-            return
-        }
-        
-        print("______________________________")
-        print(EndPoints.getProfile(id: id).description)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-            
-            if error != nil {
-                print("inside \(EndPoints.getProfile(id: id).description) erorr")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-            }else{
-                do{
-                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
-                    print(d1)
-                    DispatchQueue.main.async {
-                        self?.profileData = d1
-                        print(self?.profileData as Any)
-                        print("______________________________")
-                        self?.saveToDevice()
-                    }
-                } catch(let error) {
-                    print("inside \(EndPoints.getProfile(id: id).description) catch")
-                    print("inside catch \(error)")
-                    if let httpResponse = response as? HTTPURLResponse {
-                        if httpResponse.statusCode == 401 {
-                            print("token expired")
-                            print("______________________________")
-                        }
-                    }
-                }
-            }
-        })
-
-        task.resume()
-    }
+    //    func getProfileCall() {
+    //        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
+    //            return
+    //        }
+    //
+    //        guard let id = Credentials.shared.defaults.string(forKey: "Id") else {
+    //            return
+    //        }
+    //
+    //        guard let url = URL(string: EndPoints.getProfile(id: id).description) else {
+    //            return
+    //        }
+    //
+    //        print("______________________________")
+    //        print(EndPoints.getProfile(id: id).description)
+    //
+    //        var request = URLRequest(url: url)
+    //        request.httpMethod = "GET"
+    //        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    //        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+    //
+    //        let session = URLSession.shared
+    //        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
+    //
+    //            if error != nil {
+    //                print("inside \(EndPoints.getProfile(id: id).description) erorr")
+    //                print(error?.localizedDescription as Any)
+    //                print("______________________________")
+    //            }else{
+    //                do{
+    //                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
+    //                    print(d1)
+    //                    DispatchQueue.main.async {
+    //                        self?.profileData = d1
+    //                        print(self?.profileData as Any)
+    //                        print("______________________________")
+    //                        self?.saveToDevice()
+    //                    }
+    //                } catch(let error) {
+    //                    print("inside \(EndPoints.getProfile(id: id).description) catch")
+    //                    print("inside catch \(error)")
+    //                    if let httpResponse = response as? HTTPURLResponse {
+    //                        if httpResponse.statusCode == 401 {
+    //                            print("token expired")
+    //                            print("______________________________")
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        })
+    //
+    //        task.resume()
+    //    }
 }
 
 
@@ -354,14 +338,14 @@ extension ViewController: UITextFieldDelegate {
 extension UINavigationController {
     func popToSpecificViewController(ofClass: AnyClass, animated: Bool = true) {
         if let vc = viewControllers.filter({$0.isKind(of: ofClass)}).last {
-          popToViewController(vc, animated: animated)
+            popToViewController(vc, animated: animated)
         }
-      }
+    }
     
     func popViewControllers(viewsToPop: Int, animated: Bool = true) {
         if viewControllers.count > viewsToPop {
-          let vc = viewControllers[viewControllers.count - viewsToPop - 1]
-          popToViewController(vc, animated: animated)
+            let vc = viewControllers[viewControllers.count - viewsToPop - 1]
+            popToViewController(vc, animated: animated)
         }
-      }
+    }
 }

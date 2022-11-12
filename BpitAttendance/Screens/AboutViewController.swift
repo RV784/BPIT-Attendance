@@ -8,7 +8,7 @@
 import UIKit
 
 class AboutViewController: UIViewController {
-
+    
     @IBOutlet weak var mentorImg: UIImageView!
     @IBOutlet weak var mentorDesignation: UILabel!
     @IBOutlet weak var mentorName: UILabel!
@@ -31,7 +31,7 @@ class AboutViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         
         navigationItem.title = "About this app"
@@ -55,16 +55,4 @@ class AboutViewController: UIViewController {
         devThreeView.backgroundColor = .subjectColor
         devFourView.backgroundColor = .subjectColor
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

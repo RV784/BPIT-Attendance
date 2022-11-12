@@ -16,14 +16,15 @@ class SubjectViewController: UIViewController {
     @IBOutlet weak var subjectLoader: UIActivityIndicatorView!
     @IBOutlet weak var noInternetView: NoInternetView!
     
-//MARK: ViewDidLoad
+    //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-//        bottomButtonsView.layer.cornerRadius = 25
-//        logoutBtn.layer.cornerRadius = 25
-//        logoutBtn.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-//        profileBtn.layer.cornerRadius = 25
-//        profileBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+        //How to curve specific corners of a button
+        //        bottomButtonsView.layer.cornerRadius = 25
+        //        logoutBtn.layer.cornerRadius = 25
+        //        logoutBtn.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        //        profileBtn.layer.cornerRadius = 25
+        //        profileBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         subjectCollectionView.delegate = self
         subjectCollectionView.dataSource = self
         subjectCollectionView.register(UINib(nibName: "subjectCell", bundle: nil), forCellWithReuseIdentifier: "subjectCell")
@@ -40,7 +41,7 @@ class SubjectViewController: UIViewController {
         navigationItem.hidesBackButton = true
         navigationItem.title = "Subjects"
         navigationController?.navigationBar.prefersLargeTitles = true
-//        noInternetView.gobackBtn.isHidden = true
+        //        noInternetView.gobackBtn.isHidden = true
         noInternetView.isHidden = true
         noInternetView.retryBtn.isHidden = true
         
@@ -50,22 +51,22 @@ class SubjectViewController: UIViewController {
                                                                  action: #selector(rightHandAction))
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        tabBarController?.tabBar.isHidden = false
-//        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-//    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        tabBarController?.tabBar.isHidden = false
+    //        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    //    }
     
     override func viewDidAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
-//MARK: BUSINESS LOGIC
+    //MARK: BUSINESS LOGIC
     @IBAction func logoutBtnClicked(_ sender: Any) {
         let alertController = UIAlertController(title: "Do you want to Logout?", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-                UIAlertAction in
-                NSLog("OK Pressed")
+            UIAlertAction in
+            NSLog("OK Pressed")
             Credentials.shared.defaults.set("", forKey: "Token")
             Credentials.shared.defaults.set("", forKey: "Name")
             Credentials.shared.defaults.set("", forKey: "Email")
@@ -76,11 +77,11 @@ class SubjectViewController: UIViewController {
             Credentials.shared.defaults.set(false, forKey: "Active")
             Credentials.shared.defaults.set(false, forKey: "SuperUser")
             self.navigateToLoginAgain()
-            }
+        }
         let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-                UIAlertAction in
-                NSLog("Cancel Pressed")
-            }
+            UIAlertAction in
+            NSLog("Cancel Pressed")
+        }
         alertController.addAction(cancelAction)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
@@ -112,10 +113,10 @@ class SubjectViewController: UIViewController {
     }
     
     func shake() {
-            let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-            animation.duration = 0.6
-            animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.duration = 0.6
+        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
         noInternetView.layer.add(animation, forKey: "shake")
         let tapticFeedback = UINotificationFeedbackGenerator()
         tapticFeedback.notificationOccurred(.success)
@@ -124,7 +125,7 @@ class SubjectViewController: UIViewController {
     func disableEnableViews() {
         noInternetView.isHidden.toggle()
         subjectCollectionView.isHidden.toggle()
-//        bottomButtonsView.isHidden.toggle()
+        //        bottomButtonsView.isHidden.toggle()
         shake()
     }
     
@@ -149,8 +150,8 @@ class SubjectViewController: UIViewController {
             showNoInternetAlter()
         }
     }
-  
-//MARK: API CALLS
+    
+    //MARK: API CALLS
     func getSubject() {
         
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
@@ -233,7 +234,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             cell.subjectLabel.text = self.subjects?[indexPath.row].subject_name
             cell.sectionLabel.text = "Semester \(self.subjects?[indexPath.row].semester ?? 0)"
             if self.subjects?[indexPath.row].is_lab == true,
-                let group = self.subjects?[indexPath.row].group {
+               let group = self.subjects?[indexPath.row].group {
                 cell.labLabel.text = "Lab \(group)"
             }else{
                 cell.labLabel.text = ""
@@ -248,27 +249,10 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width  = subjectCollectionView.frame.width
-        return CGSize(width: width - 15, height: 130)
+        return CGSize(width: width - 20, height: 130)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-//        if self.subjects?[indexPath.row].is_lab ?? false {
-//            if let groupChoiceVc = storyboard?.instantiateViewController(withIdentifier: "GroupChoiceViewController") as? GroupChoiceViewController {
-//                groupChoiceVc.batch = self.subjects?[indexPath.row].batch ?? ""
-//                groupChoiceVc.branch = self.subjects?[indexPath.row].branch_code ?? ""
-//                groupChoiceVc.subject = self.subjects?[indexPath.row].subject_name ?? ""
-//                groupChoiceVc.section = self.subjects?[indexPath.row].section ?? ""
-//                groupChoiceVc.subjectCode = self.subjects?[indexPath.row].subject_code ?? ""
-//                groupChoiceVc.isLab = true
-//                groupChoiceVc.navigationItem.largeTitleDisplayMode = .never
-//                tabBarController?.tabBar.isHidden = true
-//                self.navigationController?.pushViewController(groupChoiceVc, animated: true)
-//            }
-//
-//        } else {
-//            checkNetwork(idx: indexPath.row)
-//        }
         if checkInternet() {
             if let studentListVc = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
                 studentListVc.batch = self.subjects?[indexPath.row].batch ?? ""
@@ -342,6 +326,26 @@ extension UINavigationController {
 }
 
 extension SubjectViewController: SubjectCellProtocol {
+    func seeSubjectStats(idx: Int) {
+        //goto stats screen
+        if let statsVC = storyboard?.instantiateViewController(withIdentifier: "StatsViewController") as? StatsViewController {
+            statsVC.batch = self.subjects?[idx].batch ?? ""
+            statsVC.branch = self.subjects?[idx].branch_code ?? ""
+            statsVC.section = self.subjects?[idx].section ?? ""
+            statsVC.subject = self.subjects?[idx].subject_code ?? ""
+            
+            if subjects?[idx].is_lab ?? false,
+               let group = subjects?[idx].group {
+                statsVC.isLab = true
+                statsVC.group = group
+            }
+            
+            statsVC.navigationItem.largeTitleDisplayMode = .never
+            tabBarController?.tabBar.isHidden = true
+            self.navigationController?.pushViewController(statsVC, animated: true)
+        }
+    }
+    
     func editLastAttendance(idx: Int) {
         if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
             studentListVC.batch = self.subjects?[idx].batch ?? ""
@@ -357,16 +361,6 @@ extension SubjectViewController: SubjectCellProtocol {
         }
     }
 }
-
-
-extension SubjectViewController: LoginViewControllerProtocol {
-    func reloadData(isLogin: Bool) {
-        if !isLogin {
-//            getSubject()
-        }
-    }
-}
-
 
 func returnBranch(branchCode: String?) -> String {
     if let code = branchCode {

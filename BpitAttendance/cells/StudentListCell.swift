@@ -12,6 +12,11 @@ class StudentListCell: UICollectionViewCell {
     @IBOutlet weak var rollNoLabel: UILabel!
 
     @IBOutlet weak var nameLabel: UILabel!
+    
+    deinit {
+        print(#file)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -9,6 +9,7 @@ import UIKit
 
 protocol SubjectCellProtocol: AnyObject {
     func editLastAttendance(idx: Int)
+    func seeSubjectStats(idx: Int)
 }
 
 class subjectCell: UICollectionViewCell {
@@ -33,9 +34,9 @@ class subjectCell: UICollectionViewCell {
             self?.delegate?.editLastAttendance(idx: self?.idxPath ?? 0)
         }
         
-        let addUserItem = UIAction(title: "See Statistics", image: UIImage(systemName: "person.badge.plus")) { (action) in
-            
-            print("Add User action was tapped")
+        let addUserItem = UIAction(title: "See Statistics", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+            //see stats
+            self?.delegate?.seeSubjectStats(idx: self?.idxPath ?? 0)
         }
         
         let menu = UIMenu(title: "More Options", options: .displayInline, children: [usersItem , addUserItem])
@@ -46,6 +47,9 @@ class subjectCell: UICollectionViewCell {
         baseView.backgroundColor = UIColor.subjectColor
         
         menuBtn.layer.cornerRadius = 5
+        
+        menuBtn.setTitle("", for: .normal)
+        menuBtn.setTitle("", for: .selected)
     }
     
     func config(idx: Int) {

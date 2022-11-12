@@ -141,7 +141,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="825" y="3"/>
+            <point key="canvasLocation" x="684" y="-4"/>
         </scene>
         <!--Subject View Controller-->
         <scene sceneID="PRr-6d-1XI">
@@ -198,7 +198,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P5a-vd-ogz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5485.6000000000004" y="-336.20689655172413"/>
+            <point key="canvasLocation" x="6228" y="-220.19704433497537"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="KUC-jK-Jnr">
@@ -303,7 +303,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h0d-AG-2D9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1079.2" y="920.68965517241384"/>
+            <point key="canvasLocation" x="684" y="681"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="Nun-z0-Jee">
@@ -387,7 +387,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YpS-rj-qRf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7458.3999999999996" y="539.40886699507394"/>
+            <point key="canvasLocation" x="5286" y="519"/>
         </scene>
         <!--Reset Password View Controller-->
         <scene sceneID="N7I-DZ-QBJ">
@@ -469,7 +469,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tyN-eE-4vX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2776.8000000000002" y="881.5270935960591"/>
+            <point key="canvasLocation" x="684" y="1368"/>
         </scene>
         <!--Group Choice View Controller-->
         <scene sceneID="OFA-vM-Ovg">
@@ -525,7 +525,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bev-x3-wCM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1839" y="-652"/>
+            <point key="canvasLocation" x="-1783" y="-695"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="yKV-wR-TzU">
@@ -581,7 +581,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nfr-Yv-QwM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3650.4000000000001" y="-668.7192118226601"/>
+            <point key="canvasLocation" x="6223.1999999999998" y="-1134.2364532019706"/>
         </scene>
         <!--Student List View Controller-->
         <scene sceneID="8SF-KP-uwS">
@@ -687,7 +687,62 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o9e-Dv-vFP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="892" y="-780"/>
+            <point key="canvasLocation" x="-34" y="-766"/>
+        </scene>
+        <!--Stats View Controller-->
+        <scene sceneID="1Za-70-7sQ">
+            <objects>
+                <viewController storyboardIdentifier="StatsViewController" id="gx9-o4-fFq" customClass="StatsViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fm6-HJ-iUP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="xah-JA-QKe">
+                                <rect key="frame" x="0.0" y="91" width="375" height="687"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ASI-Ry-voj">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="389-wJ-knp">
+                                <rect key="frame" x="167.66666666666666" y="414.66666666666669" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="rEH-T3-dru"/>
+                                    <constraint firstAttribute="height" constant="40" id="tcu-Uz-6Uq"/>
+                                </constraints>
+                            </activityIndicatorView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="f44-L3-dBs"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="xah-JA-QKe" firstAttribute="top" secondItem="f44-L3-dBs" secondAttribute="top" id="LqR-KQ-ASb"/>
+                            <constraint firstItem="389-wJ-knp" firstAttribute="centerX" secondItem="f44-L3-dBs" secondAttribute="centerX" id="ak7-2A-b78"/>
+                            <constraint firstItem="f44-L3-dBs" firstAttribute="trailing" secondItem="xah-JA-QKe" secondAttribute="trailing" id="c9B-Zv-aJe"/>
+                            <constraint firstItem="f44-L3-dBs" firstAttribute="bottom" secondItem="xah-JA-QKe" secondAttribute="bottom" id="eFv-NM-XeG"/>
+                            <constraint firstItem="389-wJ-knp" firstAttribute="centerY" secondItem="f44-L3-dBs" secondAttribute="centerY" id="fch-sM-L91"/>
+                            <constraint firstItem="xah-JA-QKe" firstAttribute="leading" secondItem="f44-L3-dBs" secondAttribute="leading" id="tZi-2i-p5O"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="E5W-ck-SOJ">
+                        <barButtonItem key="rightBarButtonItem" title="Month" image="calendar" catalog="system" id="lMc-ll-HHh">
+                            <connections>
+                                <action selector="monthButtonClicked:" destination="gx9-o4-fFq" id="UQ7-uk-HIH"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="loader" destination="389-wJ-knp" id="WgR-lb-JsW"/>
+                        <outlet property="monthButton" destination="lMc-ll-HHh" id="76Y-Bj-CMt"/>
+                        <outlet property="statsCollectionView" destination="xah-JA-QKe" id="gZW-IO-YHO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d7I-Bc-wQW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2314.4000000000001" y="-829.06403940886707"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="6ex-ai-KZW">
@@ -706,7 +761,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oHh-Q4-rNI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.92307692307691" y="3.5545023696682461"/>
+            <point key="canvasLocation" x="-34" y="-4"/>
         </scene>
         <!--Subjects-->
         <scene sceneID="qa6-Ws-i7e">
@@ -725,7 +780,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GB8-Md-pee" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4543.1999999999998" y="-336.20689655172413"/>
+            <point key="canvasLocation" x="5436" y="-220.19704433497537"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="6MM-yB-hqf">
@@ -954,7 +1009,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BbZ-W2-FUW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5512.8000000000002" y="856.4039408866995"/>
+            <point key="canvasLocation" x="3510" y="1029"/>
         </scene>
         <!--Profile-->
         <scene sceneID="Bj8-e6-LOF">
@@ -973,7 +1028,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4kL-1F-EMQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6516" y="539.40886699507394"/>
+            <point key="canvasLocation" x="4494" y="519"/>
         </scene>
         <!--Settings-->
         <scene sceneID="rwY-mV-OnK">
@@ -992,7 +1047,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="evc-dh-Mj9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2708" y="-668.7192118226601"/>
+            <point key="canvasLocation" x="5436" y="-1134.2364532019706"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jBG-BP-13C">
@@ -1010,7 +1065,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Qz-im-RDw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1834.4000000000001" y="881.5270935960591"/>
+            <point key="canvasLocation" x="-34" y="1368"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="umb-Fv-y1W">
@@ -1028,7 +1083,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hrt-tV-kEB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="920.68965517241384"/>
+            <point key="canvasLocation" x="-34" y="682"/>
         </scene>
         <!--About-->
         <scene sceneID="XzQ-AX-FI3">
@@ -1047,7 +1102,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6lc-2N-77b" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4570.3999999999996" y="856.4039408866995"/>
+            <point key="canvasLocation" x="2684" y="1029"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="3wf-cA-Al5">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LyY-wc-i1v" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="IQX-xJ-LLz">
+                        <rect key="frame" x="0.0" y="47" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="gx9-o4-fFq" kind="relationship" relationship="rootViewController" id="EVu-xg-AU9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bA7-RN-yM5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1372" y="-829.06403940886707"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="linkColor"/>
@@ -1056,6 +1129,7 @@
         <image name="achalSir" width="280" height="400"/>
         <image name="book" catalog="system" width="128" height="99"/>
         <image name="book.fill" catalog="system" width="128" height="95"/>
+        <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="info.circle" catalog="system" width="128" height="123"/>

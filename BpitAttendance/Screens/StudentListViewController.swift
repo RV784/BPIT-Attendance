@@ -37,6 +37,10 @@ class StudentListViewController: UIViewController {
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var studentCollectionView: UICollectionView!
     
+    deinit {
+        print(#file)
+    }
+    
 //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
