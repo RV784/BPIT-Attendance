@@ -51,52 +51,13 @@ class SubjectViewController: UIViewController {
                                                                  action: #selector(rightHandAction))
     }
     
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        tabBarController?.tabBar.isHidden = false
-    //        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-    //    }
-    
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     //MARK: BUSINESS LOGIC
-    @IBAction func logoutBtnClicked(_ sender: Any) {
-        let alertController = UIAlertController(title: "Do you want to Logout?", message: "", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-            UIAlertAction in
-            NSLog("OK Pressed")
-            Credentials.shared.defaults.set("", forKey: "Token")
-            Credentials.shared.defaults.set("", forKey: "Name")
-            Credentials.shared.defaults.set("", forKey: "Email")
-            Credentials.shared.defaults.set("", forKey: "Designation")
-            Credentials.shared.defaults.set("", forKey: "PhoneNumber")
-            Credentials.shared.defaults.set("", forKey: "DateJoined")
-            Credentials.shared.defaults.set(false, forKey: "Staff")
-            Credentials.shared.defaults.set(false, forKey: "Active")
-            Credentials.shared.defaults.set(false, forKey: "SuperUser")
-            self.navigateToLoginAgain()
-        }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-            UIAlertAction in
-            NSLog("Cancel Pressed")
-        }
-        alertController.addAction(cancelAction)
-        alertController.addAction(okAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    @IBAction func profileBtnClicked(_ sender: Any) {
-        navigateToProfilePage()
-    }
-    
-    func navigateToProfilePage() {
-        if let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
-            self.navigationController?.pushViewController(profileVC, animated: true)
-        }
-    }
-    
     func navigateToLoginAgain() {
         let alertController = UIAlertController(title: "Oops!", message: "Seems link your token expired, we'll redirect you to LogIn screen to refresh your token", preferredStyle: .alert)
         let gotoButton = UIAlertAction(title: "Go to Login Screen", style: UIAlertAction.Style.default) {
