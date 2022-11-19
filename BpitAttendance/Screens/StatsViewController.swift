@@ -38,8 +38,6 @@ class StatsViewController: UIViewController {
         let layOut = StickyLayout(stickyConfig: stickyConfig)
         statsCollectionView.collectionViewLayout = layOut
         
-        navigationItem.title = "Attendance Stats"
-        navigationController?.navigationBar.prefersLargeTitles = false
         statsCollectionView.contentInset = UIEdgeInsets(top: CGFloat(0), left: CGFloat(0), bottom: 0, right: CGFloat(0))
         
         if let monthInt = Calendar.current.dateComponents([.month], from: Date()).month {
@@ -111,6 +109,11 @@ class StatsViewController: UIViewController {
         
         monthButton.menu = menu
         getStats()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationItem.title = "Attendance Stats"
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     @IBAction func monthButtonClicked(_ sender: Any) {

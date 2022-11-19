@@ -112,6 +112,11 @@ class SubjectViewController: UIViewController {
         }
     }
     
+    func vibrate() {
+        let tapticFeedback = UINotificationFeedbackGenerator()
+        tapticFeedback.notificationOccurred(.success)
+    }
+    
     //MARK: API CALLS
     func getSubject() {
         
@@ -191,17 +196,19 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let cell = subjectCollectionView.dequeueReusableCell(withReuseIdentifier: "subjectCell", for: indexPath) as? subjectCell {
-            cell.delegate = self
             cell.subjectLabel.text = self.subjects?[indexPath.row].subject_name
             cell.sectionLabel.text = "Semester \(self.subjects?[indexPath.row].semester ?? 0)"
             if self.subjects?[indexPath.row].is_lab == true,
                let group = self.subjects?[indexPath.row].group {
+                cell.labView.isHidden = false
                 cell.labLabel.text = "Lab \(group)"
             }else{
+                cell.labView.isHidden = true
                 cell.labLabel.text = ""
             }
             cell.branch_sectionLabel.text = "\(returnBranch(branchCode: self.subjects?[indexPath.row].branch_code)) - \(self.subjects?[indexPath.row].section ?? "")"
             cell.idxPath = indexPath.row
+            cell.layer.cornerRadius = 15
             return cell
         }
         
@@ -210,7 +217,7 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width  = subjectCollectionView.frame.width
-        return CGSize(width: width - 20, height: 130)
+        return CGSize(width: width/2 - 15, height: 120)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -241,6 +248,65 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let idx = indexPaths.first?[1] else {
+            return UIContextMenuConfiguration()
+        }
+        
+        let context = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (action) -> UIMenu? in
+            let takeAttendance = UIAction(title: "Take Attendance", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                if self.checkInternet() {
+                    if let studentListVc = self.storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
+                        studentListVc.batch = self.subjects?[idx].batch ?? ""
+                        studentListVc.branch = self.subjects?[idx].branch_code ?? ""
+                        studentListVc.subject = self.subjects?[idx].subject_name ?? ""
+                        studentListVc.section = self.subjects?[idx].section ?? ""
+                        studentListVc.subjectCode = self.subjects?[idx].subject_code ?? ""
+                        
+                        if self.subjects?[idx].is_lab ?? false,
+                           let group = self.subjects?[idx].group {
+                            studentListVc.isLab = true
+                            
+                            if group == "G1" {
+                                studentListVc.groupNum = 1
+                            } else if group == "G2" {
+                                studentListVc.groupNum = 2
+                            }
+                        }
+                        studentListVc.navigationItem.largeTitleDisplayMode = .never
+                        self.tabBarController?.tabBar.isHidden = true
+                        self.navigationController?.pushViewController(studentListVc, animated: true)
+                    }
+                } else {
+                    self.showNoInternetAlter()
+                }
+            }
+            let editLastAttendance = UIAction(title: "Edit last attendance", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                self.editLastAttendance(idx: idx)
+            }
+            let seeStats = UIAction(title: "See stats", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                self.seeSubjectStats(idx: idx)
+            }
+            return UIMenu(title: "More Options", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [takeAttendance ,editLastAttendance, seeStats])
+        }
+        return context
+    }
+    
+    func editLastAttendance(idx: Int) {
+        if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
+            studentListVC.batch = self.subjects?[idx].batch ?? ""
+            studentListVC.branch = self.subjects?[idx].branch_code ?? ""
+            studentListVC.subject = self.subjects?[idx].subject_name ?? ""
+            studentListVC.section = self.subjects?[idx].section ?? ""
+            studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
+            studentListVC.isLab = self.subjects?[idx].is_lab ?? false
+            studentListVC.isEditingPrevAttendance = true
+            studentListVC.navigationItem.largeTitleDisplayMode = .never
+            tabBarController?.tabBar.isHidden = true
+            self.navigationController?.pushViewController(studentListVC, animated: true)
+        }
+    }
+    
     func checkNetwork(idx: Int) {
         if InternetConnectionManager.isConnectedToNetwork() {
             navigateToStudentList(idx: idx)
@@ -266,6 +332,26 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             self.navigationController?.pushViewController(studentListVC, animated: true)
         }
     }
+    
+    func seeSubjectStats(idx: Int) {
+        //goto stats screen
+        if let statsVC = storyboard?.instantiateViewController(withIdentifier: "StatsViewController") as? StatsViewController {
+            statsVC.batch = self.subjects?[idx].batch ?? ""
+            statsVC.branch = self.subjects?[idx].branch_code ?? ""
+            statsVC.section = self.subjects?[idx].section ?? ""
+            statsVC.subject = self.subjects?[idx].subject_code ?? ""
+            
+            if subjects?[idx].is_lab ?? false,
+               let group = subjects?[idx].group {
+                statsVC.isLab = true
+                statsVC.group = group
+            }
+            
+            statsVC.navigationItem.largeTitleDisplayMode = .never
+            tabBarController?.tabBar.isHidden = true
+            self.navigationController?.pushViewController(statsVC, animated: true)
+        }
+    }
 }
 
 extension SubjectViewController: NoInternetProtocols {
@@ -286,42 +372,42 @@ extension UINavigationController {
     }
 }
 
-extension SubjectViewController: SubjectCellProtocol {
-    func seeSubjectStats(idx: Int) {
-        //goto stats screen
-        if let statsVC = storyboard?.instantiateViewController(withIdentifier: "StatsViewController") as? StatsViewController {
-            statsVC.batch = self.subjects?[idx].batch ?? ""
-            statsVC.branch = self.subjects?[idx].branch_code ?? ""
-            statsVC.section = self.subjects?[idx].section ?? ""
-            statsVC.subject = self.subjects?[idx].subject_code ?? ""
-            
-            if subjects?[idx].is_lab ?? false,
-               let group = subjects?[idx].group {
-                statsVC.isLab = true
-                statsVC.group = group
-            }
-            
-            statsVC.navigationItem.largeTitleDisplayMode = .never
-            tabBarController?.tabBar.isHidden = true
-            self.navigationController?.pushViewController(statsVC, animated: true)
-        }
-    }
-    
-    func editLastAttendance(idx: Int) {
-        if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
-            studentListVC.batch = self.subjects?[idx].batch ?? ""
-            studentListVC.branch = self.subjects?[idx].branch_code ?? ""
-            studentListVC.subject = self.subjects?[idx].subject_name ?? ""
-            studentListVC.section = self.subjects?[idx].section ?? ""
-            studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
-            studentListVC.isLab = self.subjects?[idx].is_lab ?? false
-            studentListVC.isEditingPrevAttendance = true
-            studentListVC.navigationItem.largeTitleDisplayMode = .never
-            tabBarController?.tabBar.isHidden = true
-            self.navigationController?.pushViewController(studentListVC, animated: true)
-        }
-    }
-}
+//extension SubjectViewController: SubjectCellProtocol {
+//    func seeSubjectStats(idx: Int) {
+//        //goto stats screen
+//        if let statsVC = storyboard?.instantiateViewController(withIdentifier: "StatsViewController") as? StatsViewController {
+//            statsVC.batch = self.subjects?[idx].batch ?? ""
+//            statsVC.branch = self.subjects?[idx].branch_code ?? ""
+//            statsVC.section = self.subjects?[idx].section ?? ""
+//            statsVC.subject = self.subjects?[idx].subject_code ?? ""
+//
+//            if subjects?[idx].is_lab ?? false,
+//               let group = subjects?[idx].group {
+//                statsVC.isLab = true
+//                statsVC.group = group
+//            }
+//
+//            statsVC.navigationItem.largeTitleDisplayMode = .never
+//            tabBarController?.tabBar.isHidden = true
+//            self.navigationController?.pushViewController(statsVC, animated: true)
+//        }
+//    }
+//
+//    func editLastAttendance(idx: Int) {
+//        if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
+//            studentListVC.batch = self.subjects?[idx].batch ?? ""
+//            studentListVC.branch = self.subjects?[idx].branch_code ?? ""
+//            studentListVC.subject = self.subjects?[idx].subject_name ?? ""
+//            studentListVC.section = self.subjects?[idx].section ?? ""
+//            studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
+//            studentListVC.isLab = self.subjects?[idx].is_lab ?? false
+//            studentListVC.isEditingPrevAttendance = true
+//            studentListVC.navigationItem.largeTitleDisplayMode = .never
+//            tabBarController?.tabBar.isHidden = true
+//            self.navigationController?.pushViewController(studentListVC, animated: true)
+//        }
+//    }
+//}
 
 func returnBranch(branchCode: String?) -> String {
     if let code = branchCode {

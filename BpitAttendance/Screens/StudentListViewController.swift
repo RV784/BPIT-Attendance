@@ -158,6 +158,11 @@ class StudentListViewController: UIViewController {
         let tapticFeedback = UINotificationFeedbackGenerator()
         tapticFeedback.notificationOccurred(.success)
     }
+    
+    func vibrate() {
+        let tapticFeedback = UINotificationFeedbackGenerator()
+        tapticFeedback.notificationOccurred(.success)
+    }
 
     
     func yesPressed() {
@@ -317,10 +322,12 @@ class StudentListViewController: UIViewController {
                     }
                     if self?.isLab ?? false {
                         DispatchQueue.main.async {
+                            self?.vibrate()
                             self?.navigationController?.popViewController(animated: true)
                         }
                     } else {
                         DispatchQueue.main.async {
+                            self?.vibrate()
                             self?.navigationController?.popViewController(animated: true)
                         }
                     }
@@ -398,6 +405,7 @@ class StudentListViewController: UIViewController {
                         return
                     }
                     DispatchQueue.main.async {
+                        self?.vibrate()
                         self?.navigationController?.popViewController(animated: true)
                     }
                 } catch (let error){
