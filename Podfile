@@ -5,7 +5,7 @@ target 'BpitAttendance' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  # Pods for BpitAttendance
+  # Pods for BpitAttendance()
 
 pod "StickyLayout"
 
