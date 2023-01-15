@@ -36,6 +36,7 @@
 		AB72457528E6DB4E00D044E4 /* InternetConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB72457428E6DB4E00D044E4 /* InternetConnectionManager.swift */; };
 		AB72457728E6FCEE00D044E4 /* NoInternetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB72457628E6FCEE00D044E4 /* NoInternetView.swift */; };
 		AB72457928E6FCFA00D044E4 /* NoInternetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB72457828E6FCFA00D044E4 /* NoInternetView.xib */; };
+		AB80392B2965E83B0035C08B /* InterceptorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB80392A2965E83B0035C08B /* InterceptorModel.swift */; };
 		AB97FFC628E55EA400CA80F7 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */; };
 		AB97FFC928E5605100CA80F7 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB97FFC728E5605100CA80F7 /* ProfileCell.swift */; };
 		AB97FFCA28E5605100CA80F7 /* ProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB97FFC828E5605100CA80F7 /* ProfileCell.xib */; };
@@ -88,6 +89,7 @@
 		AB72457428E6DB4E00D044E4 /* InternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetConnectionManager.swift; sourceTree = "<group>"; };
 		AB72457628E6FCEE00D044E4 /* NoInternetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoInternetView.swift; sourceTree = "<group>"; };
 		AB72457828E6FCFA00D044E4 /* NoInternetView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoInternetView.xib; sourceTree = "<group>"; };
+		AB80392A2965E83B0035C08B /* InterceptorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterceptorModel.swift; sourceTree = "<group>"; };
 		AB97FFC528E55EA400CA80F7 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		AB97FFC728E5605100CA80F7 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		AB97FFC828E5605100CA80F7 /* ProfileCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCell.xib; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				AB2B44302916E8040045A415 /* SubmitAttendanceResponseModel.swift */,
 				AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */,
 				AB268C9C291CFF530030F1FE /* StatsModel.swift */,
+				AB80392A2965E83B0035C08B /* InterceptorModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -437,6 +440,7 @@
 				ABCA6A8F28F3E19A0060C3D5 /* OTPTextField.swift in Sources */,
 				AB72457728E6FCEE00D044E4 /* NoInternetView.swift in Sources */,
 				AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */,
+				AB80392B2965E83B0035C08B /* InterceptorModel.swift in Sources */,
 				AB2B44312916E8040045A415 /* SubmitAttendanceResponseModel.swift in Sources */,
 				ABA2CDD828D704AC006CF656 /* SubjectViewController.swift in Sources */,
 				AB2B443729175FD40045A415 /* ColorExtension.swift in Sources */,
@@ -618,7 +622,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.BpitAttendance;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bpit.attendance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -648,7 +652,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.BpitAttendance;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bpit.attendance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

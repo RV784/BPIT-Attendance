@@ -49,13 +49,21 @@ class StudentListViewController: UIViewController {
         noInternetView.delegate = self
         if isEditingPrevAttendance {
             if checkInternet() {
-                getLastAttendanceStudents(batch: self.batch, subject: self.subject, section: self.section, branch: self.branch, isLab: false, subjectCode: self.subjectCode)
+                getPostUrl() { [weak self] in
+                    self?.getLastAttendanceStudents(batch: self?.batch ?? "", subject: self?.subject ?? "", section: self?.section ?? "", branch: self?.branch ?? "", isLab: false, subjectCode: self?.subjectCode ?? "")
+                }_: { [weak self] in
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 showNoInternetAlter()
             }
         } else {
             if checkInternet() {
-                getStudents(batch: self.batch, subject: self.subject, section: self.section, branch: self.branch, isLab: self.isLab, groupNum: self.groupNum, subjectCode: self.subjectCode)
+                getPostUrl() { [weak self] in
+                    self?.getStudents(batch: self?.batch ?? "", subject: self?.subject ?? "", section: self?.section ?? "", branch: self?.branch ?? "", isLab: self?.isLab ?? false, groupNum: self?.groupNum ?? 1, subjectCode: self?.subjectCode ?? "")
+                }_: { [weak self] in
+                    self?.somethingGoneWrongError()
+                }
             } else {
                 showNoInternetAlter()
             }
@@ -177,9 +185,17 @@ class StudentListViewController: UIViewController {
 ////        }
         if checkInternet() {
             if isEditingPrevAttendance {
-                sendLastStudents()
+                getPostUrl() { [weak self] in
+                    self?.sendLastStudents()
+                }_: { [weak self] in
+                    self?.somethingGoneWrongError()
+                }
             } else {
-                sendStudents()
+                getPostUrl() { [weak self] in
+                    self?.sendStudents()
+                }_: { [weak self] in
+                    self?.somethingGoneWrongError()
+                }
             }
         } else {
             showNoInternetAlter()
@@ -280,8 +296,10 @@ class StudentListViewController: UIViewController {
             return
         }
         
-        submitBtn.setTitle("", for: .normal)
-        attendanceSubmitLoader.startAnimating()
+        DispatchQueue.main.async {
+            self.submitBtn.setTitle("", for: .normal)
+            self.attendanceSubmitLoader.startAnimating()
+        }
         
         print("______________________________")
         print(EndPoints.sendAttendance.description)
@@ -296,6 +314,10 @@ class StudentListViewController: UIViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
             
             DispatchQueue.main.async {
                 self?.submitBtn.setTitle("Submit", for: .normal)
@@ -363,8 +385,11 @@ class StudentListViewController: UIViewController {
             return
         }
         
-        submitBtn.setTitle("", for: .normal)
-        attendanceSubmitLoader.startAnimating()
+        
+        DispatchQueue.main.async {
+            self.submitBtn.setTitle("", for: .normal)
+            self.attendanceSubmitLoader.startAnimating()
+        }
         
         print("______________________________")
         print(EndPoints.sendLastAttendance.description)
@@ -379,6 +404,10 @@ class StudentListViewController: UIViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
             
             DispatchQueue.main.async {
                 self?.submitBtn.setTitle("Submit", for: .normal)
@@ -454,7 +483,9 @@ class StudentListViewController: UIViewController {
             print(EndPoints.getAllStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)
         }
         
-        studentLoader.startAnimating()
+        DispatchQueue.main.async {
+            self.studentLoader.startAnimating()
+        }
         
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -462,6 +493,10 @@ class StudentListViewController: UIViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
             
             DispatchQueue.main.async {
                 self?.studentLoader.stopAnimating()
@@ -512,7 +547,9 @@ class StudentListViewController: UIViewController {
             return
         }
         
-        self.studentLoader.startAnimating()
+        DispatchQueue.main.async {
+            self.studentLoader.startAnimating()
+        }
         
         print("______________________________")
         print(EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description)
@@ -529,6 +566,10 @@ class StudentListViewController: UIViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
             
             DispatchQueue.main.async {
                 self?.studentLoader.stopAnimating()
@@ -569,6 +610,69 @@ class StudentListViewController: UIViewController {
                 }
             }
         })
+        task.resume()
+    }
+}
+
+//MARK: INTERCEPTOR
+extension StudentListViewController {
+    func getPostUrl(_ success: @escaping () -> Void,
+                 _ failure: @escaping () -> Void) {
+        
+       //Start loader
+        self.submitBtn.setTitle("", for: .normal)
+        self.attendanceSubmitLoader.startAnimating()
+        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
+            
+            DispatchQueue.main.async {
+                //STOP loader
+                self?.submitBtn.setTitle("Submit", for: .normal)
+                self?.attendanceSubmitLoader.stopAnimating()
+            }
+            
+            if error != nil {
+                failure()
+                print("inside error")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
+            } else {
+                
+                do {
+                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
+                    print(d1)
+                    print("______________________________")
+                    
+                    if let url = d1.url {
+                        Api.shared.post = "\(url)/api"
+                        success()
+                    } else {
+                        //not getting url
+                        failure()
+                    }
+                    
+                } catch (let error) {
+                    //server issue handling
+                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
+                    print(error)
+                    failure()
+                }
+            }
+            
+        })
+        
         task.resume()
     }
 }

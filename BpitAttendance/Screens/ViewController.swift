@@ -102,7 +102,15 @@ class ViewController: UIViewController {
             return
         }
         if checkConnection() {
-            register(email: emailTxtField.text!, password: passwordTxtField.text!)
+            getPostUrl() { [weak self] in
+                DispatchQueue.main.async {
+                    self?.register(email: self?.emailTxtField.text ?? "", password: self?.passwordTxtField.text ?? "")
+                }
+            }_: { [weak self] in
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
+            }
         } else {
             //TODO: show no internet Alert
             showNoInternetAlter()
@@ -175,7 +183,63 @@ class ViewController: UIViewController {
 }
 
 // MARK: API CALL
+
+
 extension ViewController {
+    
+    
+//    func getPostUrl() {
+//
+//        guard let url = URL(string: EndPoints.getInterceptorURL.description) else {
+//            return
+//        }
+//
+//        signInBtn.setTitle("", for: .normal)
+//        self.loginLoader.startAnimating()
+//        print("______________________________")
+//        print(EndPoints.getInterceptorURL.description)
+//
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "GET"
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//
+//        let session = URLSession.shared
+//        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
+//
+//            DispatchQueue.main.async {
+//                self?.loginLoader.stopAnimating()
+//            }
+//
+//            if error != nil {
+//                print("inside error")
+//                print(error?.localizedDescription as Any)
+//                print("______________________________")
+//                DispatchQueue.main.async {
+//                    self?.somethingGoneWrongError()
+//                }
+//            } else {
+//                do {
+//                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
+//                    print(d1)
+//                    print("______________________________")
+//
+//                    if let url = d1.url {
+//                        Api.shared.post = "\(url)/api"
+//                    } else {
+//                        //not getting url
+//                    }
+//
+//                } catch (let error) {
+//                    //server issue handling
+//                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
+//                    print(error)
+//                }
+//            }
+//        })
+//
+//        task.resume()
+//    }
+    
     func register(email: String, password: String) {
         
         guard let url = URL(string: EndPoints.getToken.description) else {
@@ -183,7 +247,9 @@ extension ViewController {
         }
         
         signInBtn.setTitle("", for: .normal)
-        self.loginLoader.startAnimating()
+        DispatchQueue.main.async {
+            self.loginLoader.startAnimating()
+        }
         print("______________________________")
         print(EndPoints.getToken.description)
         
@@ -197,7 +263,12 @@ extension ViewController {
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
             
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
+            
             DispatchQueue.main.async {
+                self?.signInBtn.setTitle("Sign In", for: .normal)
                 self?.loginLoader.stopAnimating()
             }
             
@@ -243,60 +314,68 @@ extension ViewController {
         
         task.resume()
     }
-    
-    //    func getProfileCall() {
-    //        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-    //            return
-    //        }
-    //
-    //        guard let id = Credentials.shared.defaults.string(forKey: "Id") else {
-    //            return
-    //        }
-    //
-    //        guard let url = URL(string: EndPoints.getProfile(id: id).description) else {
-    //            return
-    //        }
-    //
-    //        print("______________________________")
-    //        print(EndPoints.getProfile(id: id).description)
-    //
-    //        var request = URLRequest(url: url)
-    //        request.httpMethod = "GET"
-    //        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    //        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
-    //
-    //        let session = URLSession.shared
-    //        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-    //
-    //            if error != nil {
-    //                print("inside \(EndPoints.getProfile(id: id).description) erorr")
-    //                print(error?.localizedDescription as Any)
-    //                print("______________________________")
-    //            }else{
-    //                do{
-    //                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
-    //                    print(d1)
-    //                    DispatchQueue.main.async {
-    //                        self?.profileData = d1
-    //                        print(self?.profileData as Any)
-    //                        print("______________________________")
-    //                        self?.saveToDevice()
-    //                    }
-    //                } catch(let error) {
-    //                    print("inside \(EndPoints.getProfile(id: id).description) catch")
-    //                    print("inside catch \(error)")
-    //                    if let httpResponse = response as? HTTPURLResponse {
-    //                        if httpResponse.statusCode == 401 {
-    //                            print("token expired")
-    //                            print("______________________________")
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        })
-    //
-    //        task.resume()
-    //    }
+}
+
+//MARK: INTERCEPTOR
+extension ViewController {
+    func getPostUrl(_ success: @escaping () -> Void,
+                 _ failure: @escaping () -> Void) {
+        
+       //Start loader
+        signInBtn.setTitle("", for: .normal)
+        self.loginLoader.startAnimating()
+        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
+            
+            DispatchQueue.main.async {
+                self?.signInBtn.setTitle("Sign In", for: .normal)
+                self?.loginLoader.stopAnimating()
+            }
+            
+            if error != nil {
+                failure()
+                print("inside error")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
+            } else {
+                
+                do {
+                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
+                    print(d1)
+                    print("______________________________")
+                    
+                    if let url = d1.url {
+                        Api.shared.post = "\(url)/api"
+                        success()
+                    } else {
+                        //not getting url
+                        failure()
+                    }
+                    
+                } catch (let error) {
+                    //server issue handling
+                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
+                    print(error)
+                    failure()
+                }
+            }
+            
+        })
+        
+        task.resume()
+    }
 }
 
 

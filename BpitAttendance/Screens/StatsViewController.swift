@@ -46,69 +46,69 @@ class StatsViewController: UIViewController {
         
         let jan = UIAction(title: "January", image: UIImage(systemName: "person.fill")) { [weak self] (action) in
             self?.month = 1
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let feb = UIAction(title: "Feburary", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 2
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let mar = UIAction(title: "March", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 3
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let apr = UIAction(title: "April", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 4
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let may = UIAction(title: "May", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 5
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let jun = UIAction(title: "June", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 6
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let jul = UIAction(title: "July", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 7
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let aug = UIAction(title: "August", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 8
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let sep = UIAction(title: "September", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 9
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let oct = UIAction(title: "October", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 10
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let nov = UIAction(title: "November", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 11
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         
         let dec = UIAction(title: "December", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
             self?.month = 12
-            self?.getStats()
+            self?.getStatsAPI()
         }
         
         let menu = UIMenu(title: "More Options", options: .displayInline, children: [jan , feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec])
         
         monthButton.menu = menu
-        getStats()
+        getStatsAPI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -158,10 +158,18 @@ class StatsViewController: UIViewController {
     @objc func okPressed() {
         
     }
+    
+    func getStatsAPI() {
+        getPostUrl() { [weak self] in
+            self?.getStats()
+        }_: { [weak self] in
+            self?.somethingGoneWrongError()
+        }
+    }
 }
 
+//MARK: API CALLS
 extension StatsViewController {
-    //MARK: API CALLS
     
     func getStats() {
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
@@ -192,7 +200,9 @@ extension StatsViewController {
         }
         
         //start loader
-        loader.startAnimating()
+        DispatchQueue.main.async {
+            self.loader.startAnimating()
+        }
         
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -202,6 +212,10 @@ extension StatsViewController {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
             
             DispatchQueue.main.async {
                 //stop loader
@@ -249,6 +263,70 @@ extension StatsViewController {
     }
 }
 
+//MARK: INTERCEPTOR
+extension StatsViewController {
+        
+        func getPostUrl(_ success: @escaping () -> Void,
+                     _ failure: @escaping () -> Void) {
+            
+           //Start loader
+            loader.startAnimating()
+            guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let session = URLSession.shared
+            let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+                
+                if let httpResponse = response as? HTTPURLResponse {
+                    print(httpResponse.statusCode)
+                }
+                
+                DispatchQueue.main.async {
+                    //STOP loader
+                    self?.loader.stopAnimating()
+                }
+                
+                if error != nil {
+                    failure()
+                    print("inside error")
+                    print(error?.localizedDescription as Any)
+                    print("______________________________")
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
+                } else {
+                    
+                    do {
+                        let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
+                        print(d1)
+                        print("______________________________")
+                        
+                        if let url = d1.url {
+                            Api.shared.post = "\(url)/api"
+                            success()
+                        } else {
+                            //not getting url
+                            failure()
+                        }
+                        
+                    } catch (let error) {
+                        //server issue handling
+                        print("inside catch error of \(EndPoints.getInterceptorURL.description)")
+                        print(error)
+                        failure()
+                    }
+                }
+                
+            })
+            
+            task.resume()
+        }
+}
+
+
+//MARK: COLLECTION VIEW
 extension StatsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let count = statData?.columns?.count {
