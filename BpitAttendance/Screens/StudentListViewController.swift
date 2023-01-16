@@ -41,7 +41,7 @@ class StudentListViewController: UIViewController {
         print(#file)
     }
     
-//MARK: ViewDidLoad
+    //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         studentCollectionView.dataSource = self
@@ -129,7 +129,7 @@ class StudentListViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
-//MARK: BUSINESS LOGIC
+    //MARK: BUSINESS LOGIC
     func prepareRecordData() {
         let date = dateFormatter()
         for item in self.students ?? [] {
@@ -143,7 +143,7 @@ class StudentListViewController: UIViewController {
     }
     
     func prepareLastRecordData() {
-//        let date = dateFormatter()
+        //        let date = dateFormatter()
         for item in self.lastAttendanceStudents ?? [] {
             lastRecordData?.record.append(LastAttendanceModel.studentData(id: item.id ?? 0,
                                                                           enrollment_number: item.enrollment_number ?? "",
@@ -158,10 +158,10 @@ class StudentListViewController: UIViewController {
     }
     
     func shake() {
-            let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-            animation.duration = 0.6
-            animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.duration = 0.6
+        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
         noInternetView.layer.add(animation, forKey: "shake")
         let tapticFeedback = UINotificationFeedbackGenerator()
         tapticFeedback.notificationOccurred(.success)
@@ -171,18 +171,18 @@ class StudentListViewController: UIViewController {
         let tapticFeedback = UINotificationFeedbackGenerator()
         tapticFeedback.notificationOccurred(.success)
     }
-
+    
     
     func yesPressed() {
-//        if checkConnection() {
-//            if isEditingPrevAttendance {
-//                sendLastStudents()
-//            } else {
-//                sendStudents()
-//            }
-//        } else {
-//            disableEnableViews()
-////        }
+        //        if checkConnection() {
+        //            if isEditingPrevAttendance {
+        //                sendLastStudents()
+        //            } else {
+        //                sendStudents()
+        //            }
+        //        } else {
+        //            disableEnableViews()
+        ////        }
         if checkInternet() {
             if isEditingPrevAttendance {
                 getPostUrl() { [weak self] in
@@ -217,11 +217,11 @@ class StudentListViewController: UIViewController {
     }
     
     func dateFormatter() -> String {
-//        Date().description(with: .current)  //  Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
+        //        Date().description(with: .current)  //  Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
         let dateString = Date().iso8601withFractionalSeconds   //  "2019-02-06T00:35:01.746Z"
-
+        
         if let date = dateString.iso8601withFractionalSeconds {
-//            date.description(with: .current) // "Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
+            //            date.description(with: .current) // "Tuesday, February 5, 2019 at 10:35:01 PM Brasilia Summer Time"
             return date.iso8601withFractionalSeconds       //  "2019-02-06T00:35:01.746Z\n"
         }
         return ""
@@ -234,7 +234,7 @@ class StudentListViewController: UIViewController {
                     count = count + 1
                 }
             }
-        dynamicStudentCounter.text = "\(count)"
+            dynamicStudentCounter.text = "\(count)"
         }
     }
     
@@ -280,7 +280,7 @@ class StudentListViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-//MARK: API CALLS
+    //MARK: API CALLS
     func sendStudents() {
         
         guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
@@ -360,11 +360,15 @@ class StudentListViewController: UIViewController {
                             if httpResponse.statusCode == 401 {
                                 print("token expired")
                                 self?.navigateToLoginAgain()
+                                return
                             }
                         }
                     }
                     print(error)
                     print("______________________________")
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
                 }
             }
         })
@@ -443,11 +447,15 @@ class StudentListViewController: UIViewController {
                             if httpResponse.statusCode == 401 {
                                 print("token expired")
                                 self?.navigateToLoginAgain()
+                                return
                             }
                         }
                     }
                     print(error)
                     print("______________________________")
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
                 }
             }
             
@@ -530,6 +538,9 @@ class StudentListViewController: UIViewController {
                     }
                     print(error)
                     print("______________________________")
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
                 }
             }
         })
@@ -558,7 +569,7 @@ class StudentListViewController: UIViewController {
         guard let url = URL(string: EndPoints.getLastAttendanceStudents(batch: batch, branch: branch, subject: subjectCode, section: section).description) else {
             return
         }
-
+        
         request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -600,6 +611,7 @@ class StudentListViewController: UIViewController {
                             if httpResponse.statusCode == 401 {
                                 print("token expired")
                                 self?.navigateToLoginAgain()
+                                return
                             } else {
                                 self?.showNoDataAlert()
                             }
@@ -617,9 +629,9 @@ class StudentListViewController: UIViewController {
 //MARK: INTERCEPTOR
 extension StudentListViewController {
     func getPostUrl(_ success: @escaping () -> Void,
-                 _ failure: @escaping () -> Void) {
+                    _ failure: @escaping () -> Void) {
         
-       //Start loader
+        //Start loader
         self.submitBtn.setTitle("", for: .normal)
         self.attendanceSubmitLoader.startAnimating()
         guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
@@ -753,7 +765,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func configureContextMenu(index: Int) -> UIContextMenuConfiguration {
-
+        
         let context = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (action) -> UIMenu? in
             
             if self.isEditingPrevAttendance {

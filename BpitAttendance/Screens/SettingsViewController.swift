@@ -140,12 +140,12 @@ class SettingsViewController: UIViewController {
     }
     
     
-//MARK: INTERCEPTOR
+    //MARK: INTERCEPTOR
     
     func getPostUrl(_ success: @escaping () -> Void,
-                 _ failure: @escaping () -> Void) {
+                    _ failure: @escaping () -> Void) {
         
-       //Start loader
+        //Start loader
         guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

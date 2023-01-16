@@ -186,11 +186,15 @@ class SubjectViewController: UIViewController {
                             if httpResponse.statusCode == 401 {
                                 print("token expired")
                                 self?.navigateToLoginAgain()
+                                return
                             }
                         }
                     }
                     print(error)
                     print("______________________________")
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
                 }
             }
         })
@@ -202,9 +206,9 @@ class SubjectViewController: UIViewController {
 extension SubjectViewController {
     
     func getPostUrl(_ success: @escaping () -> Void,
-                 _ failure: @escaping () -> Void) {
+                    _ failure: @escaping () -> Void) {
         
-       //Start loader
+        //Start loader
         subjectLoader.startAnimating()
         guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
         var request = URLRequest(url: url)

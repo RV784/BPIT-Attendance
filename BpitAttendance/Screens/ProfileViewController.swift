@@ -85,7 +85,7 @@ class ProfileViewController: UIViewController {
             profileTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
         }
     }
-
+    
     @objc private func keyboardWillHide(notification: NSNotification) {
         profileTableView.contentInset = .zero
     }
@@ -240,7 +240,11 @@ class ProfileViewController: UIViewController {
                             }
                             print("token expired")
                             print("______________________________")
+                            return
                         }
+                    }
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
                     }
                 }
             }
@@ -265,9 +269,9 @@ class ProfileViewController: UIViewController {
         print("______________________________")
         print(EndPoints.getProfile(id: id).description)
         
-//        guard let url = URL(string: EndPoints.editFacultyProfile.description) else {
-//            return
-//        }
+        //        guard let url = URL(string: EndPoints.editFacultyProfile.description) else {
+        //            return
+        //        }
         guard let url = URL(string: EndPoints.getProfile(id: id).description) else {
             return
         }
@@ -317,7 +321,7 @@ class ProfileViewController: UIViewController {
                     print(d1)
                     DispatchQueue.main.async {
                         self?.variableProfileData = d1.data
-//                        print(self?.variableProfileData as Any)
+                        //                        print(self?.variableProfileData as Any)
                         print("______________________________")
                         self?.saveToDevice()
                     }
@@ -326,9 +330,16 @@ class ProfileViewController: UIViewController {
                     print("inside catch \(error.localizedDescription)")
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 401 {
+                            DispatchQueue.main.async {
+                                self?.navigateToLoginAgain()
+                            }
                             print("token expired")
                             print("______________________________")
+                            return
                         }
+                    }
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
                     }
                 }
             }
@@ -365,9 +376,9 @@ class ProfileViewController: UIViewController {
 //MARK: INTERCEPTOR
 extension ProfileViewController {
     func getPostUrl(_ success: @escaping () -> Void,
-                 _ failure: @escaping () -> Void) {
+                    _ failure: @escaping () -> Void) {
         
-       //Start loader
+        //Start loader
         loader.startAnimating()
         guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
         var request = URLRequest(url: url)

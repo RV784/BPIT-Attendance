@@ -8,7 +8,7 @@
 import UIKit
 
 class EnterEmailViewController: UIViewController {
-
+    
     @IBOutlet weak var otpStackView: UIStackView!
     @IBOutlet var baseView: UIView!
     @IBOutlet weak var loader: UIActivityIndicatorView!
@@ -53,11 +53,11 @@ class EnterEmailViewController: UIViewController {
     
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
-            }
+        }
         
         let bottomOfSignInBtn = submitBtn.convert(submitBtn.bounds, to: self.view).maxY
         let topOfKeyboard = self.view.frame.height - keyboardSize.height
-
+        
         if bottomOfSignInBtn > topOfKeyboard {
             baseView.frame.origin.y = 0 - (bottomOfSignInBtn - topOfKeyboard) - keyboardSize.height*0.1
         }
@@ -106,7 +106,7 @@ class EnterEmailViewController: UIViewController {
         otpStackView.spacing = 8
         otpStackView.distribution = .fillEqually
     }
-
+    
     func setupTextField(_ textField: OTPTextField) {
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -122,7 +122,7 @@ class EnterEmailViewController: UIViewController {
         textField.autocorrectionType = .yes
         textField.textContentType = .oneTimeCode
     }
-
+    
     func addOTPFields(numberOfFields: Int) {
         for i in 0..<numberOfFields {
             let field = OTPTextField()
@@ -201,13 +201,13 @@ class EnterEmailViewController: UIViewController {
     
     private func navigateToResetPassword() {
         let otp = getOtp()
-//        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController,
-//           otp != "" {
-//            resetPasswordVC.forgotPassword = true
-//            resetPasswordVC.otp = otp
-//            resetPasswordVC.email = enterEmailField.text ?? ""
-//            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
-//        }
+        //        if let resetPasswordVC = storyboard?.instantiateViewController(withIdentifier: "ResetPasswordViewController") as? ResetPasswordViewController,
+        //           otp != "" {
+        //            resetPasswordVC.forgotPassword = true
+        //            resetPasswordVC.otp = otp
+        //            resetPasswordVC.email = enterEmailField.text ?? ""
+        //            self.navigationController?.pushViewController(resetPasswordVC, animated: true)
+        //        }
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let resetPasswordVC = storyboard.instantiateViewController(identifier: "ResetPasswordViewController") as? ResetPasswordViewController {
@@ -294,6 +294,9 @@ extension EnterEmailViewController {
                         }
                     }
                 } catch(let error) {
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
                     print(error.localizedDescription)
                 }
             }
@@ -360,9 +363,9 @@ extension EnterEmailViewController {
 //MARK: INTERCEPTOR
 extension EnterEmailViewController {
     func getPostUrl(_ success: @escaping () -> Void,
-                 _ failure: @escaping () -> Void) {
+                    _ failure: @escaping () -> Void) {
         
-       //Start loader
+        //Start loader
         loader.startAnimating()
         submitBtn.setTitle("", for: .normal)
         guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
@@ -464,8 +467,9 @@ extension EnterEmailViewController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        messageLabel.text = "Enter your registered email"
         guard let textField = textField as? OTPTextField else { return }
-
+        
         //otp is filled in order
         if textField.previousTextField != nil && textField.text == "" {
             textField.resignFirstResponder()

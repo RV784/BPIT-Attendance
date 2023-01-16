@@ -38,11 +38,11 @@ class ResetPasswordViewController: UIViewController {
         confirmPasswordTextField.isSecureTextEntry = true
         
         confirmPasswordTextField.addTarget(self, action: #selector(ResetPasswordViewController.textFieldDidChange(_:)),
-                                  for: .editingChanged)
+                                           for: .editingChanged)
         oldPasswordTextField.addTarget(self, action: #selector(ResetPasswordViewController.oldTextFieldDidChange(_:)),
-                                  for: .editingChanged)
+                                       for: .editingChanged)
         newPasswordTextField.addTarget(self, action: #selector(ResetPasswordViewController.newtextFieldDidChange(_:)),
-                                  for: .editingChanged)
+                                       for: .editingChanged)
         if forgotPassword {
             oldPasswordTextField.isHidden = true
         }
@@ -115,11 +115,11 @@ class ResetPasswordViewController: UIViewController {
     
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
-            }
+        }
         
         let bottomOfSignInBtn = submitBtn.convert(submitBtn.bounds, to: self.view).maxY
         let topOfKeyboard = self.view.frame.height - keyboardSize.height
-
+        
         if bottomOfSignInBtn > topOfKeyboard {
             baseView.frame.origin.y = 0 - (bottomOfSignInBtn - topOfKeyboard) - keyboardSize.height*0.1
         }
@@ -147,8 +147,8 @@ class ResetPasswordViewController: UIViewController {
     func showBackToLoginAlert() {
         let alertController = UIAlertController(title: "Password reset successful, Please now log in with your new Password", message: "", preferredStyle: .alert)
         let backToLoginAction = UIAlertAction(title: "Back to Login", style: UIAlertAction.Style.default) {
-                UIAlertAction in
-                NSLog("OK Pressed")
+            UIAlertAction in
+            NSLog("OK Pressed")
             Credentials.shared.defaults.set("", forKey: "Token")
             Credentials.shared.defaults.set("", forKey: "Name")
             Credentials.shared.defaults.set("", forKey: "Email")
@@ -162,7 +162,7 @@ class ResetPasswordViewController: UIViewController {
             let loginNavController = storyboard.instantiateViewController(identifier: "ViewController")
             
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
-            }
+        }
         alertController.addAction(backToLoginAction)
         self.present(alertController, animated: true, completion: nil)
     }
@@ -170,11 +170,11 @@ class ResetPasswordViewController: UIViewController {
     func successfulResetPassword() {
         let alertController = UIAlertController(title: "Password reset successful", message: "", preferredStyle: .alert)
         let confirmation = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
-                UIAlertAction in
-                NSLog("OK Pressed")
+            UIAlertAction in
+            NSLog("OK Pressed")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
         }
         alertController.addAction(confirmation)
         self.present(alertController, animated: true, completion: nil)
@@ -253,7 +253,7 @@ class ResetPasswordViewController: UIViewController {
         DispatchQueue.main.async {
             self.loader.startAnimating()
         }
-    
+        
         submitBtn.setTitle("", for: .normal)
         print("______________________________")
         print(EndPoints.setNewPassword.description)
@@ -269,7 +269,7 @@ class ResetPasswordViewController: UIViewController {
                 self?.loader.stopAnimating()
                 self?.submitBtn.setTitle("Submit", for: .normal)
             }
-//            print(String(data: data!, encoding: .utf8))
+            //            print(String(data: data!, encoding: .utf8))
             if error != nil {
                 print("Inside get OTP error")
                 print(error?.localizedDescription as Any)
@@ -296,6 +296,9 @@ class ResetPasswordViewController: UIViewController {
                 } catch(let error) {
                     print(error.localizedDescription)
                     print("______________________________")
+                    DispatchQueue.main.async {
+                        self?.somethingGoneWrongError()
+                    }
                 }
             }
         })
@@ -306,9 +309,9 @@ class ResetPasswordViewController: UIViewController {
 //MARK: INTERCEPTOR
 extension ResetPasswordViewController {
     func getPostUrl(_ success: @escaping () -> Void,
-                 _ failure: @escaping () -> Void) {
+                    _ failure: @escaping () -> Void) {
         
-       //Start loader
+        //Start loader
         loader.startAnimating()
         submitBtn.setTitle("", for: .normal)
         guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }

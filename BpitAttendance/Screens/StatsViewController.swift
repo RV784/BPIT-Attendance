@@ -9,15 +9,15 @@ import UIKit
 import StickyLayout
 
 class StatsViewController: UIViewController {
-
+    
     @IBOutlet weak var statsCollectionView: UICollectionView!
     @IBOutlet weak var loader: UIActivityIndicatorView!
     @IBOutlet weak var monthButton: UIBarButtonItem!
     
     let stickyConfig = StickyLayoutConfig(stickyRowsFromTop: 1,
-                                    stickyRowsFromBottom: 0,
-                                    stickyColsFromLeft: 1,
-                                    stickyColsFromRight: 0)
+                                          stickyRowsFromBottom: 0,
+                                          stickyColsFromLeft: 1,
+                                          stickyColsFromRight: 0)
     var batch: String = ""
     var branch: String = ""
     var subject: String = ""
@@ -140,7 +140,7 @@ class StatsViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
         return
     }
-
+    
     func getDate(dateTime: String) -> String {
         let date = dateTime.components(separatedBy: " ")
         if !date.isEmpty {
@@ -232,7 +232,7 @@ extension StatsViewController {
             } else {
                 do {
                     let d1 = try JSONDecoder().decode(StatsModel.self, from: data!)
-
+                    
                     
                     DispatchQueue.main.async {
                         print(d1)
@@ -265,64 +265,64 @@ extension StatsViewController {
 
 //MARK: INTERCEPTOR
 extension StatsViewController {
+    
+    func getPostUrl(_ success: @escaping () -> Void,
+                    _ failure: @escaping () -> Void) {
         
-        func getPostUrl(_ success: @escaping () -> Void,
-                     _ failure: @escaping () -> Void) {
+        //Start loader
+        loader.startAnimating()
+        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             
-           //Start loader
-            loader.startAnimating()
-            guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
             
-            let session = URLSession.shared
-            let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-                
-                if let httpResponse = response as? HTTPURLResponse {
-                    print(httpResponse.statusCode)
-                }
-                
+            DispatchQueue.main.async {
+                //STOP loader
+                self?.loader.stopAnimating()
+            }
+            
+            if error != nil {
+                failure()
+                print("inside error")
+                print(error?.localizedDescription as Any)
+                print("______________________________")
                 DispatchQueue.main.async {
-                    //STOP loader
-                    self?.loader.stopAnimating()
+                    self?.somethingGoneWrongError()
                 }
+            } else {
                 
-                if error != nil {
-                    failure()
-                    print("inside error")
-                    print(error?.localizedDescription as Any)
+                do {
+                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
+                    print(d1)
                     print("______________________________")
-                    DispatchQueue.main.async {
-                        self?.somethingGoneWrongError()
-                    }
-                } else {
                     
-                    do {
-                        let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
-                        print(d1)
-                        print("______________________________")
-                        
-                        if let url = d1.url {
-                            Api.shared.post = "\(url)/api"
-                            success()
-                        } else {
-                            //not getting url
-                            failure()
-                        }
-                        
-                    } catch (let error) {
-                        //server issue handling
-                        print("inside catch error of \(EndPoints.getInterceptorURL.description)")
-                        print(error)
+                    if let url = d1.url {
+                        Api.shared.post = "\(url)/api"
+                        success()
+                    } else {
+                        //not getting url
                         failure()
                     }
+                    
+                } catch (let error) {
+                    //server issue handling
+                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
+                    print(error)
+                    failure()
                 }
-                
-            })
+            }
             
-            task.resume()
-        }
+        })
+        
+        task.resume()
+    }
 }
 
 
@@ -371,7 +371,7 @@ extension StatsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     }
                 }
             }
-
+            
             if indexPath.row == indexPath.section && indexPath.row == 0 {
                 cell.backgroundColor = .barColor
                 cell.myLabel.text = "Names"
