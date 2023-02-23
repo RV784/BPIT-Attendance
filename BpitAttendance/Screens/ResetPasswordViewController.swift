@@ -204,9 +204,13 @@ class ResetPasswordViewController: UIViewController {
     @IBAction func submitBtnClicked(_ sender: Any) {
         if checkAllErrors() {
             getPostUrl() { [weak self] in
-                self?.submitNewPassword()
+                DispatchQueue.main.async {
+                    self?.submitNewPassword()
+                }
             }_: { [weak self] in
-                self?.somethingGoneWrongError()
+                DispatchQueue.main.async {
+                    self?.somethingGoneWrongError()
+                }
             }
         }
     }

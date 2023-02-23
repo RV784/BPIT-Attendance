@@ -70,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         UIView.transition(with: window,
                               duration: 0.5,
-                              options: [.transitionFlipFromLeft],
+                              options: [.showHideTransitionViews],
                               animations: nil,
                               completion: nil)
     }

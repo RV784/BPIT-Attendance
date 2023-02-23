@@ -222,6 +222,10 @@ extension StatsViewController {
                 self?.loader.stopAnimating()
             }
             
+            if let data = data {
+                print(String(data: data, encoding: .utf8))
+            }
+            
             if error != nil {
                 print("inside error")
                 print(error?.localizedDescription as Any)
@@ -359,14 +363,23 @@ extension StatsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     }
                 }
             } else {
-                cell.backgroundColor = .black
+                cell.backgroundColor = .clear
                 if indexPath.section - 1 >= 0 && indexPath.row - 1 >= 0 {
                     if let attdance = statData?.student_data?[indexPath.section - 1].attendance_data?[indexPath.row - 1] {
                         cell.myLabel.text = "\(attdance)"
-                        if attdance == 0 {
+                        
+                        if attdance == 0 && indexPath.row - 1 == 0 {
                             cell.myLabel.textColor = .red
                         } else {
-                            cell.myLabel.textColor = .label
+                            if indexPath.row - 2 >= 0 {
+                                if let attdancePrev = statData?.student_data?[indexPath.section - 1].attendance_data?[indexPath.row - 2] {
+                                    if attdancePrev == attdance {
+                                        cell.myLabel.textColor = .red
+                                    }
+                                }
+                            } else {
+                                cell.myLabel.textColor = .label
+                            }
                         }
                     }
                 }
