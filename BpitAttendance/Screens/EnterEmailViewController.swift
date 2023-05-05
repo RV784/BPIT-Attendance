@@ -81,11 +81,7 @@ class EnterEmailViewController: UIViewController {
             
             if checkInternet() {
                 emailOtpStackView.removeArrangedSubview(OTPStackView())
-                getPostUrl() { [weak self] in
-                    self?.getOTP(email: self?.enterEmailField.text ?? "")
-                }_: { [weak self] in
-                    self?.somethingGoneWrongError()
-                }
+                getOTP(email: enterEmailField.text ?? "")
             } else {
                 showNoInternetAlter()
             }
@@ -162,11 +158,7 @@ class EnterEmailViewController: UIViewController {
     private func autoLogin() {
         if getOtp() != "" {
             if checkInternet() {
-                getPostUrl() { [weak self] in
-                    self?.verifyOTP(otp: self?.getOtp() ?? "", email: self?.enterEmailField.text ?? "")
-                }_: { [weak self] in
-                    self?.somethingGoneWrongError()
-                }
+                verifyOTP(otp: getOtp() , email: enterEmailField.text ?? "")
             } else {
                 showNoInternetAlter()
             }
@@ -356,69 +348,6 @@ extension EnterEmailViewController {
                 }
             }
         })
-        task.resume()
-    }
-}
-
-//MARK: INTERCEPTOR
-extension EnterEmailViewController {
-    func getPostUrl(_ success: @escaping () -> Void,
-                    _ failure: @escaping () -> Void) {
-        
-        //Start loader
-        loader.startAnimating()
-        submitBtn.setTitle("", for: .normal)
-        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                //STOP loader
-                self?.loader.stopAnimating()
-                self?.submitBtn.setTitle("Submit", for: .normal)
-            }
-            
-            if error != nil {
-                failure()
-                print("inside error")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            } else {
-                
-                do {
-                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
-                    print(d1)
-                    print("______________________________")
-                    
-                    if let url = d1.url {
-                        Api.shared.post = "\(url)/api"
-                        success()
-                    } else {
-                        //not getting url
-                        failure()
-                    }
-                    
-                } catch (let error) {
-                    //server issue handling
-                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
-                    print(error)
-                    failure()
-                }
-            }
-            
-        })
-        
         task.resume()
     }
 }

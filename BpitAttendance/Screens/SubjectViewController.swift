@@ -31,11 +31,7 @@ class SubjectViewController: UIViewController {
         subjectCollectionView.contentInset = UIEdgeInsets(top: CGFloat(10), left: CGFloat(10), bottom: 0, right: CGFloat(10))
         
         if checkInternet() {
-            getPostUrl() { [weak self] in
-                self?.getSubject()
-            }_: { [weak self] in
-                self?.somethingGoneWrongError()
-            }
+            getSubject()
         } else {
             // show no internet Alert
             showNoInternetAlter()
@@ -110,11 +106,7 @@ class SubjectViewController: UIViewController {
     
     @objc func rightHandAction() {
         if checkInternet() {
-            getPostUrl() { [weak self] in
-                self?.getSubject()
-            }_: { [weak self] in
-                self?.somethingGoneWrongError()
-            }
+            getSubject()
         } else {
             showNoInternetAlter()
         }
@@ -203,66 +195,6 @@ class SubjectViewController: UIViewController {
 }
 
 //MARK: INTERCEPTOR
-extension SubjectViewController {
-    
-    func getPostUrl(_ success: @escaping () -> Void,
-                    _ failure: @escaping () -> Void) {
-        
-        //Start loader
-        subjectLoader.startAnimating()
-        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                //STOP loader
-                self?.subjectLoader.stopAnimating()
-            }
-            
-            if error != nil {
-                failure()
-                print("inside error")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            } else {
-                
-                do {
-                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
-                    print(d1)
-                    print("______________________________")
-                    
-                    if let url = d1.url {
-                        Api.shared.post = "\(url)/api"
-                        success()
-                    } else {
-                        //not getting url
-                        failure()
-                    }
-                    
-                } catch (let error) {
-                    //server issue handling
-                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
-                    print(error)
-                    failure()
-                }
-            }
-            
-        })
-        
-        task.resume()
-    }
-}
 
 //MARK: UICollectionViewDelegate UICollectionViewDataSource UICollectionViewDelegateFlowLayout
 extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{

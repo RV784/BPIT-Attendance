@@ -160,11 +160,7 @@ class StatsViewController: UIViewController {
     }
     
     func getStatsAPI() {
-        getPostUrl() { [weak self] in
-            self?.getStats()
-        }_: { [weak self] in
-            self?.somethingGoneWrongError()
-        }
+        getStats()
     }
 }
 
@@ -268,66 +264,6 @@ extension StatsViewController {
 }
 
 //MARK: INTERCEPTOR
-extension StatsViewController {
-    
-    func getPostUrl(_ success: @escaping () -> Void,
-                    _ failure: @escaping () -> Void) {
-        
-        //Start loader
-        loader.startAnimating()
-        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                //STOP loader
-                self?.loader.stopAnimating()
-            }
-            
-            if error != nil {
-                failure()
-                print("inside error")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            } else {
-                
-                do {
-                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
-                    print(d1)
-                    print("______________________________")
-                    
-                    if let url = d1.url {
-                        Api.shared.post = "\(url)/api"
-                        success()
-                    } else {
-                        //not getting url
-                        failure()
-                    }
-                    
-                } catch (let error) {
-                    //server issue handling
-                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
-                    print(error)
-                    failure()
-                }
-            }
-            
-        })
-        
-        task.resume()
-    }
-}
 
 
 //MARK: COLLECTION VIEW

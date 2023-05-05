@@ -17,7 +17,7 @@ struct LastAttendanceModel: Encodable {
         var batch: String
         var name: String
         var status: Bool
-        var class_roll_number: String
+        var class_roll_number: Int
         var date: String
         var subject: String
     }

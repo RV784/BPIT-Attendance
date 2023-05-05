@@ -49,21 +49,13 @@ class StudentListViewController: UIViewController {
         noInternetView.delegate = self
         if isEditingPrevAttendance {
             if checkInternet() {
-                getPostUrl() { [weak self] in
-                    self?.getLastAttendanceStudents(batch: self?.batch ?? "", subject: self?.subject ?? "", section: self?.section ?? "", branch: self?.branch ?? "", isLab: false, subjectCode: self?.subjectCode ?? "")
-                }_: { [weak self] in
-                    self?.somethingGoneWrongError()
-                }
+                getLastAttendanceStudents(batch: batch , subject: subject , section: section , branch: branch , isLab: false, subjectCode: subjectCode )
             } else {
                 showNoInternetAlter()
             }
         } else {
             if checkInternet() {
-                getPostUrl() { [weak self] in
-                    self?.getStudents(batch: self?.batch ?? "", subject: self?.subject ?? "", section: self?.section ?? "", branch: self?.branch ?? "", isLab: self?.isLab ?? false, groupNum: self?.groupNum ?? 1, subjectCode: self?.subjectCode ?? "")
-                }_: { [weak self] in
-                    self?.somethingGoneWrongError()
-                }
+                getStudents(batch: batch , subject: subject , section: section , branch: branch , isLab: isLab , groupNum: groupNum , subjectCode: subjectCode )
             } else {
                 showNoInternetAlter()
             }
@@ -150,7 +142,7 @@ class StudentListViewController: UIViewController {
                                                                           batch: item.batch ?? "",
                                                                           name: item.name ?? "",
                                                                           status: item.status ?? true,
-                                                                          class_roll_number: item.class_roll_number ?? "",
+                                                                          class_roll_number: item.class_roll_number ?? -1,
                                                                           date: item.date ?? "",
                                                                           subject: item.subject ?? ""))
         }
@@ -185,17 +177,9 @@ class StudentListViewController: UIViewController {
         ////        }
         if checkInternet() {
             if isEditingPrevAttendance {
-                getPostUrl() { [weak self] in
-                    self?.sendLastStudents()
-                }_: { [weak self] in
-                    self?.somethingGoneWrongError()
-                }
+                sendLastStudents()
             } else {
-                getPostUrl() { [weak self] in
-                    self?.sendStudents()
-                }_: { [weak self] in
-                    self?.somethingGoneWrongError()
-                }
+                sendStudents()
             }
         } else {
             showNoInternetAlter()
@@ -626,69 +610,6 @@ class StudentListViewController: UIViewController {
     }
 }
 
-//MARK: INTERCEPTOR
-extension StudentListViewController {
-    func getPostUrl(_ success: @escaping () -> Void,
-                    _ failure: @escaping () -> Void) {
-        
-        //Start loader
-        self.submitBtn.setTitle("", for: .normal)
-        self.attendanceSubmitLoader.startAnimating()
-        guard let url = URL(string: EndPoints.getInterceptorURL.description) else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                //STOP loader
-                self?.submitBtn.setTitle("Submit", for: .normal)
-                self?.attendanceSubmitLoader.stopAnimating()
-            }
-            
-            if error != nil {
-                failure()
-                print("inside error")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            } else {
-                
-                do {
-                    let d1 = try JSONDecoder().decode(InterceptorModel.self, from: data!)
-                    print(d1)
-                    print("______________________________")
-                    
-                    if let url = d1.url {
-                        Api.shared.post = "\(url)/api"
-                        success()
-                    } else {
-                        //not getting url
-                        failure()
-                    }
-                    
-                } catch (let error) {
-                    //server issue handling
-                    print("inside catch error of \(EndPoints.getInterceptorURL.description)")
-                    print(error)
-                    failure()
-                }
-            }
-            
-        })
-        
-        task.resume()
-    }
-}
-
 
 // MARK: UICollectionViewDelegate UICollectionViewDataSource UICollectionViewDelegateFlowLayout
 extension StudentListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -704,7 +625,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StudentListCell", for: indexPath) as? StudentListCell {
             
             if isEditingPrevAttendance {
-                cell.rollNoLabel.text = self.lastAttendanceStudents?[indexPath.row].class_roll_number ?? ""
+                cell.rollNoLabel.text = "\(self.lastAttendanceStudents?[indexPath.row].class_roll_number ?? -1)"
                 cell.nameLabel.text = self.lastAttendanceStudents?[indexPath.row].name ?? ""
                 if self.lastRecordData?.record[indexPath.row].status ?? false {
                     cell.backgroundColor = UIColor.systemGreen
@@ -773,7 +694,7 @@ extension StudentListViewController: UICollectionViewDelegate, UICollectionViewD
                 }
                 let enrollmentNo = UIAction(title: "Enrollment No: \(self.lastAttendanceStudents?[index].enrollment_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
                 }
-                let classRollNo = UIAction(title: "ClassRoll No: \(self.lastAttendanceStudents?[index].class_roll_number ?? "")", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
+                let classRollNo = UIAction(title: "ClassRoll No: \(self.lastAttendanceStudents?[index].class_roll_number ?? -1)", image: UIImage(), identifier: nil, discoverabilityTitle: nil, state: .off) { (_) in
                 }
                 
                 return UIMenu(title: "Student Details", image: nil, identifier: nil, options: UIMenu.Options.displayInline, children: [name ,enrollmentNo, classRollNo])
