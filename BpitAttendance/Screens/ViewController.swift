@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: BaseViewController {
     
     @IBOutlet weak var forgotPasswordLabel: UILabel!
     @IBOutlet weak var deciderIndicator: UIActivityIndicatorView!
@@ -36,8 +36,6 @@ class ViewController: UIViewController {
         passwordTxtField.layer.cornerRadius = 12
         signInBtn.layer.cornerRadius = 12
         passwordTxtField.isSecureTextEntry = true
-        emailTxtField.delegate = self
-        passwordTxtField.delegate = self
         let tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
         let forgotTap = UITapGestureRecognizer(target: self, action: #selector(ViewController.forgotPassword))
         baseView.addGestureRecognizer(tap)
@@ -57,11 +55,19 @@ class ViewController: UIViewController {
         super.viewWillDisappear(animated)
     }
     
+    override func startLoading() {
+        signInBtn.setTitle("", for: .normal)
+        loginLoader.startAnimating()
+    }
+    
+    override func stopLoading() {
+        signInBtn.setTitle("Sign In", for: .normal)
+        loginLoader.stopAnimating()
+    }
     
     //MARK: BUSINESS LOGIC
     @objc func keyboardWillShow(notification: NSNotification) {
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {               return
-        }
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
         let bottomOfSignInBtn = signInBtn.convert(signInBtn.bounds, to: self.view).maxY
         let topOfKeyboard = self.view.frame.height - keyboardSize.height
@@ -82,7 +88,6 @@ class ViewController: UIViewController {
     
     
     @objc func forgotPassword() {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let resetPasswordVC = storyboard.instantiateViewController(identifier: "EnterEmailViewController") as? EnterEmailViewController {
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(resetPasswordVC)
@@ -102,10 +107,17 @@ class ViewController: UIViewController {
             return
         }
         if checkConnection() {
-            register(email: emailTxtField.text ?? "", password: passwordTxtField.text ?? "")
+            registerUser(email: emailTxtField.text ?? "", password: passwordTxtField.text ?? "")
         } else {
-            //TODO: show no internet Alert
             showNoInternetAlter()
+        }
+    }
+    
+    @IBAction func textDidChanged(_ sender: Any) {
+        if emailTxtField.text?.isEmpty != true && passwordTxtField.text?.isEmpty != true {
+            signInBtn.layer.backgroundColor = UIColor.systemBlue.cgColor
+        } else {
+            signInBtn.layer.backgroundColor = UIColor.systemGray2.cgColor
         }
     }
     
@@ -123,24 +135,11 @@ class ViewController: UIViewController {
     }
     
     func showNoInternetAlter() {
-        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        return
-    }
-    
-    func serverDownError() {
-        let alert = UIAlertController(title: "Server is facing some issues, Please try again later", message: "", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        return
-    }
-    
-    func notCorrectCredentials() {
-        let alert = UIAlertController(title: "Incorrect Email or Password", message: "", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        return
+        showGenericUIAlert(
+            title: "No Internet",
+            message: "Your phone is not connected to Internet, Please connect and try again",
+            completion: {}
+        )
     }
     
     func saveToDevice() {
@@ -166,130 +165,51 @@ class ViewController: UIViewController {
         }
     }
     
-    func somethingGoneWrongError() {
-        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        return
+    func processData() {
+        if let _ = loginData?.token {
+            emailTxtField.text = ""
+            passwordTxtField.text = ""
+            Credentials.shared.defaults.set(loginData?.token, forKey: "Token")
+            Credentials.shared.defaults.set(loginData?.id, forKey: "Id")
+            if loginData?.isFirstLogin == true {
+                navigateToResetPassword()
+            } else {
+                navigate()
+            }
+        } else {
+            showGenericUIAlert(title: "Incorrect Email or Password", message: "", completion: {})
+        }
     }
 }
 
 // MARK: API CALL
 extension ViewController {
-    
-    func register(email: String, password: String) {
-        
-        guard let url = URL(string: EndPoints.getToken.description) else {
-            return
-        }
-        
-        signInBtn.setTitle("", for: .normal)
-        DispatchQueue.main.async {
-            self.loginLoader.startAnimating()
-        }
-        print("______________________________")
-        print(EndPoints.getToken.description)
-        
+    func registerUser(email: String, password: String) {
+        startLoading()
         let parameters: [String: Any]  = ["email" : email, "password" : password] as Dictionary<String, Any>
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                self?.signInBtn.setTitle("Sign In", for: .normal)
-                self?.loginLoader.stopAnimating()
-            }
-            
-            if error != nil {
-                print("inside error")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            } else {
-                do {
-                    let d1 = try JSONDecoder().decode(LoginModel.self, from: data!)
-                    print(d1)
-                    print("______________________________")
-                    DispatchQueue.main.async {
-                        self?.loginData = d1
-                        if self?.loginData?.token == nil {
-                            self?.signInBtn.setTitle("Sign In", for: .normal)
-                            self?.notCorrectCredentials()
-                        } else {
-                            
-                            self?.emailTxtField.text = ""
-                            self?.passwordTxtField.text = ""
-                            self?.signInBtn.setTitle("Sign In", for: .normal)
-                            self?.loginLoader.stopAnimating()
-                            Credentials.shared.defaults.set(self?.loginData?.token, forKey: "Token")
-                            Credentials.shared.defaults.set(self?.loginData?.id, forKey: "Id")
-                            if self?.loginData?.isFirstLogin ?? false {
-                                self?.navigateToResetPassword()
-                            } else {
-                                self?.navigate()
-                            }
-                        }
-                    }
-                } catch (let err) {
-                    //server issue handling
-                    print("inside catch error of \(EndPoints.getToken.description)")
-                    print(err)
-                    DispatchQueue.main.async {
-                        self?.somethingGoneWrongError()
+        request(
+            isToken: false,
+            params: parameters,
+            endpoint: .getToken,
+            requestType: .post,
+            postData: nil) { [weak self] data in
+                self?.stopLoading()
+                if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(LoginModel.self, from: data)
+                        self?.loginData = response
+                        self?.processData()
+                        return
+                    } catch let error {
+                        print(error)
                     }
                 }
+                self?.showGenericErrorAlert()
+            } _: { [weak self] error in
+                self?.stopLoading()
+                self?.showGenericErrorAlert()
+                print("Error in Request/Response \(EndPoints.getToken.description) \(String(describing: error))")
             }
-        })
-        
-        task.resume()
-    }
-}
-
-//MARK: INTERCEPTOR
-
-
-//MARK: UITextFieldDelegate
-extension ViewController: UITextFieldDelegate {
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if emailTxtField.text != "" && passwordTxtField.text != "" {
-            signInBtn.layer.backgroundColor = UIColor.systemBlue.cgColor
-        } else {
-            signInBtn.layer.backgroundColor = UIColor.systemGray2.cgColor
-        }
-        textField.layer.borderWidth = 0
-        textField.layer.borderColor = UIColor.gray.cgColor
-    }
-    
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if emailTxtField.text != "" && passwordTxtField.text != "" {
-            signInBtn.layer.backgroundColor = UIColor.systemBlue.cgColor
-        } else {
-            signInBtn.layer.backgroundColor = UIColor.systemGray2.cgColor
-        }
-        
-        if textField == emailTxtField {
-            if string == "" {
-                textField.deleteBackward()
-            } else {
-                textField.insertText(string.lowercased())
-            }
-            return false
-        }
-        
-        return true
     }
 }
 

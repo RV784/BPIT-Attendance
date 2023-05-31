@@ -37,6 +37,7 @@ class StatsViewController: UIViewController {
         
         let layOut = StickyLayout(stickyConfig: stickyConfig)
         statsCollectionView.collectionViewLayout = layOut
+        let calendarImage = UIImage(named: "calendar")
         
         statsCollectionView.contentInset = UIEdgeInsets(top: CGFloat(0), left: CGFloat(0), bottom: 0, right: CGFloat(0))
         
@@ -44,57 +45,57 @@ class StatsViewController: UIViewController {
             month = monthInt
         }
         
-        let jan = UIAction(title: "January", image: UIImage(systemName: "person.fill")) { [weak self] (action) in
+        let jan = UIAction(title: "January", image: calendarImage) { [weak self] (action) in
             self?.month = 1
             self?.getStatsAPI()
         }
         
-        let feb = UIAction(title: "Feburary", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let feb = UIAction(title: "Feburary", image: calendarImage) { [weak self] (action) in
             self?.month = 2
             self?.getStatsAPI()
         }
         
-        let mar = UIAction(title: "March", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let mar = UIAction(title: "March", image: calendarImage) { [weak self] (action) in
             self?.month = 3
             self?.getStatsAPI()
         }
         
-        let apr = UIAction(title: "April", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let apr = UIAction(title: "April", image: calendarImage) { [weak self] (action) in
             self?.month = 4
             self?.getStatsAPI()
         }
         
-        let may = UIAction(title: "May", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let may = UIAction(title: "May", image: calendarImage) { [weak self] (action) in
             self?.month = 5
             self?.getStatsAPI()
         }
         
-        let jun = UIAction(title: "June", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let jun = UIAction(title: "June", image: calendarImage) { [weak self] (action) in
             self?.month = 6
             self?.getStatsAPI()
         }
         
-        let jul = UIAction(title: "July", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let jul = UIAction(title: "July", image: calendarImage) { [weak self] (action) in
             self?.month = 7
             self?.getStatsAPI()
         }
         
-        let aug = UIAction(title: "August", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let aug = UIAction(title: "August", image: calendarImage) { [weak self] (action) in
             self?.month = 8
             self?.getStatsAPI()
         }
         
-        let sep = UIAction(title: "September", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let sep = UIAction(title: "September", image: calendarImage) { [weak self] (action) in
             self?.month = 9
             self?.getStatsAPI()
         }
         
-        let oct = UIAction(title: "October", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let oct = UIAction(title: "October", image: calendarImage) { [weak self] (action) in
             self?.month = 10
             self?.getStatsAPI()
         }
         
-        let nov = UIAction(title: "November", image: UIImage(systemName: "person.badge.plus")) { [weak self] (action) in
+        let nov = UIAction(title: "November", image: calendarImage) { [weak self] (action) in
             self?.month = 11
             self?.getStatsAPI()
         }
@@ -262,9 +263,6 @@ extension StatsViewController {
         task.resume()
     }
 }
-
-//MARK: INTERCEPTOR
-
 
 //MARK: COLLECTION VIEW
 extension StatsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

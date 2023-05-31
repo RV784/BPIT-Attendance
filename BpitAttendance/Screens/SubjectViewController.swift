@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SubjectViewController: UIViewController {
+class SubjectViewController: BaseViewController {
     var arr: [Any] = []
     var subjects: [SubjectListModel]?
     var profileDetails: ProfileModel?
@@ -19,19 +19,13 @@ class SubjectViewController: UIViewController {
     //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        //How to curve specific corners of a button
-        //        bottomButtonsView.layer.cornerRadius = 25
-        //        logoutBtn.layer.cornerRadius = 25
-        //        logoutBtn.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-        //        profileBtn.layer.cornerRadius = 25
-        //        profileBtn.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         subjectCollectionView.delegate = self
         subjectCollectionView.dataSource = self
         subjectCollectionView.register(UINib(nibName: "subjectCell", bundle: nil), forCellWithReuseIdentifier: "subjectCell")
         subjectCollectionView.contentInset = UIEdgeInsets(top: CGFloat(10), left: CGFloat(10), bottom: 0, right: CGFloat(10))
         
         if checkInternet() {
-            getSubject()
+            getSubjects()
         } else {
             // show no internet Alert
             showNoInternetAlter()
@@ -106,7 +100,7 @@ class SubjectViewController: UIViewController {
     
     @objc func rightHandAction() {
         if checkInternet() {
-            getSubject()
+            getSubjects()
         } else {
             showNoInternetAlter()
         }
@@ -117,84 +111,31 @@ class SubjectViewController: UIViewController {
         tapticFeedback.notificationOccurred(.success)
     }
     
-    //MARK: API CALLS
-    func getSubject() {
-        
-        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-            navigateToLoginAgain()
-            return
-        }
-        if tok == "" {
-            navigateToLoginAgain()
-            return
-        }
-        
-        guard let url = URL(string: EndPoints.getSubjects.description) else {
-            return
-        }
-        
-        DispatchQueue.main.async {
-            self.subjectLoader.startAnimating()
-        }
-        print("______________________________")
-        print(EndPoints.getSubjects.description)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                self?.subjectLoader.stopAnimating()
-            }
-            
-            if error != nil {
-                print("inside error")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            }else{
-                do{
-                    let d1 = try JSONDecoder().decode([SubjectListModel].self, from: data!)
-                    self?.subjects = d1
-                    DispatchQueue.main.async {
-                        print(self?.subjects as Any)
-                        print("______________________________")
-                        self?.subjectCollectionView.reloadData()
-                    }
-                    
-                } catch (let error) {
-                    if let httpResponse = response as? HTTPURLResponse {
-                        DispatchQueue.main.async {
-                            if httpResponse.statusCode == 401 {
-                                print("token expired")
-                                self?.navigateToLoginAgain()
-                                return
-                            }
-                        }
-                    }
+    
+//MARK: API CALLS
+    func getSubjects() {
+        startLoading()
+        request(isToken: true, endpoint: .getSubjects, requestType: .get, postData: nil) { [weak self] data in
+            self?.stopLoading()
+            if let data = data {
+                do {
+                    let subjects = try JSONDecoder().decode([SubjectListModel].self, from: data)
+                    self?.subjects = subjects
+                    self?.subjectCollectionView.reloadData()
+                    return
+                } catch let error {
                     print(error)
-                    print("______________________________")
-                    DispatchQueue.main.async {
-                        self?.somethingGoneWrongError()
-                    }
                 }
             }
-        })
-        task.resume()
+            self?.showGenericErrorAlert()
+        } _: { [weak self] error in
+            self?.stopLoading()
+            self?.showGenericErrorAlert()
+            print("Error in Request/Response \(EndPoints.getSubjects.description) \(String(describing: error))")
+        }
     }
 }
 
-//MARK: INTERCEPTOR
 
 //MARK: UICollectionViewDelegate UICollectionViewDataSource UICollectionViewDelegateFlowLayout
 extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -382,43 +323,6 @@ extension UINavigationController {
         }
     }
 }
-
-//extension SubjectViewController: SubjectCellProtocol {
-//    func seeSubjectStats(idx: Int) {
-//        //goto stats screen
-//        if let statsVC = storyboard?.instantiateViewController(withIdentifier: "StatsViewController") as? StatsViewController {
-//            statsVC.batch = self.subjects?[idx].batch ?? ""
-//            statsVC.branch = self.subjects?[idx].branch_code ?? ""
-//            statsVC.section = self.subjects?[idx].section ?? ""
-//            statsVC.subject = self.subjects?[idx].subject_code ?? ""
-//
-//            if subjects?[idx].is_lab ?? false,
-//               let group = subjects?[idx].group {
-//                statsVC.isLab = true
-//                statsVC.group = group
-//            }
-//
-//            statsVC.navigationItem.largeTitleDisplayMode = .never
-//            tabBarController?.tabBar.isHidden = true
-//            self.navigationController?.pushViewController(statsVC, animated: true)
-//        }
-//    }
-//
-//    func editLastAttendance(idx: Int) {
-//        if let studentListVC = storyboard?.instantiateViewController(withIdentifier: "StudentListViewController") as? StudentListViewController {
-//            studentListVC.batch = self.subjects?[idx].batch ?? ""
-//            studentListVC.branch = self.subjects?[idx].branch_code ?? ""
-//            studentListVC.subject = self.subjects?[idx].subject_name ?? ""
-//            studentListVC.section = self.subjects?[idx].section ?? ""
-//            studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
-//            studentListVC.isLab = self.subjects?[idx].is_lab ?? false
-//            studentListVC.isEditingPrevAttendance = true
-//            studentListVC.navigationItem.largeTitleDisplayMode = .never
-//            tabBarController?.tabBar.isHidden = true
-//            self.navigationController?.pushViewController(studentListVC, animated: true)
-//        }
-//    }
-//}
 
 func returnBranch(branchCode: String?) -> String {
     if let code = branchCode {

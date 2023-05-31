@@ -30,6 +30,7 @@
 		AB2B4433291708B10045A415 /* EditProfileResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */; };
 		AB2B4435291759020045A415 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B4434291759020045A415 /* SettingsViewController.swift */; };
 		AB2B443729175FD40045A415 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B443629175FD40045A415 /* ColorExtension.swift */; };
+		AB2F12F12A2720BC00F312A2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2F12F02A2720BC00F312A2 /* BaseViewController.swift */; };
 		AB33B0F628DF68DF00B8662C /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F528DF68DF00B8662C /* RequestModels.swift */; };
 		AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */; };
 		AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33B0FA28E17F4A00B8662C /* Credentials.swift */; };
@@ -83,6 +84,7 @@
 		AB2B4432291708B10045A415 /* EditProfileResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileResponseModel.swift; sourceTree = "<group>"; };
 		AB2B4434291759020045A415 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AB2B443629175FD40045A415 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		AB2F12F02A2720BC00F312A2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		AB33B0F528DF68DF00B8662C /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		AB33B0F728DF7C3500B8662C /* GroupChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChoiceViewController.swift; sourceTree = "<group>"; };
 		AB33B0FA28E17F4A00B8662C /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -194,6 +196,14 @@
 			path = APIManager;
 			sourceTree = "<group>";
 		};
+		AB2F12EF2A2720A800F312A2 /* BaseClasses */ = {
+			isa = PBXGroup;
+			children = (
+				AB2F12F02A2720BC00F312A2 /* BaseViewController.swift */,
+			);
+			path = BaseClasses;
+			sourceTree = "<group>";
+		};
 		AB33B0F428DF68CB00B8662C /* Requests */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,6 +256,7 @@
 		ABA2CDB228D60EE0006CF656 /* BpitAttendance */ = {
 			isa = PBXGroup;
 			children = (
+				AB2F12EF2A2720A800F312A2 /* BaseClasses */,
 				AB2B4427291537600045A415 /* APIManager */,
 				AB2B44192914DF640045A415 /* Extensions */,
 				ABCA6A8D28F3E1880060C3D5 /* CustomViews */,
@@ -427,6 +438,7 @@
 				AB0C489F28DB11CA0058B55D /* StudentListViewController.swift in Sources */,
 				AB33B0F828DF7C3500B8662C /* GroupChoiceViewController.swift in Sources */,
 				AB0C489D28DAC09E0058B55D /* SubjectListModel.swift in Sources */,
+				AB2F12F12A2720BC00F312A2 /* BaseViewController.swift in Sources */,
 				ABA2CDB828D60EE0006CF656 /* ViewController.swift in Sources */,
 				ABC50E782901231D00540B2F /* ForgotPasswordEmailResponseModel.swift in Sources */,
 				AB2B44182914CF230045A415 /* ResetPasswordModel.swift in Sources */,

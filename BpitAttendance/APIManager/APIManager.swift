@@ -17,8 +17,8 @@ final class APIManager {
                  endpoint: EndPoints,
                  requestType: RequestType,
                  postData: Data?,
-                 success: @escaping (Data?) -> Void,
-                 failure: @escaping () -> Void) {
+                 _ success: @escaping (Data?, URLResponse?) -> Void,
+                 _ failure: @escaping (Error?) -> Void) {
         
        //Start loader
         guard let url = URL(string: endpoint.description) else { return }
@@ -32,7 +32,7 @@ final class APIManager {
         if isToken {
             guard let tok = Credentials.shared.defaults.string(forKey: "Token"),
                   tok != "" else {
-                //back to login Screen
+                //TODO: back to login Screen
                 return
             }
             request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
@@ -40,13 +40,17 @@ final class APIManager {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error in
-            
-            if error != nil {
-                failure()
-            } else {
-                success(data)
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
             }
             
+            DispatchQueue.main.async {
+                if error != nil {
+                    failure(error)
+                } else {
+                    success(data, response)
+                }
+            }
         })
         
         task.resume()
