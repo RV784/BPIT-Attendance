@@ -26,9 +26,7 @@ class BaseViewController: UIViewController {
     }
     
     func stopLoading() {
-        if let loader = activityView {
-            loader.stopAnimating()
-        }
+        activityView?.stopAnimating()
     }
     
     func tokenExpired() {
@@ -70,7 +68,8 @@ class BaseViewController: UIViewController {
             requestType: requestType,
             postData: postData) { [weak self] data, response in
                 if let httpResponse = response as? HTTPURLResponse,
-                   httpResponse.statusCode == 401 {
+                   httpResponse.statusCode == 401,
+                   isToken {
                     print("token expired")
                     self?.tokenExpired()
                     

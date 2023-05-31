@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: BaseViewController {
     
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var titleDesignation: UILabel!
@@ -43,12 +43,6 @@ class ProfileViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(ProfileViewController.dismissKeyboard))
         baseView.addGestureRecognizer(tap)
-        if checkInternet() {
-            getProfileCall()
-        } else {
-            showNoInternetAlter()
-        }
-        
         mainNameView.backgroundColor = UIColor.barColor
         //        navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -64,7 +58,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         if checkInternet() {
-            getProfileCall()
+            getProfileData()
         } else {
             showNoInternetAlter()
         }
@@ -110,21 +104,6 @@ class ProfileViewController: UIViewController {
         profileTableView.reloadData()
     }
     
-    func navigateToLoginAgain() {
-        let alertController = UIAlertController(title: "Oops!", message: "Seems link your token expired, we'll redirect you to LogIn screen to refresh your token", preferredStyle: .alert)
-        let gotoButton = UIAlertAction(title: "Go to Login Screen", style: UIAlertAction.Style.default) {
-            UIAlertAction in
-            NSLog("gotoButton Pressed")
-            if let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
-                loginVC.tokExpMidCycle = true
-                self.tabBarController?.tabBar.isHidden = true
-                self.navigationController?.pushViewController(loginVC, animated: true)
-            }
-        }
-        alertController.addAction(gotoButton)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     func savePressed() {
         if checkInternet() {
             sendFacultyData()
@@ -134,136 +113,47 @@ class ProfileViewController: UIViewController {
     }
     
     func showNoInternetAlter() {
-        let alert = UIAlertController(title: "No Internet", message: "Your phone is not connected to Internet, Please connect and try again", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        return
+        showGenericUIAlert(
+            title: "No Internet",
+            message: "Your phone is not connected to Internet, Please connect and try again",
+            completion: {})
     }
     
     func checkInternet() -> Bool {
         return InternetConnectionManager.isConnectedToNetwork()
     }
     
-    func somethingGoneWrongError() {
-        let alert = UIAlertController(title: "Alert", message: "Something went wrong, please try again later", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        return
-    }
-    
     //MARK: API CALLS
-    func getProfileCall() {
-        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-            navigateToLoginAgain()
-            return
-        }
-        
-        if tok == "" {
-            navigateToLoginAgain()
-            return
-        }
-        
-        guard let id = Credentials.shared.defaults.string(forKey: "Id") else {
-            return
-        }
-        
-        guard let url = URL(string: EndPoints.getProfile(id: id).description) else {
-            return
-        }
-        
-        DispatchQueue.main.async {
-            self.loader.startAnimating()
-        }
-        
-        print("______________________________")
-        print(EndPoints.getProfile(id: id).description)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                self?.loader.stopAnimating()
-            }
-            
-            if error != nil {
-                print("inside \(EndPoints.getProfile(id: id).description) erorr")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            }else{
-                do{
-                    let d1 = try JSONDecoder().decode(ProfileModel.self, from: data!)
-                    print(d1)
-                    if d1.name == nil {
-                        DispatchQueue.main.async {
-                            self?.navigateToLoginAgain()
-                            return
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self?.variableProfileData = d1
-                        print(self?.variableProfileData as Any)
-                        print("______________________________")
+    func getProfileData() {
+        guard let id = Credentials.shared.defaults.string(forKey: "Id") else { return }
+        startLoading()
+        request(
+            isToken: true,
+            endpoint: .getProfile(id: id),
+            requestType: .get,
+            postData: nil) { [weak self] data in
+                self?.stopLoading()
+                if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(ProfileModel.self, from: data)
+                        self?.variableProfileData = response
                         self?.saveToDevice()
-                    }
-                } catch(let error) {
-                    print("inside \(EndPoints.getProfile(id: id).description) catch")
-                    print("inside catch \(error)")
-                    if let httpResponse = response as? HTTPURLResponse {
-                        if httpResponse.statusCode == 401 {
-                            DispatchQueue.main.async {
-                                self?.navigateToLoginAgain()
-                            }
-                            print("token expired")
-                            print("______________________________")
-                            return
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self?.somethingGoneWrongError()
+                        return
+                    } catch let error {
+                        print(error)
                     }
                 }
+                self?.showGenericErrorAlert()
+            } _: { [weak self] error in
+                self?.stopLoading()
+                self?.showGenericErrorAlert()
+                print("Error in Request/Response \(EndPoints.getProfile(id: id).description) \(String(describing: error))")
             }
-        })
-        
-        task.resume()
     }
     
     func sendFacultyData() {
-        guard let tok = Credentials.shared.defaults.string(forKey: "Token") else {
-            return
-        }
-        
-        guard let id = Credentials.shared.defaults.string(forKey: "Id") else {
-            return
-        }
-        
-        DispatchQueue.main.async {
-            self.loader.startAnimating()
-        }
-        
-        print("______________________________")
-        print(EndPoints.getProfile(id: id).description)
-        
-        //        guard let url = URL(string: EndPoints.editFacultyProfile.description) else {
-        //            return
-        //        }
-        guard let url = URL(string: EndPoints.getProfile(id: id).description) else {
-            return
-        }
-        
+        guard let id = Credentials.shared.defaults.string(forKey: "Id") else { return }
+        startLoading()
         let parameters: [String: Any] = [
             "id": Credentials.shared.defaults.integer(forKey: "Id"),
             "email": Credentials.shared.defaults.string(forKey: "Email") ?? "",
@@ -277,63 +167,29 @@ class ProfileViewController: UIViewController {
             "image_url": variableProfileData?.image_url ?? ""
         ] as Dictionary<String, Any>
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "PATCH"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
-        
-        let session = URLSession.shared
-        
-        let task = session.dataTask(with: request ,completionHandler: { [weak self] data, response, error in
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-            
-            DispatchQueue.main.async {
-                self?.loader.stopAnimating()
-            }
-            
-            if error != nil {
-                print("inside erorr")
-                print(error?.localizedDescription as Any)
-                print("______________________________")
-                
-                DispatchQueue.main.async {
-                    self?.somethingGoneWrongError()
-                }
-            }else{
-                do{
-                    let d1 = try JSONDecoder().decode(EditProfileResponseModel.self, from: data!)
-                    print(d1)
-                    DispatchQueue.main.async {
-                        self?.variableProfileData = d1.data
-                        //                        print(self?.variableProfileData as Any)
-                        print("______________________________")
+        request(
+            isToken: true,
+            params: parameters,
+            endpoint: .getProfile(id: id),
+            requestType: .patch,
+            postData: nil) { [weak self] data in
+                self?.stopLoading()
+                if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(EditProfileResponseModel.self, from: data)
+                        self?.variableProfileData = response.data
                         self?.saveToDevice()
-                    }
-                } catch(let error) {
-                    print("inside \(EndPoints.getProfile(id: id).description) catch")
-                    print("inside catch \(error.localizedDescription)")
-                    if let httpResponse = response as? HTTPURLResponse {
-                        if httpResponse.statusCode == 401 {
-                            DispatchQueue.main.async {
-                                self?.navigateToLoginAgain()
-                            }
-                            print("token expired")
-                            print("______________________________")
-                            return
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self?.somethingGoneWrongError()
+                        return
+                    } catch let error {
+                        print(error)
                     }
                 }
+                self?.showGenericErrorAlert()
+            } _: { [weak self] error in
+                self?.stopLoading()
+                self?.showGenericErrorAlert()
+                print("Error in Request/Response \(EndPoints.getProfile(id: id).description) \(String(describing: error))")
             }
-        })
-        
-        task.resume()
     }
     
     func loadProfileImage(image_url: String) {

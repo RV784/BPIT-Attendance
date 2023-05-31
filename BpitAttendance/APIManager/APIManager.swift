@@ -32,6 +32,7 @@ final class APIManager {
         if isToken {
             guard let tok = Credentials.shared.defaults.string(forKey: "Token"),
                   tok != "" else {
+                failure(nil)
                 //TODO: back to login Screen
                 return
             }
