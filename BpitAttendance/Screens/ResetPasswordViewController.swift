@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ResetPasswordViewController: UIViewController {
+class ResetPasswordViewController: BaseViewController {
     
     
     @IBOutlet var baseView: UIView!
@@ -207,7 +207,91 @@ class ResetPasswordViewController: UIViewController {
         }
     }
     
+    func processData(data: ResetPasswordModel) {
+        if data.message != nil {
+            showBackToLoginAlert()
+        } else if data.token != nil {
+            Credentials.shared.defaults.set(data.token, forKey: "Token")
+            successfulResetPassword()
+        } else if data.error?.first != nil {
+            showSamePasswordError()
+        }
+    }
+    
     //MARK: API CALLS
+    func submitPassword() {
+        if forgotPassword {
+            oldPasswordTextField.text = ""
+        }
+        
+        if forgotPassword {
+            let params = ["current_password": oldPasswordTextField.text ?? "",
+                      "new_password": newPasswordTextField.text ?? "",
+                      "new_password_confirm": confirmPasswordTextField.text ?? "",
+                      "password_otp": otp,
+                      "forget": true,
+                      "email": email
+            ] as Dictionary<String, Any>
+            changeFirstPassword(with: params)
+        } else {
+            let params  = ["current_password": oldPasswordTextField.text ?? "",
+                       "new_password": newPasswordTextField.text ?? "",
+                       "new_password_confirm": confirmPasswordTextField.text ?? "",
+            ] as Dictionary<String, Any>
+            changePassword(with: params)
+        }
+    }
+    
+    func changeFirstPassword(with params: [String: Any]) {
+        startLoading()
+        request(
+            isToken: false,
+            params: params,
+            endpoint: .setNewPassword,
+            requestType: .put,
+            postData: nil) { [weak self] data in
+                self?.stopLoading()
+                if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(ResetPasswordModel.self, from: data)
+                        self?.processData(data: response)
+                        return
+                    } catch let error {
+                        print(error)
+                    }
+                }
+                self?.showGenericErrorAlert()
+            } _: { [weak self] error in
+                self?.stopLoading()
+                self?.showGenericErrorAlert()
+                print("Error in Request/Response \(EndPoints.setNewPassword.description) \(String(describing: error))")
+            }
+    }
+    
+    func changePassword(with params: [String: Any]) {
+        startLoading()
+        request(
+            isToken: true,
+            params: params,
+            endpoint: .setNewPassword,
+            requestType: .put,
+            postData: nil) { [weak self] data in
+                self?.stopLoading()
+                if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(ResetPasswordModel.self, from: data)
+                        self?.processData(data: response)
+                        return
+                    } catch let error {
+                        print(error)
+                    }
+                }
+            } _: { [weak self] error in
+                self?.stopLoading()
+                print("Error in Request/Response \(EndPoints.setNewPassword.description) \(String(describing: error))")
+            }
+    }
+    
     func submitNewPassword() {
         
         if forgotPassword {
