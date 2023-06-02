@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: BaseViewController {
     
     @IBOutlet weak var resetPasswordBtn: UIButton!
     @IBOutlet weak var signOut: UIButton!

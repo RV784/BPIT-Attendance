@@ -174,6 +174,7 @@ class ResetPasswordViewController: BaseViewController {
             NSLog("OK Pressed")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
+            mainTabBarController.overrideUserInterfaceStyle = .dark
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
         }
         alertController.addAction(confirmation)

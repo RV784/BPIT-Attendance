@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let token = Credentials.shared.defaults.string(forKey: "Token"),
            token != "" {
             let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBar")
+            mainTabBarController.overrideUserInterfaceStyle = .dark
             window?.rootViewController = mainTabBarController
         } else {
             let loginNavController = storyboard.instantiateViewController(identifier: "ViewController")

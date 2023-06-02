@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GroupChoiceViewController: UIViewController {
+class GroupChoiceViewController: BaseViewController {
     var batch: String = ""
     var subject: String = ""
     var subjectCode: String = ""

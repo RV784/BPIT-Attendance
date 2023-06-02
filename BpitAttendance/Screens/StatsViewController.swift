@@ -8,7 +8,7 @@
 import UIKit
 import StickyLayout
 
-class StatsViewController: UIViewController {
+class StatsViewController: BaseViewController {
     
     @IBOutlet weak var statsCollectionView: UICollectionView!
     @IBOutlet weak var loader: UIActivityIndicatorView!

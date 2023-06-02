@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AboutViewController: UIViewController {
+class AboutViewController: BaseViewController {
     
     @IBOutlet weak var mentorImg: UIImageView!
     @IBOutlet weak var mentorDesignation: UILabel!

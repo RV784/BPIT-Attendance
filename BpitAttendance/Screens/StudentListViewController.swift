@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StudentListViewController: UIViewController {
+class StudentListViewController: BaseViewController {
     
     var color: UIColor = UIColor.yellow
     var isAbsent: Bool = false

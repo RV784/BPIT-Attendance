@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EnterEmailViewController: UIViewController {
+class EnterEmailViewController: BaseViewController {
     
     @IBOutlet weak var otpStackView: UIStackView!
     @IBOutlet var baseView: UIView!
