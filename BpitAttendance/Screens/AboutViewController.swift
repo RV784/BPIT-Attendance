@@ -8,51 +8,86 @@
 import UIKit
 
 class AboutViewController: BaseViewController {
+    @IBOutlet var aboutAppTableView: UITableView!
     
-    @IBOutlet weak var mentorImg: UIImageView!
-    @IBOutlet weak var mentorDesignation: UILabel!
-    @IBOutlet weak var mentorName: UILabel!
-    @IBOutlet weak var mentorView: UIView!
-    
-    
-    @IBOutlet weak var devOneView: UIView!
-    @IBOutlet weak var devOneImg: UIImageView!
-    
-    
-    @IBOutlet weak var devTwoView: UIView!
-    @IBOutlet weak var devTwoImg: UIImageView!
-    
-    
-    @IBOutlet weak var devThreeView: UIView!
-    @IBOutlet weak var devThreeImg: UIImageView!
-    
-    @IBOutlet weak var devFourView: UIView!
-    @IBOutlet weak var devFourImg: UIImageView!
+    private var aboutAppData: [AboutTableViewCell.ViewModel] = [] {
+        didSet {
+            aboutAppTableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        aboutAppTableView.delegate = self
+        aboutAppTableView.dataSource = self
+        aboutAppTableView.register(type: AboutTableViewCell.self)
         
         navigationItem.title = "About this app"
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        mentorView.layer.cornerRadius = 10
-        devOneView.layer.cornerRadius = 10
-        devTwoView.layer.cornerRadius = 10
-        devThreeView.layer.cornerRadius = 10
-        devFourView.layer.cornerRadius = 10
+        makeData()
+    }
+    
+    private func makeData() {
+        var data: [AboutTableViewCell.ViewModel] = []
         
-        mentorImg.layer.cornerRadius = 30
-        devOneImg.layer.cornerRadius = 30
-        devTwoImg.layer.cornerRadius = 30
-        devThreeImg.layer.cornerRadius = 30
-        devFourImg.layer.cornerRadius = 30
+        // Achal Kaushik
+        data.append(.init(
+            name: "Prof. Achal Kaushik",
+            profileImage: UIImage(named: "achalSir"),
+            designationText: "HOD (Computer Science)")
+        )
         
-        mentorView.backgroundColor = .subjectColor
-        devOneView.backgroundColor = .subjectColor
-        devTwoView.backgroundColor = .subjectColor
-        devThreeView.backgroundColor = .subjectColor
-        devFourView.backgroundColor = .subjectColor
+        // Rajat Verma
+        data.append(.init(
+            name: "Rajat Verma",
+            profileImage: UIImage(named: "rajat"),
+            designationText: "Mobile App Developer (iOS)")
+        )
+        
+        // Shubham Jindal
+        data.append(.init(
+            name: "Shubham Jindal",
+            profileImage: UIImage(named: "jindal"),
+            designationText: "Backend Developer")
+        )
+        
+        // Nishant Mittal
+        data.append(.init(
+            name: "Nishant Mittal",
+            profileImage: UIImage(named: "nishant"),
+            designationText: "Mobile App Developer (Android)")
+        )
+        
+        // Mohak Sharma
+        data.append(.init(
+            name: "Mohak Sharma",
+            profileImage: UIImage(named: "mohak"),
+            designationText: "Web Developer")
+        )
+        
+        aboutAppData = data
+    }
+}
+
+extension AboutViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        aboutAppData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(AboutTableViewCell.self) {
+            cell.config(aboutAppData[indexPath.row])
+            cell.selectionStyle = .none
+            return cell
+        }
+        
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        86
     }
 }
