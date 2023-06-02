@@ -13,7 +13,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" hidesBottomBarWhenPushed="YES" id="BYZ-38-t0r" customClass="ViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -229,7 +229,7 @@
         <!--Enter Email View Controller-->
         <scene sceneID="eRG-DK-F7b">
             <objects>
-                <viewController storyboardIdentifier="EnterEmailViewController" id="fO7-uz-YYb" customClass="EnterEmailViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EnterEmailViewController" hidesBottomBarWhenPushed="YES" id="fO7-uz-YYb" customClass="EnterEmailViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NBl-xt-Ijd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -398,7 +398,7 @@
         <!--Reset Password View Controller-->
         <scene sceneID="N7I-DZ-QBJ">
             <objects>
-                <viewController storyboardIdentifier="ResetPasswordViewController" id="49U-rq-ML5" customClass="ResetPasswordViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ResetPasswordViewController" hidesBottomBarWhenPushed="YES" id="49U-rq-ML5" customClass="ResetPasswordViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="joB-uO-rqQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -413,6 +413,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="textDidChanged:" destination="49U-rq-ML5" eventType="editingChanged" id="zQW-WD-0VY"/>
+                                        </connections>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e0P-VT-MOf">
                                         <rect key="frame" x="0.0" y="70" width="335" height="50"/>
@@ -421,6 +424,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="textDidChanged:" destination="49U-rq-ML5" eventType="editingChanged" id="a3f-VR-KLA"/>
+                                        </connections>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password " textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xv5-cF-K9i">
                                         <rect key="frame" x="0.0" y="140" width="335" height="50"/>
@@ -429,6 +435,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="textDidChanged:" destination="49U-rq-ML5" eventType="editingChanged" id="dMf-ez-8Ci"/>
+                                        </connections>
                                     </textField>
                                 </subviews>
                             </stackView>
@@ -592,7 +601,7 @@
         <!--Student List View Controller-->
         <scene sceneID="8SF-KP-uwS">
             <objects>
-                <viewController storyboardIdentifier="StudentListViewController" id="kV8-F2-sEu" customClass="StudentListViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StudentListViewController" hidesBottomBarWhenPushed="YES" id="kV8-F2-sEu" customClass="StudentListViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Opb-XG-dL1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -698,7 +707,7 @@
         <!--Stats View Controller-->
         <scene sceneID="1Za-70-7sQ">
             <objects>
-                <viewController storyboardIdentifier="StatsViewController" id="gx9-o4-fFq" customClass="StatsViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StatsViewController" hidesBottomBarWhenPushed="YES" id="gx9-o4-fFq" customClass="StatsViewController" customModule="BpitAttendance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fm6-HJ-iUP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -753,7 +762,7 @@
         <!--Navigation Controller-->
         <scene sceneID="6ex-ai-KZW">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ym1-EX-Jqc" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="Ym1-EX-Jqc" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="XoJ-4n-ftU">
                         <rect key="frame" x="0.0" y="50" width="375" height="44"/>
@@ -1058,7 +1067,7 @@
         <!--Navigation Controller-->
         <scene sceneID="jBG-BP-13C">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cKL-PM-Rr3" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="cKL-PM-Rr3" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="VvM-oh-TC8">
                         <rect key="frame" x="0.0" y="50" width="375" height="44"/>
@@ -1076,7 +1085,7 @@
         <!--Navigation Controller-->
         <scene sceneID="umb-Fv-y1W">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="GsZ-hu-lBa" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="GsZ-hu-lBa" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="a44-dm-6i9">
                         <rect key="frame" x="0.0" y="50" width="375" height="44"/>
@@ -1113,7 +1122,7 @@
         <!--Navigation Controller-->
         <scene sceneID="3wf-cA-Al5">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LyY-wc-i1v" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="LyY-wc-i1v" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="IQX-xJ-LLz">
                         <rect key="frame" x="0.0" y="50" width="375" height="44"/>

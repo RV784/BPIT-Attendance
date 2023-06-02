@@ -61,7 +61,6 @@ class ProfileViewController: BaseViewController {
         } else {
             showNoInternetAlter()
         }
-        tabBarController?.tabBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     

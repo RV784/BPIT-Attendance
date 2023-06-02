@@ -71,11 +71,21 @@ class ResetPasswordViewController: BaseViewController {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        
+    }
+    
+    @IBAction func textDidChanged(_ sender: Any) {
         if confirmPasswordTextField.text != newPasswordTextField.text {
             confirmPasswordTextField.layer.borderWidth = 0.5
             confirmPasswordTextField.layer.borderColor = UIColor.red.cgColor
-        } else {
+            submitBtn.backgroundColor = .systemGray2
+        } else if confirmPasswordTextField.text != "" &&
+                    newPasswordTextField.text != "" &&
+                    oldPasswordTextField.text != "" {
+            submitBtn.backgroundColor = .link
             confirmPasswordTextField.layer.borderWidth = 0
+        } else {
+            submitBtn.backgroundColor = .systemGray2
         }
     }
     

@@ -35,7 +35,6 @@ class BaseViewController: UIViewController {
     func routeToLoginScreen(with email: String?) {
         if let loginVC = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
             loginVC.tokExpMidCycle = true
-            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(loginVC, animated: true)
         }
     }

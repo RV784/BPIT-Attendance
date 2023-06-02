@@ -166,15 +166,6 @@ class StudentListViewController: BaseViewController {
     
     
     func yesPressed() {
-        //        if checkConnection() {
-        //            if isEditingPrevAttendance {
-        //                sendLastStudents()
-        //            } else {
-        //                sendStudents()
-        //            }
-        //        } else {
-        //            disableEnableViews()
-        ////        }
         if checkInternet() {
             if isEditingPrevAttendance {
                 sendLastStudents()

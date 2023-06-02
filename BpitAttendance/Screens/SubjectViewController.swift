@@ -47,7 +47,6 @@ class SubjectViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
-        tabBarController?.tabBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
@@ -59,7 +58,6 @@ class SubjectViewController: BaseViewController {
             NSLog("gotoButton Pressed")
             if let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
                 loginVC.tokExpMidCycle = true
-                self.tabBarController?.tabBar.isHidden = true
                 self.navigationController?.pushViewController(loginVC, animated: true)
             }
         }
@@ -192,7 +190,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
                     }
                 }
                 studentListVc.navigationItem.largeTitleDisplayMode = .never
-                tabBarController?.tabBar.isHidden = true
                 self.navigationController?.pushViewController(studentListVc, animated: true)
             }
         } else {
@@ -226,7 +223,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
                             }
                         }
                         studentListVc.navigationItem.largeTitleDisplayMode = .never
-                        self.tabBarController?.tabBar.isHidden = true
                         self.navigationController?.pushViewController(studentListVc, animated: true)
                     }
                 } else {
@@ -254,7 +250,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             studentListVC.isLab = self.subjects?[idx].is_lab ?? false
             studentListVC.isEditingPrevAttendance = true
             studentListVC.navigationItem.largeTitleDisplayMode = .never
-            tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(studentListVC, animated: true)
         }
     }
@@ -280,7 +275,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             studentListVC.subjectCode = self.subjects?[idx].subject_code ?? ""
             studentListVC.isLab = self.subjects?[idx].is_lab ?? false
             studentListVC.navigationItem.largeTitleDisplayMode = .never
-            tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(studentListVC, animated: true)
         }
     }
@@ -300,7 +294,6 @@ extension SubjectViewController: UICollectionViewDelegate, UICollectionViewDataS
             }
             
             statsVC.navigationItem.largeTitleDisplayMode = .never
-            tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(statsVC, animated: true)
         }
     }
