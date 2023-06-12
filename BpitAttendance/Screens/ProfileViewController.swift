@@ -129,7 +129,7 @@ class ProfileViewController: BaseViewController {
             isToken: true,
             endpoint: .getProfile(id: id),
             requestType: .get,
-            postData: nil) { [weak self] data in
+            postData: nil, vibrateUponSuccess: false) { [weak self] data in
                 self?.stopLoading()
                 if let data = data {
                     do {
@@ -170,7 +170,7 @@ class ProfileViewController: BaseViewController {
             params: parameters,
             endpoint: .getProfile(id: id),
             requestType: .patch,
-            postData: nil) { [weak self] data in
+            postData: nil, vibrateUponSuccess: false) { [weak self] data in
                 self?.stopLoading()
                 if let data = data {
                     do {

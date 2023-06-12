@@ -260,7 +260,7 @@ class ResetPasswordViewController: BaseViewController {
             params: params,
             endpoint: .setNewPassword,
             requestType: .put,
-            postData: nil) { [weak self] data in
+            postData: nil, vibrateUponSuccess: false) { [weak self] data in
                 self?.stopLoading()
                 if let data = data {
                     do {
@@ -286,7 +286,7 @@ class ResetPasswordViewController: BaseViewController {
             params: params,
             endpoint: .setNewPassword,
             requestType: .put,
-            postData: nil) { [weak self] data in
+            postData: nil, vibrateUponSuccess: false) { [weak self] data in
                 self?.stopLoading()
                 if let data = data {
                     do {

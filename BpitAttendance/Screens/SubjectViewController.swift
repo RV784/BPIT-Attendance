@@ -113,7 +113,7 @@ class SubjectViewController: BaseViewController {
 //MARK: API CALLS
     func getSubjects() {
         startLoading()
-        request(isToken: true, endpoint: .getSubjects, requestType: .get, postData: nil) { [weak self] data in
+        request(isToken: true, endpoint: .getSubjects, requestType: .get, postData: nil, vibrateUponSuccess: false) { [weak self] data in
             self?.stopLoading()
             if let data = data {
                 do {

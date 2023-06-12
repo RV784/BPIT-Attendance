@@ -25,6 +25,7 @@ class BaseViewController: UIViewController {
     }
     
     func stopLoading() {
+        activityView?.removeFromSuperview()
         activityView?.stopAnimating()
     }
     
@@ -51,11 +52,17 @@ class BaseViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    func giveHapticFeedback() {
+        let tapticFeedback = UINotificationFeedbackGenerator()
+        tapticFeedback.notificationOccurred(.success)
+    }
+    
     func request(isToken: Bool,
                  params: [String: Any]? = nil,
                  endpoint: EndPoints,
                  requestType: RequestType,
                  postData: Data?,
+                 vibrateUponSuccess: Bool,
                  _ success: @escaping (Data?) -> Void,
                  _ failure: @escaping (Error?) -> Void) {
         
@@ -74,6 +81,9 @@ class BaseViewController: UIViewController {
                     // TRY TO MAKE A PIPELINE HERE
                     failure(nil)
                 } else {
+                    if vibrateUponSuccess {
+                        self?.giveHapticFeedback()
+                    }
                     success(data)
                 }
             } _: { error in

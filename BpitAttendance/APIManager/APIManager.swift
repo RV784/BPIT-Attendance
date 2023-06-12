@@ -20,7 +20,7 @@ final class APIManager {
                  _ success: @escaping (Data?, URLResponse?) -> Void,
                  _ failure: @escaping (Error?) -> Void) {
         
-       //Start loader
+        //Start loader
         guard let url = URL(string: endpoint.description) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = requestType.rawValue
@@ -37,6 +37,10 @@ final class APIManager {
                 return
             }
             request.setValue("Token \(tok)", forHTTPHeaderField: "Authorization")
+        }
+        
+        if let data = postData {
+            request.httpBody = data
         }
         
         let session = URLSession.shared

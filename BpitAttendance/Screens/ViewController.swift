@@ -192,7 +192,8 @@ extension ViewController {
             params: parameters,
             endpoint: .getToken,
             requestType: .post,
-            postData: nil) { [weak self] data in
+            postData: nil,
+            vibrateUponSuccess: true) { [weak self] data in
                 self?.stopLoading()
                 if let data = data {
                     do {
