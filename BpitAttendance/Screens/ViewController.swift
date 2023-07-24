@@ -12,7 +12,7 @@ class ViewController: BaseViewController {
     @IBOutlet weak var forgotPasswordLabel: UILabel!
     @IBOutlet weak var deciderIndicator: UIActivityIndicatorView!
     @IBOutlet weak var deciderView: UIView!
-    @IBOutlet var baseView: UIView!
+    @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
     @IBOutlet weak var loginLoader: UIActivityIndicatorView!

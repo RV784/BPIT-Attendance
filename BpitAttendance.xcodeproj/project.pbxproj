@@ -58,6 +58,7 @@
 		ABCA6A8C28F3DDF70060C3D5 /* EnterEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA6A8B28F3DDF70060C3D5 /* EnterEmailViewController.swift */; };
 		ABCA6A8F28F3E19A0060C3D5 /* OTPTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA6A8E28F3E19A0060C3D5 /* OTPTextField.swift */; };
 		ABCA6A9128F3E4970060C3D5 /* OTPStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA6A9028F3E4970060C3D5 /* OTPStackView.swift */; };
+		ABE175FC2A6E73F20088268B /* URLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE175FB2A6E73F20088268B /* URLRequestExtension.swift */; };
 		CA2225CEF121E7B960AC6163 /* Pods_BpitAttendance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9FAEAA121340629137A52F /* Pods_BpitAttendance.framework */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +118,7 @@
 		ABCA6A8B28F3DDF70060C3D5 /* EnterEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewController.swift; sourceTree = "<group>"; };
 		ABCA6A8E28F3E19A0060C3D5 /* OTPTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPTextField.swift; sourceTree = "<group>"; };
 		ABCA6A9028F3E4970060C3D5 /* OTPStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPStackView.swift; sourceTree = "<group>"; };
+		ABE175FB2A6E73F20088268B /* URLRequestExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestExtension.swift; sourceTree = "<group>"; };
 		F5A561E53C6C7E5FA8AB01E2 /* Pods-BpitAttendance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BpitAttendance.release.xcconfig"; path = "Target Support Files/Pods-BpitAttendance/Pods-BpitAttendance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -193,6 +195,7 @@
 				AB2B441A2914DF760045A415 /* Date.swift */,
 				AB2B443629175FD40045A415 /* ColorExtension.swift */,
 				AB85C7232A2A7D5B00761511 /* TableViewExtensions.swift */,
+				ABE175FB2A6E73F20088268B /* URLRequestExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				AB268C9A291CF5AA0030F1FE /* StatsCollectionViewCell.swift in Sources */,
 				AB85C7242A2A7D5B00761511 /* TableViewExtensions.swift in Sources */,
 				ABABFB0628F2096300D684C9 /* LoginModel.swift in Sources */,
+				ABE175FC2A6E73F20088268B /* URLRequestExtension.swift in Sources */,
 				AB72457528E6DB4E00D044E4 /* InternetConnectionManager.swift in Sources */,
 				AB33B0FB28E17F4A00B8662C /* Credentials.swift in Sources */,
 				ABCA6A9128F3E4970060C3D5 /* OTPStackView.swift in Sources */,
