@@ -326,6 +326,8 @@ class StudentListViewController: BaseViewController {
         if isLab {
             endPoint = EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subjectCode, section: section, groupNo: groupNum)
         } else {
+            
+            
             endPoint = EndPoints.getGroupSpecificStudents(batch: batch, branch: branch, subject: subjectCode, section: section, groupNo: groupNum)
         }
         studentLoader.startAnimating()
